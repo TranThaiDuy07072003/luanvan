@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('products', function (Blueprint $table){
+            $table->id();
+            $table->string('name')->unique(); //sản phẩm không được trùng nhau, yes sir chắc chắn là như vậy zồi
+            $table->string('slug')->unique(); // ca-chua-beef-huu-co-300g
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade'); //Nếu xóa 1 danh mục (category), thì tự động xóa tất cả sản phẩm (product) thuộc danh mục đó.
+            $table->text('description')->nullable();
+            $table->decimal('price', 10, 2);
+            $table->integer('stock')->default(0);
+            $table->string('status')->default('in_stock'); // in_stock, out_of_stock (còn hàng, hết hàng)
+            $table->string('unit')->unique(); //kg, g, l, ml, cái, hộp
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('products');
+    }
+};
