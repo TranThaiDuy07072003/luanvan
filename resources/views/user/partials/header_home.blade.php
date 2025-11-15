@@ -59,8 +59,8 @@
                         <nav>
                             <div class="ltn__main-menu">
                                 <ul>
-                                    <li class="menu-icon"><a href="index.html">Trang chủ</a> </li>
-                                    <li class="menu-icon"><a href="about.html">Về chúng tôi</a>
+                                    <li class="menu-icon"><a href="/">Trang chủ</a> </li>
+                                    <li class="menu-icon"><a href="about">Về chúng tôi</a>
                                         <!-- <ul>
                                                     <li><a href="#">Về chúng tôi</a></li>
                                                     <li><a href="service.html">Dịch vụ</a></li>
@@ -102,7 +102,7 @@
                             <li>
                                 <a href="#"><i class="icon-user"></i></a>
                                 <ul>
-                                    <li><a href="login.html">Đăng nhập</a></li>
+                                    <li><a href="/login">Đăng nhập</a></li>
                                     <li><a href="register.html">Đăng kí</a></li>
                                     <li><a href="account.html">Tài khoản</a></li>
                                     <li><a href="wishlist.html">Yêu thích</a></li>

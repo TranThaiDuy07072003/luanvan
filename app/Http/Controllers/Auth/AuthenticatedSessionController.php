@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
+use Illuminate\Support\Facades\Log;
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -25,10 +27,10 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
+        Log::info('Thông tin bình thường');
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended('/');
     }
 
     /**

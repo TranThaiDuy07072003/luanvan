@@ -6,26 +6,30 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;  // Thêm để dùng Authentication facade
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ActivationMail;
 
 class AuthController extends Controller
 {
-    // Method hiển thị form đăng ký (giữ nguyên code cũ)
     public function showRegisterForm()
     {
         return view('user.pages.register');
     }
 
-    // Method xử lý đăng ký (dựa trên code cũ, thêm validation cho checkbox nếu có)
-    public function register(Request $request)
+    public function showLoginForm()
     {
-        // Validate backend (xóa rules và messages cho checkbox1, checkbox2)
+        return view('user.pages.login');
+    }
+
+    public function register(Request $request): RedirectResponse
+    {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',  // Giữ 'confirmed' để check password_confirmation
+            'password' => 'required|string|min:6|confirmed',
         ], [
             'name.required' => 'Vui lòng nhập họ và tên',
             'email.required' => 'Vui lòng nhập email',
@@ -36,20 +40,7 @@ class AuthController extends Controller
             'password.confirmed' => 'Mật khẩu và xác nhận không khớp',
         ]);
 
-        // Kiểm tra email đã tồn tại hay chưa (giữ nguyên code cũ)
-        $existingUser = User::where('email', $request->email)->first();
-        if ($existingUser) {
-            if ($existingUser->isPending()) {  // Giả sử method isPending() tồn tại trong model User
-                toastr()->error('Email đã được sử dụng. Vui lòng chọn email khác.');
-                return redirect()->route('register');
-            }
-            return redirect()->route('register');
-        }
-
-        // Tạo mã xác nhận email (giữ nguyên)
         $token = Str::random(64);
-
-        // Tạo user (giữ nguyên, với Hash::make cho password)
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -59,56 +50,74 @@ class AuthController extends Controller
             'activation_token' => $token,
         ]);
 
-        // Gửi email activation (thêm code này để hoàn thiện, dùng Mail facade - config mail trước trong .env)
-        // Mail::to($user->email)->send(new ActivationMail($user, $token));  // Giả sử bạn có Mailable class
+        // SỬA: Gửi đúng tham số
+        // Chỗ này lúc đăng ký gửi email kích hoạt
+        Mail::to($user->email)->send(new ActivationMail($token, $user));
 
         toastr()->success('Đăng ký thành công! Vui lòng kiểm tra email để kích hoạt tài khoản.');
 
-        // Redirect về trang login thay vì back() (vì đã dùng Authentication, redirect đến route login)
-        return redirect()->route('login');
+        return redirect()->route('login'); // ĐÚNG: về login
     }
 
-    // Method mới: Xử lý đăng nhập (authenticate) sử dụng Auth::attempt()
-    public function authenticate(Request $request): RedirectResponse
+    // SỬA: Tên method và route
+    public function activate($token): RedirectResponse
     {
-        // Validate credentials (rules đơn giản, message tiếng Việt)
+        $user = User::where('activation_token', $token)->first();
+
+        if (!$user) {
+            toastr()->error('Link kích hoạt không hợp lệ hoặc đã hết hạn.');
+            return redirect()->route('login');
+        }
+
+        if ($user->status === 'active') {
+            toastr()->info('Tài khoản đã được kích hoạt trước đó.');
+            Auth::login($user);
+            return redirect()->route('home');
+        }
+
+        $user->status = 'active';
+        $user->activation_token = null;
+        $user->email_verified_at = now();
+        $user->save();
+
+        Auth::login($user);
+        toastr()->success('Kích hoạt tài khoản thành công! Chào mừng bạn!');
+
+        return redirect()->route('home');
+    }
+
+    public function login(Request $request): RedirectResponse
+    {
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
-        ], [
-            'email.required' => 'Vui lòng nhập email',
-            'email.email' => 'Định dạng email không hợp lệ',
-            'password.required' => 'Vui lòng nhập mật khẩu',
         ]);
 
-        // Attempt login với điều kiện custom (status 'active' và activation_token null)
-        if (Auth::attempt($credentials + ['status' => 'active'], $request->filled('remember'))) {
-            // Regenerate session để tránh fixation attack (bảo mật)
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
 
-            toastr()->success('Đăng nhập thành công!');
+            if (Auth::user()->status !== 'active') {
+                Auth::logout();
+                toastr()->error('Tài khoản chưa được kích hoạt. Vui lòng kiểm tra email.');
+                return back();
+            }
 
-            // Redirect đến trang intended (nếu có) hoặc dashboard
-            return redirect()->intended('/dashboard');
+            toastr()->success('Đăng nhập thành công!');
+            return redirect()->intended('/');
         }
 
-        // Nếu fail, back với error và giữ input email
         return back()->withErrors([
-            'email' => 'Thông tin đăng nhập không đúng hoặc tài khoản chưa kích hoạt.',
+            'email' => 'Email hoặc mật khẩu không đúng.',
         ])->onlyInput('email');
     }
 
-    // Method mới: Xử lý logout
     public function logout(Request $request): RedirectResponse
     {
-        Auth::logout();  // Logout user
-
-        // Invalidate session và regenerate token (bảo mật)
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         toastr()->success('Đăng xuất thành công!');
-
-        return redirect('/');  // Redirect về home
+        return redirect()->route('home');
     }
 }

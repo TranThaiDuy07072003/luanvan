@@ -20,9 +20,10 @@ return new class extends Migration
             $table->string('phone_number')->nullable(); //co the null duoc
             $table->string('avatar')->nullable(); //co the null duoc
             $table->text('address')->nullable();
-            $table->foreignId('role_id')->constrained('roles')->onDelete('cascade'); 
+            $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
             $table->string('activation_token')->nullable();
             $table->string('google_id')->nullable();
+            
 
 
             $table->timestamps();

@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model
+class User extends Authenticatable
 {
     use HasFactory;
 
@@ -20,7 +21,24 @@ class User extends Model
         'role_id',
         'activation_token',
         'google_id',
+
+
     ];
+
+
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+
+    // Đảm bảo có cột này trong DB
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+
+
+
 
 
     // 1. Mỗi user thuộc về một vai trò (Role)
