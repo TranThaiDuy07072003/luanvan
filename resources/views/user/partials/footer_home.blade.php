@@ -55,7 +55,7 @@
                                 <h4 class="footer-title">Công ty</h4>
                                 <div class="footer-menu">
                                     <ul>
-                                        <li><a href="about.html">Về chúng tôi</a></li>
+                                        <li><a href="{{ route('about') }}">Về chúng tôi</a></li>
                                         <li><a href="shop.html">Sản phẩm</a></li>
                                         <li><a href="faq.html">FAQ</a></li>
                                         <li><a href="contact.html">Liên hệ</a></li>

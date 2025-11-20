@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ProductImage; // <-- Nhớ use Model ProductImage
+
 
 class Product extends Model
 {
+    use HasFactory;
+
+
     protected $fillable = ['name', 'description', 'price', 'stock', 'category_id', 'status', 'slug', 'unit'];
 
 
@@ -18,7 +24,7 @@ class Product extends Model
 
 
      // 2. Một sản phẩm có nhiều hình ảnh (Products_Images)
-    public function image()
+    public function images()
     {
         return $this->hasMany(ProductImage::class);  // nhánh chân gà
     }
@@ -54,5 +60,13 @@ class Product extends Model
         return $this->belongsToMany(Recipe::class, 'product_recipe')
                     ->withPivot('quantity');   // lưu thêm số lượng trong bảng trung gian
     }
+
+
+
+    public function firstImage()
+    {
+        return $this->hasOne(ProductImage::class)->orderBy('id', 'asc');
+    }
+
 
 }

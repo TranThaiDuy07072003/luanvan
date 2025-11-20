@@ -7,7 +7,7 @@
                     <div class="footer-widget footer-about-widget">
                         <div class="footer-logo">
                             <div class="site-logo">
-                                <img src="img/logo0.png" alt="Logo">
+                                <img src="{{ asset('assets/user/img/logo0.png') }}" alt="Logo">
                             </div>
                         </div>
                         <p>Sự hài lòng của quý khách là niềm vinh hạnh của cửa hàng chúng tôi</p>
@@ -56,7 +56,7 @@
                         <h4 class="footer-title">Công ty</h4>
                         <div class="footer-menu">
                             <ul>
-                                <li><a href="about.html">Về chúng tôi</a></li>
+                                <li><a href="{{ route('about') }}">Về chúng tôi</a></li>
                                 <li><a href="shop.html">Sản phẩm</a></li>
                                 <li><a href="faq.html">FAQ</a></li>
                                 <li><a href="contact.html">Liên hệ</a></li>
@@ -115,7 +115,7 @@
             </div>
         </div>
     </div>
-    <div class="ltn__copyright-area ltn__copyright-2 section-bg-2  ltn__border-top-2--- plr--5">
+    {{-- <div class="ltn__copyright-area ltn__copyright-2 section-bg-2  ltn__border-top-2--- plr--5">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-6 col-12">
@@ -134,6 +134,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </footer>
 <!-- FOOTER AREA END -->

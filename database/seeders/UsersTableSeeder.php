@@ -27,6 +27,7 @@ class UsersTableSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
+
         // Tạo user 2
         User::create([
             'name' => 'Tran Thi B',

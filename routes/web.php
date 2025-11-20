@@ -1,27 +1,29 @@
 <?php
+
+use App\Http\Controllers\Clients\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Clients\AuthController;  // Use cho AuthController custom
 use App\Http\Controllers\Clients\PasswordController;  // Use cho ProfileController từ Breeze (nếu cần)
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Clients\AccountController;
+use App\Http\Controllers\Clients\HomeController;
+use App\Http\Controllers\Clients\ProductController;
 
 // Routes public (không yêu cầu login) - giữ nguyên custom của bạn
-Route::get('/', function () {
-    return view('user.pages.home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/about', function () {
     return view('user.pages.about');
-});
+})->name('about');
 
 Route::get('/service', function () {
     return view('user.pages.service');
-});
+})->name('service');
 
 Route::get('/faq', function () {
     return view('user.pages.faq');
-});
+})->name('faq');
 
 // Routes cho authentication - dùng middleware 'guest' để chỉ cho phép khi chưa login (uncomment và thêm route register của bạn)
 Route::middleware('guest')->group(function () {
@@ -57,19 +59,44 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware(['auth.custom'])->group(function () {
     Route::prefix('account')->group(function(){
         Route::get('/', [AccountController::class, 'index'])->name('account');
-        Route::put('/update', [AccountController::class, 'update'])->name('account.update');
+        Route::post('/update', [AccountController::class, 'update'])->name('account.update');
+        Route::put('/update', [AccountController::class, 'update']);
 
 
         Route::post('/change-password', [AccountController::class, 'changePassword'])->name('account.change-password');
 
+
+        Route::post('addresses', [AccountController::class, 'addAddress'])->name('account.addresses.add');
+        Route::put('addresses/{id}', [AccountController::class, 'updatePrimaryAddress'])->name('account.addresses.update');
+        Route::delete('addresses/{id}', [AccountController::class, 'deleteAddress'])->name('account.addresses.delete');
+
     });
+
+
 });
 
 
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+
+Route::get('/products/filter', [ProductController::class, 'filter'])->name('products.filter');
 
 
 
 
+
+// Detail Product
+Route::get('/product/{slug}', [ProductController::class, 'detail'])->name('product.detail');
+
+
+
+// Handle Cart
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+
+//xóa giỏ hàng
+Route::post('/cart/remove', [CartController::class, 'removeFormMiniCart'])->name('cart.remove');
+
+//Xe đẩy trên cùng
+Route::get('/mini-cart', [CartController::class, 'loadMiniCart'])->name('cart.mini');
 
 
 

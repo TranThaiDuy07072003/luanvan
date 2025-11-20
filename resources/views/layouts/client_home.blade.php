@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     {{-- <title>NongSanSach - Cửa hàng bán rau củ</title> --}}
     <title>@yield('title')</title>
