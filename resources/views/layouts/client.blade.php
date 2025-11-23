@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset('assets/user/css/plugins.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/user/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/user/css/responsive.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/user/css/custom.css') }}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
@@ -51,6 +52,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="{{ asset('assets/user/js/custom.js') }}"></script>
+
+    <script src="{{ asset('assets/user/css/custom.css') }}"></script>
 
     <script>
         // 1. Setup CSRF Token cho mọi request AJAX

@@ -37,7 +37,7 @@ class ProductController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        // Lọc Sắp xếp
+
         if ($request->has('sort_by')) {
             switch ($request->sort_by) {
                 case 'price_asc':
@@ -54,11 +54,11 @@ class ProductController extends Controller
                     break;
             }
         } else {
-            // Thêm else để luôn có sắp xếp mặc định
+
              $query->orderBy('id', 'desc');
         }
 
-        // Thêm withQueryString() để giữ các tham số filter khi click link phân trang
+        
         $products = $query->paginate(9)->withQueryString();
 
         /** @var \App\Models\Product $product */

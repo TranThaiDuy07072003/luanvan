@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ActivationMail;
-use App\Models\CartItem; // <--- NHỚ THÊM DÒNG NÀY
+use App\Models\CartItem; 
 
 class AuthController extends Controller
 {

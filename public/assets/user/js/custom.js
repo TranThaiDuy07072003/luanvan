@@ -252,7 +252,7 @@ $(document).ready(function() {
 
 
     // Khi click vào 1 danh mục
-    // Đoạn code này trong custom.js của bạn đã RẤT ĐÚNG
+    
     $(".category-filter").click(function(){
         $(".category-filter").removeClass('active'); // Xóa 'active' ở tất cả các link
         $(this).addClass('active'); // Thêm 'active' CHỈ cho link vừa bấm
@@ -319,27 +319,51 @@ $(document).ready(function() {
 
 
 /*********************************
-     * PAGE PRODUCTS
+     * PAGE DETAIL PRODUCTS
 *********************************/
-    $(document).on('click', '.qtybutton', function() {
-        console.log(16313125785);
+    if(window.location.pathname !=='/cart'){
+        $(document).on('click', '.qtybutton', function() {
 
-        var $button = $(this);
-        var $input = $button.siblings('input');
-        var oldValue = parseInt($input.val());
-        var maxStock = parseInt($input.data('max'));
+            var $button = $(this);
+            var $input = $button.siblings('input');
+            var oldValue = parseInt($input.val());
+            var maxStock = parseInt($input.data('max'));
 
-        if ($button.hasClass('inc')) {
-            if (oldValue < maxStock) {
-                $input.val(oldValue + 1);
+            if ($button.hasClass('inc')) {
+                if (oldValue < maxStock) {
+                    $input.val(oldValue + 1);
+                }
+            } else {
+                if (oldValue > 1) {
+                    $input.val(oldValue - 1);
+                }
             }
-        } else {
-            if (oldValue > 1) {
-                $input.val(oldValue - 1);
-            }
-        }
-    });
+        });
 
+    }else{
+        $(document).on('click', '.qtybutton', function() {
+
+            let $button = $(this);
+            let $input = $button.siblings('input');
+            let oldValue = parseInt($input.val());
+            let maxStock = parseInt($input.data('max'));
+            let productId = $input.data('id');
+            let newValue = oldValue;
+
+
+            if ($button.hasClass('inc') && oldValue < maxStock) {
+                newValue = oldValue + 1;
+
+            } else if($button.hasClass('dec') && oldValue > 1) {
+                newValue = oldValue - 1;
+            }
+
+            if(newValue != oldValue)
+            {
+                updateCart(productId, newValue, $input);
+            }
+        });
+    }
 
 
     // Add to cart
@@ -386,7 +410,7 @@ $(document).ready(function() {
 
 
 /*********************************
-     * CARTs
+     *MINI CARTs
 *********************************/
 
 // Xe đẩy trên cùng:
@@ -429,6 +453,88 @@ $(document).ready(function() {
             }
         });
     });
+
+
+
+
+/*********************************
+     *PAGE CARTs
+*********************************/
+    //Xu ly cap nhat so luong san pham trong trang gio hang
+    function updateCart(productId, quantity, $input){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            url: '/cart/update',
+            type: 'POST',
+            data: {
+                product_id: productId,
+                quantity : quantity
+            },
+
+            success:function(response) {
+                $input.val(response.quantity);
+                $input.closest('tr').find('.cart-product-subtotal').text(response.total);
+                $('.cart-total').text(response.total); //tong tien hang
+                $('.cart-grand-total').text(response.grandTotal); //tong cong
+            },
+
+            error: function(xhr) {
+                alert(xhr.responseJSON.error);
+            }
+        });
+
+
+
+    }
+
+
+    //Xu ly XOA  san pham trong trang gio hang
+    $('.remove-from-cart').on('click', function(e){
+
+        let productId = $(this).data('id');
+        let row = $(this).closest('tr');
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            url: '/cart/remove-cart',
+            type: 'POST',
+            data: {
+                product_id: productId,
+
+            },
+
+            success:function(response) {
+                row.remove();
+                $('.cart-total').text(response.total); //tong tien hang
+                $('.cart-grand-total').text(response.grandTotal); //tong cong
+                if($('.cart-product-remove').length === 0)
+                {
+                    location.reload();
+                }
+            },
+
+            error: function(xhr) {
+                alert(xhr.responseJSON.error);
+            }
+        });
+
+    });
+
+
+
+
+
+
 
 
 
