@@ -106,6 +106,7 @@ class CategoryController extends Controller
     {
         try {
             $category = Category::findOrFail($request->category_id);
+
             if(!$category) {
                 return response()->json([
                     'status' => false,
@@ -113,9 +114,27 @@ class CategoryController extends Controller
                 ], 404);
             }
 
-            // Delete image from storage
+            // --- ĐOẠN CODE KIỂM TRA RÀNG BUỘC (Thêm mới) ---
+            // Đếm số sản phẩm đang thuộc danh mục này
+            $productCount = $category->products()->count();
+
+            if ($productCount > 0) {
+                // Nếu còn sản phẩm -> Trả về lỗi, KHÔNG XÓA
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Không thể xóa! Danh mục này đang chứa ' . $productCount . ' sản phẩm. Vui lòng xóa hết sản phẩm trong danh mục này trước.'
+                ]);
+            }
+            // ------------------------------------------------
+
+            // Nếu không còn sản phẩm (số lượng = 0) thì mới chạy xuống đây để xóa
+
+            // Xóa ảnh cũ của danh mục (nếu có)
             if($category->image) {
-                Storage::disk('public')->delete($category->image);
+                // Kiểm tra file tồn tại trước khi xóa
+                if(Storage::disk('public')->exists($category->image)){
+                    Storage::disk('public')->delete($category->image);
+                }
             }
 
             $category->delete();
@@ -124,10 +143,11 @@ class CategoryController extends Controller
                 'status' => true,
                 'message' => 'Xóa danh mục thành công!'
             ]);
+
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'message' => 'Đã xảy ra lỗi khi xóa danh mục.'
+                'message' => 'Đã xảy ra lỗi khi xóa danh mục: ' . $th->getMessage()
             ], 500);
         }
     }

@@ -228,9 +228,9 @@ $(document).ready(function() {
                 sort_by: sort_by,
             },
             beforeSend: function() {
-                $("#loading-spinner").show();
-                $("#liton_product_grid").hide();
-                $("#pagination-links").hide(); // Ẩn cả phân trang cũ
+                // $("#loading-spinner").show();
+                // $("#liton_product_grid").hide();
+                // $("#pagination-links").hide(); // Ẩn cả phân trang cũ
             },
             success: function(response) {
                 // Cập nhật lại lưới sản phẩm
@@ -239,9 +239,9 @@ $(document).ready(function() {
                 $("#pagination-links").html(response.pagination_html);
             },
             complete: function() {
-                $("#loading-spinner").hide();
-                $("#liton_product_grid").show();
-                $("#pagination-links").show(); // Hiện phân trang mới
+                // $("#loading-spinner").hide();
+                // $("#liton_product_grid").show();
+                // $("#pagination-links").show(); // Hiện phân trang mới
             },
             error: function(xhr) {
                 console.error(xhr.responseText); // Dùng console.error để xem lỗi rõ hơn
@@ -252,7 +252,7 @@ $(document).ready(function() {
 
 
     // Khi click vào 1 danh mục
-    
+
     $(".category-filter").click(function(){
         $(".category-filter").removeClass('active'); // Xóa 'active' ở tất cả các link
         $(this).addClass('active'); // Thêm 'active' CHỈ cho link vừa bấm
@@ -289,9 +289,9 @@ $(document).ready(function() {
                 sort_by: sort_by,
             },
              beforeSend: function() {
-                $("#loading-spinner").show();
-                $("#liton_product_grid").hide();
-                $("#pagination-links").hide();
+                // $("#loading-spinner").show();
+                // $("#liton_product_grid").hide();
+                // $("#pagination-links").hide();
             },
             success: function(response) {
                 $("#liton_product_grid").html(response.products_html);
@@ -302,9 +302,9 @@ $(document).ready(function() {
                 }, 500);
             },
             complete: function() {
-                $("#loading-spinner").hide();
-                $("#liton_product_grid").show();
-                $("#pagination-links").show();
+                // $("#loading-spinner").hide();
+                // $("#liton_product_grid").show();
+                // $("#pagination-links").show();
             },
             error: function (xhr) {
                 alert('Có lỗi khi chuyển trang!');
@@ -321,13 +321,49 @@ $(document).ready(function() {
 /*********************************
      * PAGE DETAIL PRODUCTS
 *********************************/
-    if(window.location.pathname !=='/cart'){
-        $(document).on('click', '.qtybutton', function() {
 
-            var $button = $(this);
-            var $input = $button.siblings('input');
-            var oldValue = parseInt($input.val());
-            var maxStock = parseInt($input.data('max'));
+// // Xử lý click ảnh nhỏ để hiển thị ảnh lớn
+// $(document).on('click', '.ltn__shop-details-small-img .single-small-img', function() {
+//     let $thumbnail = $(this);
+//     let $largeImg = $thumbnail.closest('.ltn__shop-details-img-gallery').find('.ltn__shop-details-large-img .single-large-img a');
+//     let imgIndex = $thumbnail.index();
+
+//     // Ẩn tất cả ảnh lớn
+//     $largeImg.css('opacity', '0');
+
+//     // Hiện ảnh tương ứng
+//     $largeImg.eq(imgIndex).css('opacity', '1');
+// });
+
+
+    // Xử lý click ảnh nhỏ để thay đổi ảnh lớn
+    $(document).on('click', '.ltn__shop-details-small-img .single-small-img', function() {
+        let $this = $(this);
+
+        // 1. Lấy đường dẫn ảnh từ thẻ img con
+        let newImageSrc = $this.find('img').attr('src');
+
+        // 2. Tìm thẻ ảnh lớn (trong khung bên trái)
+        let $largeImgContainer = $this.closest('.ltn__shop-details-img-gallery').find('.ltn__shop-details-large-img .single-large-img img');
+
+        // 3. Thay đổi src của ảnh lớn
+        $largeImgContainer.attr('src', newImageSrc);
+
+        // (Tùy chọn) Thêm hiệu ứng active cho ảnh nhỏ đang chọn
+        $('.ltn__shop-details-small-img .single-small-img').removeClass('active-img'); // Xóa active cũ
+        $this.addClass('active-img'); // Thêm active mới
+    });
+
+
+
+
+if(window.location.pathname !=='/cart'){
+    $(document).on('click', '.qtybutton', function() {
+
+        var $button = $(this);
+        var $input = $button.siblings('input');
+        var oldValue = parseInt($input.val());
+        var maxStock = parseInt($input.data('max'));
 
             if ($button.hasClass('inc')) {
                 if (oldValue < maxStock) {
@@ -461,11 +497,10 @@ $(document).ready(function() {
      *PAGE CARTs
 *********************************/
     //Xu ly cap nhat so luong san pham trong trang gio hang
+    // 1. Hàm cập nhật số lượng (Sửa lỗi nhảy số lung tung)
     function updateCart(productId, quantity, $input){
         $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
         });
 
         $.ajax({
@@ -475,59 +510,74 @@ $(document).ready(function() {
                 product_id: productId,
                 quantity : quantity
             },
-
             success:function(response) {
+                // Cập nhật ô input
                 $input.val(response.quantity);
-                $input.closest('tr').find('.cart-product-subtotal').text(response.total);
-                $('.cart-total').text(response.total); //tong tien hang
-                $('.cart-grand-total').text(response.grandTotal); //tong cong
-            },
 
+                // Cập nhật thành tiền của dòng đó (Server đã tính giúp rồi)
+                $input.closest('tr').find('.cart-product-subtotal').text(response.subtotal + 'VNĐ');
+
+                // Cập nhật tổng tiền giỏ hàng
+                $('.cart-total').text(response.total + 'VNĐ');
+                $('.cart-grand-total').text(response.grandTotal + 'VNĐ');
+
+                // Cập nhật số lượng trên ICON (Giỏ bé)
+                $('#cart_count').text(response.cart_count);
+
+                // --- ĐỒNG BỘ GIỎ BÉ (MINI CART) ---
+                // Cập nhật số lượng và giá trong Mini Cart tương ứng
+                // Tìm dòng sản phẩm trong mini cart dựa vào ID (cần đảm bảo mini cart có class định danh)
+                let $miniItem = $('.mini-cart-item-delete[data-id="'+productId+'"]').closest('.mini-cart-item');
+                if($miniItem.length > 0) {
+                    // Update text: "5 x 100.000"
+                    let priceText = $miniItem.find('.mini-cart-quantity').text().split('x')[1]; // Lấy lại phần giá
+                    $miniItem.find('.mini-cart-quantity').text(response.quantity + ' x ' + priceText);
+                }
+            },
             error: function(xhr) {
-                alert(xhr.responseJSON.error);
+                alert(xhr.responseJSON.error || 'Lỗi cập nhật');
+                // Reset lại số cũ nếu lỗi
+                $input.val(parseInt($input.val()) - 1);
             }
         });
-
-
-
     }
 
 
-    //Xu ly XOA  san pham trong trang gio hang
+    // 2. Sự kiện XÓA ở GIỎ LỚN (Đồng bộ sang Giỏ Bé)
     $('.remove-from-cart').on('click', function(e){
-
-        let productId = $(this).data('id');
-        let row = $(this).closest('tr');
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+        e.preventDefault();
+        let button = $(this);
+        let productId = button.data('id');
+        let row = button.closest('tr');
 
         $.ajax({
             url: '/cart/remove-cart',
             type: 'POST',
-            data: {
-                product_id: productId,
-
-            },
-
+            data: { product_id: productId },
             success:function(response) {
+                // Xóa dòng ở giỏ lớn
                 row.remove();
-                $('.cart-total').text(response.total); //tong tien hang
-                $('.cart-grand-total').text(response.grandTotal); //tong cong
-                if($('.cart-product-remove').length === 0)
-                {
+
+                // Cập nhật tiền
+                $('.cart-total').text(response.total + 'VNĐ');
+                $('.cart-grand-total').text(response.grandTotal + 'VNĐ');
+
+                // Cập nhật số lượng trên ICON
+                $('#cart_count').text(response.cart_count);
+
+                // --- QUAN TRỌNG: XÓA LUÔN MÓN ĐÓ Ở GIỎ BÉ (MINI CART) ---
+                // Tìm nút xóa trong mini cart có cùng ID và xóa cha của nó
+                $('.mini-cart-item-delete[data-id="'+productId+'"]').closest('.mini-cart-item').remove();
+
+                // Nếu xóa hết sạch thì reload trang để hiện giỏ trống
+                if($('.cart-product-remove').length === 0) {
                     location.reload();
                 }
             },
-
             error: function(xhr) {
-                alert(xhr.responseJSON.error);
+                alert(xhr.responseJSON.error || 'Lỗi xóa sản phẩm');
             }
         });
-
     });
 
 

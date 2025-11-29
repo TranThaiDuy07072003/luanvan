@@ -18,11 +18,17 @@
                                         <i class="far fa-eye"></i>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="javascript:void(0)" title="Thêm Vào Giỏ Hàng" class="add-to-cart-btn" data-id="{{ $product->id }}">
-                                        <i class="fas fa-shopping-cart"></i>
-                                    </a>
-                                </li>
+
+
+                                @if ($product->stock > 0 && $product->status == 'in_stock')
+
+                                    <li>
+                                        <a href="javascript:void(0)" title="Thêm Vào Giỏ Hàng" class="add-to-cart-btn" data-id="{{ $product->id }}">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </a>
+                                    </li>
+
+                                @endif
 
                             </ul>
                         </div>
@@ -36,11 +42,12 @@
                         </div>
                         <h2 class="product-title"><a href="{{ route('product.detail' , $product->slug) }}">{{ $product->name }}</a></h2>
                         <div class="product-price">
-
-                            <span>
-                                {{ number_format($product->price, 0, ',', '.') }}VNĐ
-                            </span>
-
+                            {{-- LOGIC: Hiện giá hoặc chữ HẾT HÀNG --}}
+                            @if ($product->stock > 0 && $product->status == 'in_stock')
+                                <span>{{ number_format($product->price, 0, ',', '.') }} VNĐ</span>
+                            @else
+                                <span style="color: #ff0000; font-weight: bold; font-size: 16px;">HẾT HÀNG</span>
+                            @endif
                         </div>
                     </div>
                 </div>

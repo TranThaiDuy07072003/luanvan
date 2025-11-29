@@ -55,12 +55,12 @@
 
 
                     @if ($adminUser->role->permissions->contains('name', 'manager_products'))
-                        <li><a href="#"><i class="fa fa-desktop"></i> Quản lý sản phẩm<span
+                        <li><a href="javascript:void(0)"><i class="fa fa-desktop"></i> Quản lý sản phẩm<span
                                     class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
 
-                                <li><a href="general_elements.html">Thêm sản phẩm</a></li>
-                                <li><a href="media_gallery.html">Danh sách sản phẩm</a></li>
+                                <li><a href="{{ route('admin.product.add') }}">Thêm sản phẩm</a></li>
+                                <li><a href="{{ route('admin.products.index') }}">Danh sách sản phẩm</a></li>
 
                             </ul>
                         </li>

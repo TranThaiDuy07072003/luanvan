@@ -24,13 +24,14 @@
                                             </a>
                                         </div>
                                         <!-- <h6 class="slide-sub-title animated"><img src="img/icons/icon-img/1.png"
-                                                                                                alt="#"> 100% genuine Products</h6> -->
+                                                                                                        alt="#"> 100% genuine Products</h6> -->
                                         <h1 class="slide-title animated ">Thực Phẩm Sạch <br> Đến Cho Mọi Nhà</h1>
                                         <div class="slide-brief animated">
                                             <p>Chúng Tôi Mang Đến Sự Trải Nghiệm <br>Đến Cho Khách Hàng.</p>
                                         </div>
                                         <div class="btn-wrapper animated">
-                                            <a href="{{ route('products.index') }}" class="theme-btn-1 btn btn-effect-1 text-uppercase">Khám
+                                            <a href="{{ route('products.index') }}"
+                                                class="theme-btn-1 btn btn-effect-1 text-uppercase">Khám
                                                 phá sản phẩm</a>
                                         </div>
                                     </div>
@@ -40,38 +41,7 @@
                     </div>
                 </div>
             </div>
-            <!-- ltn__slide-item -->
-            {{-- <div class="ltn__slide-item ltn__slide-item-2 ltn__slide-item-3 ltn__slide-item-3-normal bg-image"
-                data-bg="img/slider/14.jpg">
-                <div class="ltn__slide-item-inner  text-right text-end">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-12 align-self-center">
-                                <div class="slide-item-info">
-                                    <div class="slide-item-info-inner ltn__slide-animation">
-                                        <!-- <h6 class="slide-sub-title ltn__secondary-color animated">// TALENTED
-                                                        ENGINEER & MECHANICS</h6> -->
-                                        <h1 class="slide-title animated ">An Toàn Thực Phẩm<br> Organic Food</h1>
-                                        <div class="slide-brief animated">
-                                            <p>Thực phẩm sạch từ cửa hàng đạt chuẩn.</p>
-                                        </div>
-                                        <div class="btn-wrapper animated">
-                                            <a href="shop.html" class="theme-btn-1 btn btn-effect-1 text-uppercase">Khám
-                                                Phá
-                                                Sản Phẩm</a>
-                                            <a href="about.html" class="btn btn-transparent btn-effect-3">Về Chúng Tôi</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- <div class="slide-item-img slide-img-left">
-                                            <img src="img/slider/22.png" alt="#">
-                                        </div> -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
-            <!--  -->
+
         </div>
     </div>
     <!-- SLIDER AREA END -->
@@ -135,7 +105,8 @@
                     </div>
                     <div class="tab-content">
                         @foreach ($categories as $index => $category)
-                            <div class="tab-pane fade {{ $index == 0 ? 'active show' : '' }}" id="tab_{{ $category->id }}">
+                            <div class="tab-pane fade {{ $index == 0 ? 'active show' : '' }}"
+                                id="tab_{{ $category->id }}">
                                 <div class="ltn__product-tab-content-inner">
                                     <div class="row ltn__tab-product-slider-one-active slick-arrow-1">
                                         <!-- ltn__product-item -->
@@ -143,7 +114,8 @@
                                             <div class="col-lg-12">
                                                 <div class="ltn__product-item ltn__product-item-3 text-center">
                                                     <div class="product-img">
-                                                        <a href="{{ route('product.detail', $product->slug) }}"><img src="{{ $product->image_url }}"
+                                                        <a href="{{ route('product.detail', $product->slug) }}"><img
+                                                                src="{{ $product->image_url }}"
                                                                 alt="{{ $product->name }}"></a>
 
                                                         <div class="product-hover-action">
@@ -155,12 +127,18 @@
                                                                         <i class="far fa-eye"></i>
                                                                     </a>
                                                                 </li>
-                                                                <li>
-                                                                    <a href="#" title="Thêm Vào Giỏ Hàng"
-                                                                        class="add-to-cart-btn" data-id="{{ $product->id }}">
-                                                                        <i class="fas fa-shopping-cart"></i>
-                                                                    </a>
-                                                                </li>
+
+
+                                                                @if ($product->stock > 0 && $product->status == 'in_stock')
+                                                                    <li>
+                                                                        <a href="javascript:void(0)"
+                                                                            title="Thêm Vào Giỏ Hàng"
+                                                                            class="add-to-cart-btn"
+                                                                            data-id="{{ $product->id }}">
+                                                                            <i class="fas fa-shopping-cart"></i>
+                                                                        </a>
+                                                                    </li>
+                                                                @endif
 
                                                             </ul>
                                                         </div>
@@ -182,9 +160,15 @@
                                                                 href="{{ route('product.detail', $product->slug) }}">{{ $product->name }}</a>
                                                         </h2>
                                                         <div class="product-price">
-                                                            <span>{{ number_format($product->price, 0, ',', '.') }}
-                                                                VNĐ</span>
-
+                                                            {{-- LOGIC: Hiện giá hoặc chữ HẾT HÀNG --}}
+                                                            @if ($product->stock > 0 && $product->status == 'in_stock')
+                                                                <span>{{ number_format($product->price, 0, ',', '.') }}
+                                                                    VNĐ</span>
+                                                            @else
+                                                                <span
+                                                                    style="color: #ff0000; font-weight: bold; font-size: 16px;">HẾT
+                                                                    HÀNG</span>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>
@@ -287,7 +271,8 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#" title="Thêm Vào Giỏ Hàng" class="add-to-cart-btn" data-id="{{ $product->id }}">
+                                            <a href="#" title="Thêm Vào Giỏ Hàng" class="add-to-cart-btn"
+                                                data-id="{{ $product->id }}">
                                                 <i class="fas fa-shopping-cart"></i>
                                             </a>
                                         </li>

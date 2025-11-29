@@ -90,6 +90,10 @@ $(document).ready(function(){
         form.find('input[type="file"]').val('');
         form.find('#image-preview').html('');
         form.find('#image-preview').attr('src', '');
+
+
+        form.find('#image-preview-container').html('');
+
     });
 
 
@@ -137,8 +141,6 @@ $(document).ready(function(){
             $("#image-preview").attr("src", "");
         }
     });
-
-
 
 
 
@@ -249,6 +251,224 @@ $(document).ready(function(){
                 if (response.status) {
                     toastr.success(response.message);
                     // Remove the deleted category row from the table
+                    row.remove();
+                } else {
+                    toastr.error(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Có lỗi xảy ra: " + error);
+            },
+        });
+    });
+
+
+
+
+
+    /*********************************
+     * MANAGEMENT - Products
+     *********************************/
+    // lay hinh
+    $("#product-images").change(function (e) {
+        let files = e.target.files;
+        console.log(files);
+        let previewContainer = $("#image-preview-container");
+        previewContainer.empty();
+
+        if (files.length > 0) {
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        let img = $("<img>")
+                            .attr("src", e.target.result)
+                            .addClass("image-preview");
+                            img.css({
+                                "max-width": "150px",
+                                "max-height": "150px",
+                                "margin": "5px",
+                                "border-radius": "5px",
+                            })
+                        previewContainer.append(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        } else {
+            previewContainer.html("");
+        }
+    });
+
+
+
+
+    $(".product-images").change(function (e) {
+        let files = e.target.files;
+        let productId = $(this).data("id");
+
+        let previewContainer = $("#image-preview-container-" + productId);
+        previewContainer.empty();
+
+        if (files.length > 0) {
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        let img = $("<img>")
+                            .attr("src", e.target.result)
+                            .addClass("image-preview");
+                            img.css({
+                                "max-width": "150px",
+                                "max-height": "150px",
+                                "margin": "5px",
+                                "border-radius": "5px",
+                            })
+                        previewContainer.append(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        } else {
+            previewContainer.html("");
+        }
+    });
+
+
+
+
+    //update product
+    $(document).on("click", ".btn-update-submit-product", function(e){
+        e.preventDefault();
+        let button = $(this);
+        let productId = button.data("id");
+        let form = button.closest(".modal").find("form");
+        let formData = new FormData(form[0]);
+
+        formData.append("id", productId);
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+        });
+
+        $.ajax({
+            url: "product/update",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                button.prop("disabled", true);
+                button.text("Đang cập nhật...");
+            },
+            success: function (response) {
+                if (response.status) {
+
+
+                    let product = response.data;
+
+                    let productId = product.id;
+
+                    // let imageSrc = product.images.length > 0 ? product.images[0].url : "storage/products/default-product.png";
+
+                    // Dùng image_url từ Controller trả về
+                    let imageSrc = product.image_url;
+
+                    // Regenerate new HTML for updated now
+                    //Regenerate new HTML for updated row
+                    let newRow = `
+                        <tr id="product-row-${productId}">
+                            <td>
+                                <img src="${imageSrc}" alt="${product.name}" class="image-product"  width="80px">
+                            </td>
+
+                            <td>${product.name}</td>
+                            <td>${product.category_name}</td>
+                            <td>${product.slug}</td>
+                            <td>${product.description}</td>
+                            <td>${product.stock}</td>
+                            <td>${product.price_formatted} VND</td>
+                            <td>${product.unit}</td>
+                            <td>${product.status}</td>
+
+
+                            <td>
+                                 <a class="btn btn-app btn-update-product" data-toggle="modal"
+                                    data-target="#modalUpdate-${productId}">
+                                        <i class="fa fa-edit"></i>Chỉnh sửa
+                                 </a>
+
+                            </td>
+
+                            <td>
+                                <a class="btn btn-app btn-delete-product" data-id="${productId}" data-status="${product.status}">
+                                    <i class="fa fa-close"></i>Xóa
+                                </a>
+
+                            </td>
+                        </tr>`;
+
+                        // Replace the old row with the new row
+                        $('#product-row-' + productId).replaceWith(newRow);
+
+                        toastr.success(response.message);
+                        $('#modalUpdate-' + productId).modal('hide');
+
+                } else {
+                    toastr.error(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Có lỗi xảy ra: " + error);
+            },
+            complete: function () {
+                button.prop("disabled", false);
+                button.text("Chỉnh sửa");
+            },
+        });
+    });
+
+
+
+
+
+
+    //delete product
+    $(document).on("click", ".btn-delete-product", function(e){
+        e.preventDefault();
+        let button = $(this);
+        let productId = button.data("id");
+
+        let status = button.data("status"); // Lấy trạng thái từ nút bấm
+        // --- KIỂM TRA NGAY TẠI ĐÂY ---
+        if (status === 'in_stock') {
+            toastr.warning('Sản phẩm đang bán (Còn hàng) không được phép xóa! Vui lòng chuyển trạng thái sang Hết hàng trước.');
+            return; // Dừng lại ngay, không chạy tiếp code bên dưới
+        }
+
+        let row = button.closest("tr");
+
+        if(!confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')) return;
+
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+        });
+
+        $.ajax({
+            url: "product/delete",
+            type: "POST",
+            data: {
+                id: productId,
+            },
+            success: function (response) {
+                if (response.status) {
+                    toastr.success(response.message);
+                    // Remove the deleted product row from the table
                     row.remove();
                 } else {
                     toastr.error(response.message);

@@ -14,7 +14,8 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="modal-product-img">
-                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                                        <img src="{{ asset('storage/' . ($product->images->first()->image ?? 'uploads/products/default-product.png')) }}"
+                                        alt="{{ $product->name }}">
                                     </div>
                                     <div class="modal-product-info">
 

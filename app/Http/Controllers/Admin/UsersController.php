@@ -31,10 +31,9 @@ class UsersController extends Controller
             ]);
         }
 
-        $user->role_id = 2; // Role = 2 same as 'staff'
+        $user->role_id = 2;
         $user->save();
 
-        // Redirect back with success message
         return response()->json([
             'status' => true,
             'message' => 'Đã update thành nhân viên.',
@@ -47,7 +46,7 @@ class UsersController extends Controller
     public function changeStatus(Request $request)
     {
         $userId = $request->user_id;
-        $status = $request->status; // 'active', 'banned', hoặc 'delete'
+        $status = $request->status;
 
         $user = User::find($userId);
 
@@ -58,11 +57,11 @@ class UsersController extends Controller
             ]);
         }
 
-        // Cập nhật trạng thái
+
         $user->status = $status;
         $user->save();
 
-        // Tạo thông báo tùy theo trạng thái
+
         $msg = 'Đã cập nhật trạng thái thành công.';
         if($status == 'delete') $msg = 'Đã xóa người dùng thành công.';
         if($status == 'banned') $msg = 'Đã chặn người dùng.';

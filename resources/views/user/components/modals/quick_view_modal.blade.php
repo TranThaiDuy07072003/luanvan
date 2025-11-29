@@ -28,58 +28,66 @@
                                         </div>
                                         <h3>{{ $product->name }}</h3>
                                         <div class="product-price">
-                                            <span>{{ number_format($product->price, 0, ',', '.') }} VNĐ</span>
-
+                                            @if ($product->stock > 0 && $product->status == 'in_stock')
+                                                <span>{{ number_format($product->price, 0, ',', '.') }} VNĐ</span>
+                                            @else
+                                                <span style="color: #ff0000; font-weight: bold; font-size: 20px;">HẾT
+                                                    HÀNG</span>
+                                            @endif
                                         </div>
+
                                         <div class="modal-product-meta ltn__product-details-menu-1">
                                             <ul>
                                                 <li>
-                                                    <strong>Danh mục:</strong>
+                                                    {{-- <strong>Danh mục:</strong>
                                                     <span>
-                                                        <a href="javascript:void(0)">{{ $product->category->name }}</a>
+                                                        <a href="javascript:void(0)">{{ $product->category->name ?? 'Danh mục đã xóa' }}</a>
+                                                    </span> --}}
+
+                                                    <strong>Thương hiệu:</strong>
+                                                    <span>
+                                                        <a href="javascript:void(0)">NongSanSach</a>
                                                     </span>
+
+
                                                 </li>
                                             </ul>
                                         </div>
+
                                         <div class="ltn__product-details-menu-2">
                                             <ul>
-                                                <li>
-
-                                                    <div class="cart-plus-minus">
-                                                        <div class="dec qtybutton">-</div>
-                                                        <input type="text" value="1" name="qtybutton"
-                                                            class="cart-plus-minus-box" readonly
-                                                            data-max="{{ $product->stock }}">
-                                                        <div class="inc qtybutton">+</div>
-                                                    </div>
-
-                                                </li>
-                                                <li>
-
-                                                    <a href="javascript:void(0)"
-                                                        class="theme-btn-1 btn btn-effect-1 add-to-cart-btn"
-                                                        title="Thêm vào giỏ hàng" data-id="{{ $product->id }}">
-                                                        <i class="fas fa-shopping-cart"></i>
-                                                        <span>Thêm vào giỏ hàng</span>
-                                                    </a>
-
-                                                </li>
+                                                @if ($product->stock > 0 && $product->status == 'in_stock')
+                                                    <li>
+                                                        <div class="cart-plus-minus">
+                                                            <div class="dec qtybutton">-</div>
+                                                            <input type="text" value="1" name="qtybutton"
+                                                                class="cart-plus-minus-box" readonly
+                                                                data-max="{{ $product->stock }}">
+                                                            <div class="inc qtybutton">+</div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0)"
+                                                            class="theme-btn-1 btn btn-effect-1 add-to-cart-btn"
+                                                            title="Thêm vào giỏ hàng" data-id="{{ $product->id }}">
+                                                            <i class="fas fa-shopping-cart"></i>
+                                                            <span>Thêm vào giỏ hàng</span>
+                                                        </a>
+                                                    </li>
+                                                @else
+                                                    <li>
+                                                        <button class="btn theme-btn-1 btn-effect-1"
+                                                            style="background-color: #ccc; cursor: not-allowed;"
+                                                            disabled>
+                                                            <span>TẠM HẾT HÀNG</span>
+                                                        </button>
+                                                    </li>
+                                                @endif
                                             </ul>
                                         </div>
 
 
-                                        {{-- <div class="ltn__product-details-menu-3">
-                                            <ul>
-                                                <li>
-                                                    <a href="#" class="" title="Wishlist"
-                                                        data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
-                                                        <i class="far fa-heart"></i>
-                                                        <span>Add to Wishlist</span>
-                                                    </a>
-                                                </li>
 
-                                            </ul>
-                                        </div> --}}
 
 
                                         <hr>

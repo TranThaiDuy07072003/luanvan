@@ -38,7 +38,7 @@
                         </ul>
                     </div>
                     <div class="tab-content">
-                        <div id="loading-spinner">
+                        <div id="">
                             <div id="loader">
 
                             </div>
@@ -257,73 +257,73 @@
 
 @push('scripts')
 <script>
-    $(document).ready(function() {
+    // $(document).ready(function() {
 
-        // Hàm chính để gọi AJAX
-        function fetchProducts(pageUrl = '{{ route('products.filter') }}') {
-            let category_id = $(".category-filter.active").data('id') || '';
-            let sort_by = $("#sort-by").val();
+    //     // Hàm chính để gọi AJAX
+    //     function fetchProducts(pageUrl = '{{ route('products.filter') }}') {
+    //         let category_id = $(".category-filter.active").data('id') || '';
+    //         let sort_by = $("#sort-by").val();
 
-            $.ajax({
-                url: pageUrl, // Dùng URL được truyền vào
-                type: "GET",
-                data: {
-                    category_id: category_id,
-                    sort_by: sort_by,
-                },
-                beforeSend: function() {
-                    $("#loading-spinner").show();
-                    $("#liton_product_grid").hide();
-                    $("#pagination-links").hide(); // Ẩn phân trang cũ
-                },
-                success: function(response) {
-                    $("#liton_product_grid").html(response.products_html);
-                    // Cập nhật lại HTML của phân trang
-                    $("#pagination-links").html(response.pagination_html);
-                },
-                complete: function() {
-                    $("#loading-spinner").hide();
-                    $("#liton_product_grid").show();
-                    $("#pagination-links").show(); // Hiển thị phân trang mới
-                },
-                error: function(xhr) {
-                    console.error(xhr.responseText);
-                    alert('Có lỗi xảy ra khi lọc sản phẩm!');
-                }
-            });
-        }
+    //         $.ajax({
+    //             url: pageUrl, // Dùng URL được truyền vào
+    //             type: "GET",
+    //             data: {
+    //                 category_id: category_id,
+    //                 sort_by: sort_by,
+    //             },
+    //             beforeSend: function() {
+    //                 $("#loading-spinner").show();
+    //                 $("#liton_product_grid").hide();
+    //                 $("#pagination-links").hide(); // Ẩn phân trang cũ
+    //             },
+    //             success: function(response) {
+    //                 $("#liton_product_grid").html(response.products_html);
+    //                 // Cập nhật lại HTML của phân trang
+    //                 $("#pagination-links").html(response.pagination_html);
+    //             },
+    //             complete: function() {
+    //                 $("#loading-spinner").hide();
+    //                 $("#liton_product_grid").show();
+    //                 $("#pagination-links").show(); // Hiển thị phân trang mới
+    //             },
+    //             error: function(xhr) {
+    //                 console.error(xhr.responseText);
+    //                 alert('Có lỗi xảy ra khi lọc sản phẩm!');
+    //             }
+    //         });
+    //     }
 
-        // 1. Khi click vào 1 danh mục
-        $(".category-filter").click(function() {
-            $(".category-filter").removeClass('active');
-            $(this).addClass('active');
-            fetchProducts(); // Gọi hàm lọc (sẽ tự động lấy trang 1)
-        });
+    //     // 1. Khi click vào 1 danh mục
+    //     $(".category-filter").click(function() {
+    //         $(".category-filter").removeClass('active');
+    //         $(this).addClass('active');
+    //         fetchProducts(); // Gọi hàm lọc (sẽ tự động lấy trang 1)
+    //     });
 
-        // 2. Khi thay đổi sắp xếp
-        $("#sort-by").change(function() {
-            // Cần khởi tạo lại niceSelect sau khi thay đổi (nếu bạn dùng plugin 'nice-select')
-            // $(this).niceSelect('update');
-            fetchProducts(); // Gọi hàm lọc (sẽ tự động lấy trang 1)
-        });
+    //     // 2. Khi thay đổi sắp xếp
+    //     $("#sort-by").change(function() {
+    //         // Cần khởi tạo lại niceSelect sau khi thay đổi (nếu bạn dùng plugin 'nice-select')
+    //         // $(this).niceSelect('update');
+    //         fetchProducts(); // Gọi hàm lọc (sẽ tự động lấy trang 1)
+    //     });
 
-        // 3. Khi click vào link phân trang (AJAX)
-        // Phải dùng $(document).on(...) vì link này được load lại
-        $(document).on('click', '#pagination-links .pagination a', function(e) {
-            e.preventDefault(); // Ngăn chuyển trang
-            let url = $(this).attr('href'); // Lấy URL của trang (ví dụ: /products/filter?page=2)
+    //     // 3. Khi click vào link phân trang (AJAX)
+    //     // Phải dùng $(document).on(...) vì link này được load lại
+    //     $(document).on('click', '#pagination-links .pagination a', function(e) {
+    //         e.preventDefault(); // Ngăn chuyển trang
+    //         let url = $(this).attr('href'); // Lấy URL của trang (ví dụ: /products/filter?page=2)
 
-            if (!url) return;
+    //         if (!url) return;
 
-            // Gọi hàm lọc với URL của trang mới
-            fetchProducts(url);
+    //         // Gọi hàm lọc với URL của trang mới
+    //         fetchProducts(url);
 
-            // Cuộn lên đầu danh sách sản phẩm
-            $('html, body').animate({
-                scrollTop: $("#liton_product_grid").offset().top - 150
-            }, 500);
-        });
+    //         // Cuộn lên đầu danh sách sản phẩm
+    //         $('html, body').animate({
+    //             scrollTop: $("#liton_product_grid").offset().top - 150
+    //         }, 500);
+    //     });
 
-    });
+    // });
 </script>
 @endpush

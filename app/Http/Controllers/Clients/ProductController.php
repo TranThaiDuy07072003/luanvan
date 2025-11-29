@@ -12,13 +12,14 @@ class ProductController extends Controller
     public function index()
     {
         $categories = Category::withCount('products')->get();
-        $products = Product::with('firstImage')->where('status', 'in_stock')->paginate(9);
+        $products = Product::with('firstImage')->whereIn('status', ['in_stock', 'out_of_stock'])->paginate(9);
 
 
         /** @var \App\Models\Product $product */
         foreach ($products as $product) {
             $product->image_url = $product->firstImage?->image
-            ? asset('storage/uploads/products/'.$product->firstImage->image) : asset('storage/uploads/products/default-product.png');
+            ? asset('storage/' . $product->firstImage->image)
+                : asset('storage/uploads/products/default-product.png');
         }
 
         return view('user.pages.products', compact('categories', 'products'));
@@ -29,7 +30,7 @@ class ProductController extends Controller
 
 
     public function filter(Request $request){
-        $query = Product::with('firstImage')->where('status', 'in_stock');
+        $query = Product::with('firstImage')->whereIn('status', ['in_stock', 'out_of_stock']);
 
         // Lọc Category
         if($request->has('category_id')&& $request->category_id != '')
@@ -58,13 +59,14 @@ class ProductController extends Controller
              $query->orderBy('id', 'desc');
         }
 
-        
+
         $products = $query->paginate(9)->withQueryString();
 
         /** @var \App\Models\Product $product */
         foreach ($products as $product) {
             $product->image_url = $product->firstImage?->image
-            ? asset('storage/uploads/products/'.$product->firstImage->image) : asset('storage/uploads/products/default-product.png');
+            ? asset('storage/' . $product->firstImage->image)
+                : asset('storage/uploads/products/default-product.png');
         }
 
         // SỬA LẠI: Trả về 2 key (products_html và pagination_html)
@@ -87,6 +89,13 @@ class ProductController extends Controller
         ->where('id',  '!=',  $product->id)
         ->limit( 6)
         ->get();
+
+        // 2. [QUAN TRỌNG] Xử lý đường dẫn ảnh cho sản phẩm tương tự
+        foreach ($relatedProducts as $related) {
+            $related->image_url = $related->firstImage
+                ? asset('storage/' . $related->firstImage->image)
+                : asset('storage/uploads/products/default-product.png');
+        }
 
         return view('user.pages.product-detail',  compact('product',  'relatedProducts'));
     }

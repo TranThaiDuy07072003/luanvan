@@ -72,9 +72,9 @@ class AccountController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        
+
         if (!Hash::check($request->current_password, $user->password)) {
-            // Trả về lỗi đúng cấu trúc để Toastr bắt được
+
             return response()->json([
                 'errors' => [
                     'current_password' => ['Mật khẩu hiện tại không chính xác.']
@@ -82,7 +82,6 @@ class AccountController extends Controller
             ], 422);
         }
 
-        // SỬA LẠI: Dùng Hash::make
         $user->password = Hash::make($request->new_password);
         $user->save();
 
@@ -97,7 +96,7 @@ class AccountController extends Controller
 
     public function addAddress(Request $request)
     {
-        // Validation dữ liệu đầu vào
+        
         $request->validate([
             'full_name' => 'required|string|max:255',
             'phone' => 'required|digits:10',

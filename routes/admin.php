@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,12 +48,12 @@ Route::prefix('admin')->group(function () {
 
 
     Route::middleware(['permission:manager_products'])->group(function(){
-        Route::get('/product/add' , [CategoryController::class, 'showFormAddCate'])->name('admin.product.add');
-        Route::post('/product/add', [CategoryController::class, 'addCategory'])->name('admin.product.add');
+        Route::get('/product/add' , [ProductController::class, 'showFormAddProduct'])->name('admin.product.add');
+        Route::post('/product/add', [ProductController::class, 'addProduct'])->name('admin.product.add');
 
-        Route::get('/products' , [CategoryController::class, 'index'])->name('admin.products.index');
-        Route::post('/product/update', [CategoryController::class, 'updateCategory']);
-        Route::post('/product/delete', [CategoryController::class, 'deleteCategory']);
+        Route::get('/products' , [ProductController::class, 'index'])->name('admin.products.index');
+        Route::post('/product/update', [ProductController::class, 'updateProduct']);
+        Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
     });
 
 

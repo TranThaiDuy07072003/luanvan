@@ -52,8 +52,13 @@
                                     </div>
                                     <h3>{{ $product->name }}</h3>
                                     <div class="product-price">
-                                        <span>{{ number_format($product->price, 0, ',', '.') }} VNĐ</span>
-
+                                        {{-- LOGIC GIÁ --}}
+                                        @if ($product->stock > 0 && $product->status == 'in_stock')
+                                            <span>{{ number_format($product->price, 0, ',', '.') }} VNĐ</span>
+                                        @else
+                                            <span style="color: #ff0000; font-weight: bold; font-size: 24px;">HẾT
+                                                HÀNG</span>
+                                        @endif
                                     </div>
                                     <div class="modal-product-meta ltn__product-details-menu-1">
                                         <ul>
@@ -61,7 +66,8 @@
                                                 <strong>Danh mục</strong>
                                                 <span>
 
-                                                    <a href="javascript:void(0)">{{ $product->category->name }}</a>
+                                                    <a
+                                                        href="javascript:void(0)">{{ $product->category->name ?? 'Danh mục đã xóa' }}</a>
 
                                                 </span>
                                             </li>
@@ -69,23 +75,34 @@
                                     </div>
                                     <div class="ltn__product-details-menu-2">
                                         <ul>
-                                            <li>
-                                                <div class="cart-plus-minus">
-                                                    <div class="dec qtybutton">-</div>
-                                                    <input type="text" value="1" name="qtybutton"
-                                                        class="cart-plus-minus-box" readonly
-                                                        data-max="{{ $product->stock }}">
-                                                    <div class="inc qtybutton">+</div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)"
-                                                    class="theme-btn-1 btn btn-effect-1 add-to-cart-btn"
-                                                    title="Thêm vào giỏ hàng" data-id="{{ $product->id }}">
-                                                    <i class="fas fa-shopping-cart"></i>
-                                                    <span>Thêm vào giỏ hàng</span>
-                                                </a>
-                                            </li>
+                                            {{-- LOGIC NÚT MUA --}}
+                                            @if ($product->stock > 0 && $product->status == 'in_stock')
+                                                <li>
+                                                    <div class="cart-plus-minus">
+                                                        <div class="dec qtybutton">-</div>
+                                                        <input type="text" value="1" name="qtybutton"
+                                                            class="cart-plus-minus-box" readonly
+                                                            data-max="{{ $product->stock }}">
+                                                        <div class="inc qtybutton">+</div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void(0)"
+                                                        class="theme-btn-1 btn btn-effect-1 add-to-cart-btn"
+                                                        title="Thêm vào giỏ hàng" data-id="{{ $product->id }}">
+                                                        <i class="fas fa-shopping-cart"></i>
+                                                        <span>Thêm vào giỏ hàng</span>
+                                                    </a>
+                                                </li>
+                                            @else
+                                                <li>
+                                                    <button class="btn theme-btn-1 btn-effect-1"
+                                                        style="background-color: #ccc; cursor: not-allowed; width: 100%;"
+                                                        disabled>
+                                                        <span>TẠM HẾT HÀNG</span>
+                                                    </button>
+                                                </li>
+                                            @endif
                                         </ul>
                                     </div>
 
@@ -284,11 +301,15 @@
                                                 <i class="far fa-eye"></i>
                                             </a>
                                         </li>
-                                        <li>
-                                            <a href="javascript:void(0)" title="Thêm Vào Giỏ Hàng" class="add-to-cart-btn" data-id="{{ $product->id }}">
-                                                <i class="fas fa-shopping-cart"></i>
-                                            </a>
-                                        </li>
+                                        {{-- LOGIC 1: CHỈ HIỆN NÚT MUA KHI CÒN HÀNG --}}
+                                        @if ($product->stock > 0 && $product->status == 'in_stock')
+                                            <li>
+                                                <a href="javascript:void(0)" title="Thêm Vào Giỏ Hàng"
+                                                    class="add-to-cart-btn" data-id="{{ $product->id }}">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </a>
+                                            </li>
+                                        @endif
 
                                     </ul>
                                 </div>
@@ -304,11 +325,12 @@
                                         href="{{ route('product.detail', $product->slug) }}">{{ $product->name }}</a>
                                 </h2>
                                 <div class="product-price">
-
-                                    <span>
-                                        {{ number_format($product->price, 0, ',', '.') }}VNĐ
-                                    </span>
-
+                                    {{-- LOGIC 2: HIỆN GIÁ HOẶC CHỮ HẾT HÀNG --}}
+                                    @if ($product->stock > 0 && $product->status == 'in_stock')
+                                        <span>{{ number_format($product->price, 0, ',', '.') }}VNĐ</span>
+                                    @else
+                                        <span style="color: #ff0000; font-weight: bold; font-size: 16px;">HẾT HÀNG</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -316,11 +338,9 @@
                 @endforeach
 
             </div>
-            {{-- Cái thân (đi qua ProductController là hiểu - hàm detail)--}}
+            {{-- Cái thân (đi qua ProductController là hiểu - hàm detail) --}}
             @foreach ($relatedProducts as $product)
-
                 @include('user.components.includes.include-modals')
-
             @endforeach
         </div>
     </div>

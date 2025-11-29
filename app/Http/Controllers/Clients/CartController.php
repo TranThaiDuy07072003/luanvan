@@ -44,7 +44,8 @@ class CartController extends Controller
                 ]);
             }
 
-            $cartCount = CartItem::where('user_id', Auth::id())->count();
+            // --- SỬA Ở ĐÂY: Dùng sum('quantity') thay vì count() ---
+            $cartCount = CartItem::where('user_id', Auth::id())->sum('quantity');
 
         } else {
             // If not logged in, save to session
@@ -64,15 +65,15 @@ class CartController extends Controller
             }
 
             session()->put('cart', $cart);
-            $cartCount = count($cart);
 
+            // --- SỬA Ở ĐÂY: Dùng array_column và array_sum để cộng tổng số lượng ---
+            $cartCount = array_sum(array_column($cart, 'quantity'));
         }
 
         return response()->json([
             'message' => true,
             'cart_count' => $cartCount,
         ]);
-
     }
 
     public function loadMiniCart()
@@ -98,7 +99,9 @@ class CartController extends Controller
         if (Auth::check()) {
 
             CartItem::where('user_id', Auth::id())->where('product_id', $request->product_id)->delete();
-            $cartCount = CartItem::where('user_id', Auth::id())->count();
+
+            // --- SỬA Ở ĐÂY: sum('quantity') ---
+            $cartCount = CartItem::where('user_id', Auth::id())->sum('quantity');
 
         } else {
 
@@ -106,8 +109,9 @@ class CartController extends Controller
             $cart = session()->get('cart', []);
             unset($cart[$request->product_id]);
             session()->put('cart', $cart);
-            $cartCount = count($cart);
 
+            // --- SỬA Ở ĐÂY: tính tổng mảng ---
+            $cartCount = array_sum(array_column($cart, 'quantity'));
         }
 
         return response()->json([
@@ -151,89 +155,85 @@ class CartController extends Controller
         $productId = $request->product_id;
         $quantity = $request->quantity;
 
+        // 1. Cập nhật dữ liệu vào DB/Session (Code cũ của bạn, giữ nguyên logic)
         if (Auth::check()) {
-            // Update gio hang trong database
-            $cartItems = CartItem::where('user_id', Auth::id())->where('product_id', $productId)->first();
+            $cartItem = CartItem::where('user_id', Auth::id())->where('product_id', $productId)->first();
+            if(!$cartItem) return response()->json(['error' => 'Sản phẩm không tồn tại'], 404);
 
-            if(!$cartItems)
-            {
-                return response()->json(['error' => 'Sản phẩm không tồn tại trong giỏ hàng'], 404);
-            }
             $product = Product::find($productId);
+            if($quantity > $product->stock) return response()->json(['error' => 'Quá số lượng tồn kho'], 400);
 
-            if($quantity > $product->stock)
-            {
-                return response()->json(['error' => 'Số lượng vượt quá tồn kho'], 400);
-            }
-
-            $cartItems->quantity = $quantity;
-            $cartItems->save();
-
-        }else{
-            // Nguoc lai thi cap nhat gio hang  trong session
+            $cartItem->quantity = $quantity;
+            $cartItem->save();
+        } else {
             $cart = session()->get('cart', []);
+            if(!isset($cart[$productId])) return response()->json(['error' => 'Sản phẩm không tồn tại'], 404);
 
-            if(!isset($cart[$productId]))
-            {
-                return response()->json(['error' => 'Sản phẩm không tồn tại trong giỏ hàng'], 404);
-            }
             $product = Product::find($productId);
-
-            if($quantity > $product->stock)
-            {
-                return response()->json(['error' => 'Số lượng vượt quá tồn kho'], 400);
-            }
+            if($quantity > $product->stock) return response()->json(['error' => 'Quá số lượng tồn kho'], 400);
 
             $cart[$productId]['quantity'] = $quantity;
             session()->put('cart', $cart);
         }
-        //calculate cartTotal again
-        $subtotal = $quantity * $product->price;
-        $total = $this->calculateCartTotal();
-        $grandTotal = $total + 15000;
+
+        // 2. TÍNH TOÁN LẠI MỌI THỨ (Server tính, JS không cần tính)
+        $subtotal = $quantity * $product->price; // Thành tiền của món đó
+        $total = $this->calculateCartTotal();    // Tổng tiền hàng
+        $grandTotal = $total + 15000;            // Tổng cộng (kèm ship)
+
+        // Tính lại tổng số lượng icon giỏ hàng
+        if (Auth::check()) {
+            $cartCount = CartItem::where('user_id', Auth::id())->sum('quantity');
+        } else {
+            $cart = session()->get('cart', []);
+            $cartCount = array_sum(array_column($cart, 'quantity'));
+        }
 
         return response()->json([
+            'status' => true,
             'quantity' => $quantity,
+            // Trả về chuỗi đã format sẵn
             'subtotal' => number_format($subtotal, 0, ',', '.'),
             'total' => number_format($total, 0, ',', '.'),
             'grandTotal' => number_format($grandTotal, 0, ',', '.'),
+            'cart_count' => $cartCount, // Trả về số lượng để update icon
         ]);
     }
 
 
     //Xu ly XOA san pham trong trang gio hang
+    // Xử lý XÓA sản phẩm ở Giỏ Lớn
     public function removeCartItem(Request $request)
     {
         $productId = $request->product_id;
 
         if (Auth::check()) {
-
             CartItem::where('user_id', Auth::id())->where('product_id', $productId)->delete();
-
-
-        }else{
-
+        } else {
             $cart = session()->get('cart', []);
-
             unset($cart[$productId]);
             session()->put('cart', $cart);
         }
-        //calculate cartTotal again
 
+        // Tính toán lại
         $total = $this->calculateCartTotal();
         $grandTotal = $total + 15000;
 
+        // Tính lại số lượng icon
+        if (Auth::check()) {
+            $cartCount = CartItem::where('user_id', Auth::id())->sum('quantity');
+        } else {
+            $cart = session()->get('cart', []);
+            $cartCount = array_sum(array_column($cart, 'quantity'));
+        }
+
         return response()->json([
-            
+            'status' => true,
             'total' => number_format($total, 0, ',', '.'),
             'grandTotal' => number_format($grandTotal, 0, ',', '.'),
+            'cart_count' => $cartCount, // Trả về để JS update icon
         ]);
     }
-
-
-
-
-
 
 
 

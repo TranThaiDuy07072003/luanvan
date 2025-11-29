@@ -14,7 +14,7 @@
     background-color: black;
 }
 
-#category-image{
+#category-image, .product-images, #product-images{
     display: none;
 }
 
@@ -28,19 +28,29 @@
 }
 
 
-.image-category{
+.image-category, .image-product{
     width: 80px;
     height: 80px;
 }
 
 
-.btn-update-category{
+.btn-update-category, .btn-update-product{
     color: green !important;
 }
-.btn-delete-category{
+.btn-delete-category, .btn-delete-product{
     color: red !important;
 }
 
-.category-image{
+.category-image, #product-images{
     display: none;
+}
+
+
+
+.image-preview-listproduct{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+    margin-top: 10px;
+    gap: 10px;
 }

@@ -14,7 +14,8 @@ class HomeController extends Controller
         foreach ($categories as $index => $category) {
             foreach ($category->products as $product) {
                 $product->image_url = $product->firstImage?->image
-                ? asset('storage/uploads/products/'.$product->firstImage->image) : asset('storage/uploads/products/default-product.png');
+                ? asset('storage/' . $product->firstImage->image)
+                : asset('storage/uploads/products/default-product.png');
             }
         }
 
@@ -34,7 +35,8 @@ class HomeController extends Controller
         /** @var \App\Models\Product $product */
         foreach ($bestSellingProducts as $product) {
              $product->image_url = $product->firstImage?->image
-                ? asset('storage/uploads/products/'.$product->firstImage->image) : asset('storage/uploads/products/default-product.png');
+                ? asset('storage/' . $product->firstImage->image)
+                : asset('storage/uploads/products/default-product.png');
         }
 
         return view('user.pages.home', compact('categories', 'bestSellingProducts'));
