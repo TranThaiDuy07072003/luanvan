@@ -44,8 +44,46 @@
                                             </div>
                                         </div>
                                         <div class="tab-pane fade" id="liton_tab_orders">
-                                             <div class="ltn__myaccount-tab-content-inner">
-                                                <!-- ... nội dung đơn hàng ... -->
+                                            <div class="ltn__myaccount-tab-content-inner">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Mã đơn hàng</th>
+                                                                <th>Ngày</th>
+                                                                <th>Trạng thái</th>
+                                                                <th>Tổng</th>
+                                                                <th>Hành động</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($orders as $order)
+                                                                <tr>
+                                                                    <td>#{{ $order->id }}</td>
+                                                                    <td>{{ $order->created_at->format('d/m/Y') }}</td>
+
+                                                                    <td>
+                                                                        @if ($order->status == 'pending')
+                                                                            <span class="badge bg-warning">Chờ xác
+                                                                                nhận</span>
+                                                                        @elseif($order->status == 'processing')
+                                                                            <span class="badge bg-primary">Đang xử lý</span>
+                                                                        @elseif($order->status == 'completed')
+                                                                            <span class="badge bg-success">Hoàn thành</span>
+                                                                        @elseif($order->status == 'canceled')
+                                                                            <span class="badge bg-danger">Đã huỷ</span>
+                                                                        @endif
+                                                                    </td>
+
+
+                                                                    <td>{{ number_format($order->total_price, 0, ',', '.') }}
+                                                                        VND</td>
+                                                                    <td><a href="#" class="btn btn-primary btn-sm">Xem</a></td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -56,7 +94,7 @@
                                             <div class="ltn__myaccount-tab-content-inner">
                                                 <p>Các địa chỉ sau sẽ được sử dụng trên trang thanh toán theo mặc định.</p>
                                                 <div class="table-responsive">
-                                                   <table class="table">
+                                                    <table class="table">
                                                         <thead>
                                                             <tr>
                                                                 <th>Tên người nhận</th>
@@ -69,45 +107,55 @@
                                                         </thead>
                                                         <tbody>
                                                             {{-- Đảm bảo $addresses được truyền từ Controller --}}
-                                                            @if(isset($addresses) && $addresses->count() > 0)
-                                                                @foreach($addresses as $address)
-                                                                <tr>
-                                                                    <td>{{ $address->full_name }}</td>
-                                                                    <td>{{ $address->address }}</td>
-                                                                    <td>{{ $address->city }}</td>
-                                                                    <td>{{ $address->phone }}</td>
-                                                                    <td>
-                                                                        @if($address->default)
-                                                                            <span class="badge bg-success">Mặc định</span>
-                                                                        @else
-                                                                            <!-- THÊM CLASS "form-set-default" -->
-                                                                            <form action="{{ route('account.addresses.update', $address->id) }}" method="POST" class="d-inline form-set-default">
+                                                            @if (isset($addresses) && $addresses->count() > 0)
+                                                                @foreach ($addresses as $address)
+                                                                    <tr>
+                                                                        <td>{{ $address->full_name }}</td>
+                                                                        <td>{{ $address->address }}</td>
+                                                                        <td>{{ $address->city }}</td>
+                                                                        <td>{{ $address->phone }}</td>
+                                                                        <td>
+                                                                            @if ($address->default)
+                                                                                <span class="badge bg-success">Mặc
+                                                                                    định</span>
+                                                                            @else
+                                                                                <!-- THÊM CLASS "form-set-default" -->
+                                                                                <form
+                                                                                    action="{{ route('account.addresses.update', $address->id) }}"
+                                                                                    method="POST"
+                                                                                    class="d-inline form-set-default">
+                                                                                    @csrf
+                                                                                    @method('PUT')
+                                                                                    <button type="submit"
+                                                                                        class="btn btn-effect-1 btn-warning btn-sm">Chọn</button>
+                                                                                </form>
+                                                                            @endif
+                                                                        </td>
+                                                                        <td>
+                                                                            <!-- THÊM CLASS "form-delete-address" và XÓA onclick="" -->
+                                                                            <form
+                                                                                action="{{ route('account.addresses.delete', $address->id) }}"
+                                                                                method="POST"
+                                                                                class="d-inline form-delete-address">
                                                                                 @csrf
-                                                                                @method('PUT')
-                                                                                <button type="submit" class="btn btn-effect-1 btn-warning btn-sm">Chọn</button>
+                                                                                @method('DELETE')
+                                                                                <button type="submit"
+                                                                                    class="btn btn-sm btn-danger">Xóa</button>
                                                                             </form>
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>
-                                                                        <!-- THÊM CLASS "form-delete-address" và XÓA onclick="" -->
-                                                                        <form action="{{ route('account.addresses.delete', $address->id) }}" method="POST" class="d-inline form-delete-address">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
-                                                                        </form>
-                                                                    </td>
-                                                                </tr>
+                                                                        </td>
+                                                                    </tr>
                                                                 @endforeach
                                                             @else
                                                                 <tr>
-                                                                    <td colspan="6" class="text-center">Bạn chưa có địa chỉ nào.</td>
+                                                                    <td colspan="6" class="text-center">Bạn chưa có địa
+                                                                        chỉ nào.</td>
                                                                 </tr>
                                                             @endif
                                                         </tbody>
                                                     </table>
                                                 </div>
                                                 <button class="btn theme-btn-1 btn-effect-1 mt-3" data-bs-toggle="modal"
-                                            data-bs-target="#addAddressModal">Thêm địa chỉ mới</button>
+                                                    data-bs-target="#addAddressModal">Thêm địa chỉ mới</button>
                                             </div>
                                         </div>
                                         <!-- ============================================= -->
@@ -116,38 +164,51 @@
 
 
                                         <!-- Modal Thêm Địa Chỉ (Giữ nguyên) -->
-                                        <div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="addAddressModal" tabindex="-1"
+                                            aria-labelledby="addAddressModalLabel" aria-hidden="true">
                                             <!-- ... (toàn bộ nội dung modal giữ nguyên) ... -->
                                             <div class="modal-dialog">
                                                 <div class="modal-content" style="padding: 5px 10px">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="addAddressModalLabel">Thêm địa chỉ mới</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        <h5 class="modal-title" id="addAddressModalLabel">Thêm địa chỉ mới
+                                                        </h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form action="{{ route('account.addresses.add') }}" method="POST" id="addAddressForm">
+                                                        <form action="{{ route('account.addresses.add') }}" method="POST"
+                                                            id="addAddressForm">
                                                             @csrf
                                                             <div class="mb-3">
-                                                                <label for="full_name" class="form-lable">Tên người dùng</label>
-                                                                <input type="text" class="form-control" id="full_name" name="full_name" required>
+                                                                <label for="full_name" class="form-lable">Tên người
+                                                                    dùng</label>
+                                                                <input type="text" class="form-control" id="full_name"
+                                                                    name="full_name" required>
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="address" class="form-lable">Địa chỉ</label>
-                                                                <input type="text" class="form-control" id="address" name="address" required>
+                                                                <input type="text" class="form-control" id="address"
+                                                                    name="address" required>
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="city" class="form-lable">Thành phố</label>
-                                                                <input type="text" class="form-control" id="city" name="city" required>
+                                                                <input type="text" class="form-control" id="city"
+                                                                    name="city" required>
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="phone" class="form-lable">Số điện thoại</label>
-                                                                <input type="text" class="form-control" id="phone" name="phone" required>
+                                                                <label for="phone" class="form-lable">Số điện
+                                                                    thoại</label>
+                                                                <input type="text" class="form-control" id="phone"
+                                                                    name="phone" required>
                                                             </div>
-                                                            <div class="mb-3 form-check" >
-                                                                <input type="checkbox" class="form-check-input" id="default" name="default">
-                                                                <label for="default" class="form-lable">Đặt làm địa chỉ mặc định</label>
+                                                            <div class="mb-3 form-check">
+                                                                <input type="checkbox" class="form-check-input"
+                                                                    id="default" name="default">
+                                                                <label for="default" class="form-lable">Đặt làm địa chỉ
+                                                                    mặc định</label>
                                                             </div>
-                                                            <button type="submit" id="btn-add-address" class="btn theme-btn-1 btn btn-block">Lưu địa chỉ</button>
+                                                            <button type="submit" id="btn-add-address"
+                                                                class="btn theme-btn-1 btn btn-block">Lưu địa chỉ</button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -157,30 +218,39 @@
                                         <!-- Tab Chi tiết tài khoản (Giữ nguyên) -->
                                         <div class="tab-pane fade" id="liton_tab_account">
                                             <!-- ... (toàn bộ nội dung tab giữ nguyên) ... -->
-                                             <div class="ltn__myaccount-tab-content-inner">
+                                            <div class="ltn__myaccount-tab-content-inner">
                                                 <div class="ltn__form-box">
-                                                    <form id="update-account-form" action="{{ route('account.update') }}">
+                                                    <form id="update-account-form"
+                                                        action="{{ route('account.update') }}">
                                                         <!-- ... (các input) ... -->
-                                                         <div class="row mb-50">
+                                                        <div class="row mb-50">
                                                             <div class="col-md-6">
                                                                 <label for="ltn__name">Họ và tên:</label>
-                                                                <input type="text" name="ltn__name" id="ltn__name" value="{{ $user->name }}" required>
+                                                                <input type="text" name="ltn__name" id="ltn__name"
+                                                                    value="{{ $user->name }}" required>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label for="ltn__phone_number">Số điện thoại:</label>
-                                                                <input type="number" name="ltn__phone_number" id="ltn__phone_number" value="{{ $user->phone_number ?? '' }}" required>
+                                                                <input type="number" name="ltn__phone_number"
+                                                                    id="ltn__phone_number"
+                                                                    value="{{ $user->phone_number ?? '' }}" required>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label for="ltn__email">Email (không được thay đổi)</label>
-                                                                <input type="email" name="ltn__email" id="ltn__email" value="{{ $user->email }}" readonly>
+                                                                <input type="email" name="ltn__email" id="ltn__email"
+                                                                    value="{{ $user->email }}" readonly>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label for="ltn__address">Địa chỉ:</label>
-                                                                <input type="text" name="ltn__address" id="ltn__address" value="{{ $user->address ?? '' }}" required>
+                                                                <input type="text" name="ltn__address"
+                                                                    id="ltn__address" value="{{ $user->address ?? '' }}"
+                                                                    required>
                                                             </div>
                                                         </div>
                                                         <div class="btn-wrapper">
-                                                            <button type="submit" id="btn-update-info" class="btn theme-btn-1 btn-effect-1 text-uppercase">Cập nhật</button>
+                                                            <button type="submit" id="btn-update-info"
+                                                                class="btn theme-btn-1 btn-effect-1 text-uppercase">Cập
+                                                                nhật</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -192,22 +262,28 @@
                                             <!-- ... (toàn bộ nội dung tab giữ nguyên) ... -->
                                             <div class="ltn__myaccount-tab-content-inner">
                                                 <div class="ltn__form-box">
-                                                    <form action="{{ route('account.change-password') }}" method="POST" id="change-password-form">
+                                                    <form action="{{ route('account.change-password') }}" method="POST"
+                                                        id="change-password-form">
                                                         <!-- ... (các input) ... -->
                                                         <fieldset>
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <label>Mật khẩu hiện tại</label>
-                                                                    <input type="password" name="current_password" required>
+                                                                    <input type="password" name="current_password"
+                                                                        required>
                                                                     <label>Mật khẩu mới:</label>
                                                                     <input type="password" name="new_password" required>
                                                                     <label>Xác nhận mật khẩu mới:</label>
-                                                                    <input type="password" name="new_password_confirmation" autocomplete="new-password" required>
+                                                                    <input type="password"
+                                                                        name="new_password_confirmation"
+                                                                        autocomplete="new-password" required>
                                                                 </div>
                                                             </div>
                                                         </fieldset>
                                                         <div class="btn-wrapper">
-                                                            <button type="submit" id="btn-change-password" class="btn theme-btn-1 btn-effect-1 text-uppercase">Đổi mật khẩu</button>
+                                                            <button type="submit" id="btn-change-password"
+                                                                class="btn theme-btn-1 btn-effect-1 text-uppercase">Đổi mật
+                                                                khẩu</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -252,7 +328,8 @@
                         if (response.success) {
                             toastr.success(response.message, 'Thành công!');
                             $('input[name="ltn__name"]').val(response.user.name);
-                            $('input[name="ltn__phone_number"]').val(response.user.phone_number);
+                            $('input[name="ltn__phone_number"]').val(response.user
+                            .phone_number);
                             $('input[name="ltn__address"]').val(response.user.address);
                         }
                     },
@@ -272,7 +349,7 @@
                 });
             });
 
-            
+
             // --- SCRIPT 2: ĐỔI MẬT KHẨU ---
             $('#change-password-form').on('submit', function(e) {
                 e.preventDefault();
@@ -340,7 +417,9 @@
                             let errors = xhr.responseJSON.errors;
                             $.each(errors, function(key, value) {
                                 let input = $('#' + key);
-                                input.after('<p class="error-message text-danger" style="font-size: 0.9em;">' + value[0] + '</p>');
+                                input.after(
+                                    '<p class="error-message text-danger" style="font-size: 0.9em;">' +
+                                    value[0] + '</p>');
                             });
                             toastr.error('Vui lòng kiểm tra lại thông tin.', 'Lỗi nhập liệu');
                         } else {

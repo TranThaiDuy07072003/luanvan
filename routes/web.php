@@ -65,8 +65,13 @@ Route::prefix('/')->group(function () {
             Route::put('addresses/{id}', [AccountController::class, 'updatePrimaryAddress'])->name('account.addresses.update');
             Route::delete('addresses/{id}', [AccountController::class, 'deleteAddress'])->name('account.addresses.delete');
 
-            Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+
+
         });
+        Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+        Route::get('/checkout/get-address', [CheckoutController::class, 'getAddress']);
+
+        Route::post('/checkout', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder');
 
     });
 

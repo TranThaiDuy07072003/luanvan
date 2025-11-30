@@ -32,7 +32,8 @@
                                 </div>
 
                                 <div>
-                                    <a href="{{ route('account') }}" class="btn theme-btn-1 btn-effect-1 text-uppercase">Thêm địa chỉ mới</a>
+                                    <a href="{{ route('account') }}"
+                                        class="btn theme-btn-1 btn-effect-1 text-uppercase">Thêm địa chỉ mới</a>
                                 </div>
 
                             </div>
@@ -43,12 +44,14 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="input-item input-item-name ltn__custom-icon">
-                                            <input type="text" name="ltn__name" placeholder="Họ và tên" value="{{ $defaultAddress->full_name }}" readonly>
+                                            <input type="text" name="ltn__name" placeholder="Họ và tên"
+                                                value="{{ $defaultAddress->full_name }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="input-item input-item-phone ltn__custom-icon">
-                                            <input type="text" name="ltn__lastname" placeholder="Số điện thoại" value="{{ $defaultAddress->phone }}" readonly>
+                                            <input type="text" name="ltn__phone" placeholder="Số điện thoại"
+                                                value="{{ $defaultAddress->phone }}" readonly>
                                         </div>
                                     </div>
 
@@ -57,13 +60,15 @@
                                     <div class="col-lg-6 col-md-6">
                                         <h6>Địa chỉ</h6>
                                         <div class="input-item">
-                                            <input type="text" placeholder="Số nhà và tên đường" value="{{ $defaultAddress->address }}" readonly>
+                                            <input type="text" name="ltn__address" placeholder="Số nhà và tên đường"
+                                                value="{{ $defaultAddress->address }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6">
                                         <h6>Thành phố</h6>
                                         <div class="input-item">
-                                            <input type="text" placeholder="Thành phố" value="{{ $defaultAddress->city }}" readonly>
+                                            <input type="text" name="ltn__city" placeholder="Thành phố"
+                                                value="{{ $defaultAddress->city }}" readonly>
                                         </div>
                                     </div>
 
@@ -79,8 +84,10 @@
                 <div class="col-lg-6">
                     <div class="ltn__checkout-payment-method mt-50">
                         <h4 class="title-2">Phương thức thanh toán</h4>
-                        <form action="" method="POST">
+                        <form action="{{ route('checkout.placeOrder') }}" method="POST">
                             @csrf
+                            <input type="hidden" name="address_id" value="{{ $defaultAddress->id }}">
+
                             <div id="checkout_payment">
 
                                 <div class="card">
@@ -99,9 +106,9 @@
 
                                     <h5 class="collapsed ltn__card-title">
                                         <input type="radio" name="payment_method" value="zalopay" id="payment_zalopay"
-                                            checked>
+                                            >
                                         <label for="payment_zalopay">
-                                            Zalopay <img src="{{ asset('assets/user/img/icons/payment-3.png') }}"
+                                            VNPay <img src="{{ asset('assets/user/img/icons/payment-3.png') }}"
                                                 alt="javascript:void(0)">
                                         </label>
                                     </h5>
@@ -112,31 +119,68 @@
                                 <p>XIN QUÝ KHÁCH VUI LÒNG KIỂM TRA LẠI THÔNG TIN, SỐ SẢN PHẨM MUA , ĐỊA CHỈ HOẶC SỐ ĐIỆN
                                     THOẠI ĐỂ TRÁNH NHẦM LẪN .</p>
                             </div>
-                            <button class="btn theme-btn-1 btn-effect-1 text-uppercase" type="submit">Đặt hàng</button>
+                            <button class="btn theme-btn-1 btn-effect-1 text-uppercase" type="submit" id="order_button_cash">Đặt hàng</button>
                         </form>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="shoping-cart-total mt-50">
-                        <h4 class="title-2">Tổng giỏ hàng</h4>
+                        <h4>Tổng Giỏ Hàng</h4>
                         <table class="table">
                             <tbody>
+                                {{-- 1. Vòng lặp hiển thị chi tiết từng món hàng --}}
+                                @foreach ($cartItems as $item)
+                                    <tr>
+                                        {{-- Tên sản phẩm x Số lượng --}}
+                                        <td>
+                                            {{ $item->product->name }}
+                                            <strong>× {{ $item->quantity }}</strong>
+                                        </td>
+                                        <td>
+                                            {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }} VNĐ
+                                        </td>
+                                    </tr>
+                                @endforeach
+
+                                {{-- Dòng kẻ ngăn cách --}}
                                 <tr>
-                                    <td>Nấm hương <strong>× 2</strong></td>
-                                    <td>$298.00</td>
+                                    <td colspan="2" style="padding: 0;">
+                                        <hr style="margin: 10px 0;">
+                                    </td>
                                 </tr>
 
+                                {{-- 2. Tổng tiền hàng --}}
                                 <tr>
-                                    <td>Phí vận chuyển</td>
-                                    <td>15.000đ</td>
+                                    <td><strong>Tổng Tiền Hàng</strong></td>
+                                    <td>
+                                        <strong>
+                                            <span class="cart-total">{{ number_format($cartTotal, 0, ',', '.') }} VNĐ</span>
+                                        </strong>
+                                    </td>
                                 </tr>
 
+                                {{-- 3. Phí vận chuyển --}}
                                 <tr>
-                                    <td><strong>Tổng cộng</strong></td>
-                                    <td><strong>$633.00</strong></td>
+                                    <td>Phí Vận Chuyển</td>
+                                    <td>15.000 VNĐ</td>
+                                </tr>
+
+                                {{-- 4. Tổng cộng thanh toán --}}
+                                <tr>
+                                    <td><strong>Tổng Cộng</strong></td>
+                                    <td>
+                                        <strong>
+                                            <span class="cart-grand-total"
+                                                style="color: var(--ltn__secondary-color); font-size: 18px;">
+                                                {{ number_format($cartTotal + 15000, 0, ',', '.') }} VNĐ
+                                            </span>
+                                        </strong>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
+
+
                     </div>
                 </div>
             </div>
