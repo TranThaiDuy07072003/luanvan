@@ -37,6 +37,15 @@ class User extends Authenticatable
     ];
 
 
+    // Trong file app/Models/User.php
+
+    protected $appends = ['avatar_url']; // Thêm dòng này nếu chưa có
+
+    public function getAvatarUrlAttribute()
+    {
+        // Trả về đường dẫn ảnh default
+        return asset('storage/uploads/users/default-avatar.png');
+    }
 
 
 

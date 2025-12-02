@@ -60,6 +60,7 @@
                                                             @foreach ($orders as $order)
                                                                 <tr>
                                                                     <td>#{{ $order->id }}</td>
+
                                                                     <td>{{ $order->created_at->format('d/m/Y') }}</td>
 
                                                                     <td>
@@ -78,7 +79,8 @@
 
                                                                     <td>{{ number_format($order->total_price, 0, ',', '.') }}
                                                                         VND</td>
-                                                                    <td><a href="#" class="btn btn-primary btn-sm">Xem</a></td>
+
+                                                                    <td><a href="{{ route('order.show', $order->id) }}" class="btn btn-primary btn-sm">Xem</a></td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
@@ -388,49 +390,49 @@
             });
 
             // --- SCRIPT 3: THÊM ĐỊA CHỈ (Modal) ---
-            $('#addAddressForm').on('submit', function(e) {
-                e.preventDefault();
-                let form = $(this);
-                let btn = $('#btn-add-address');
-                let originalText = btn.text();
-                btn.prop('disabled', true).text('Đang lưu...');
-                $('.error-message').remove();
-                let formData = new FormData(this);
+            // $('#addAddressForm').on('submit', function(e) {
+            //     e.preventDefault();
+            //     let form = $(this);
+            //     let btn = $('#btn-add-address');
+            //     let originalText = btn.text();
+            //     btn.prop('disabled', true).text('Đang lưu...');
+            //     $('.error-message').remove();
+            //     let formData = new FormData(this);
 
-                $.ajax({
-                    url: form.attr('action'),
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        if (response.success) {
-                            toastr.success(response.message, 'Thành công!');
-                            $('#addAddressModal').modal('hide');
-                            setTimeout(function() {
-                                location.reload();
-                            }, 1000);
-                        }
-                    },
-                    error: function(xhr) {
-                        if (xhr.status === 422) {
-                            let errors = xhr.responseJSON.errors;
-                            $.each(errors, function(key, value) {
-                                let input = $('#' + key);
-                                input.after(
-                                    '<p class="error-message text-danger" style="font-size: 0.9em;">' +
-                                    value[0] + '</p>');
-                            });
-                            toastr.error('Vui lòng kiểm tra lại thông tin.', 'Lỗi nhập liệu');
-                        } else {
-                            toastr.error('Có lỗi xảy ra, vui lòng thử lại.', 'Lỗi hệ thống');
-                        }
-                    },
-                    complete: function() {
-                        btn.prop('disabled', false).text(originalText);
-                    }
-                });
-            });
+            //     $.ajax({
+            //         url: form.attr('action'),
+            //         type: 'POST',
+            //         data: formData,
+            //         contentType: false,
+            //         processData: false,
+            //         success: function(response) {
+            //             if (response.success) {
+            //                 toastr.success(response.message, 'Thành công!');
+            //                 $('#addAddressModal').modal('hide');
+            //                 setTimeout(function() {
+            //                     location.reload();
+            //                 }, 1000);
+            //             }
+            //         },
+            //         error: function(xhr) {
+            //             if (xhr.status === 422) {
+            //                 let errors = xhr.responseJSON.errors;
+            //                 $.each(errors, function(key, value) {
+            //                     let input = $('#' + key);
+            //                     input.after(
+            //                         '<p class="error-message text-danger" style="font-size: 0.9em;">' +
+            //                         value[0] + '</p>');
+            //                 });
+            //                 toastr.error('Vui lòng kiểm tra lại thông tin.', 'Lỗi nhập liệu');
+            //             } else {
+            //                 toastr.error('Có lỗi xảy ra, vui lòng thử lại.', 'Lỗi hệ thống');
+            //             }
+            //         },
+            //         complete: function() {
+            //             btn.prop('disabled', false).text(originalText);
+            //         }
+            //     });
+            // });
 
 
             // --- SCRIPT 4: CHỌN ĐỊA CHỈ MẶC ĐỊNH (MỚI) ---

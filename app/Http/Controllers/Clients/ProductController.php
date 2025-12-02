@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Clients;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -82,13 +85,37 @@ class ProductController extends Controller
 
     public function detail($slug)
     {
-        $product = Product::with( ['category', 'images'])->where( 'slug',  $slug)->firstOrFail();
+        $product = Product::with( ['category', 'images', 'reviews.user'])->where( 'slug',  $slug)->firstOrFail();
 
         // Get products in the same category
         $relatedProducts = Product::where( 'category_id',  $product->category_id)
         ->where('id',  '!=',  $product->id)
-        ->limit( 6)
+        ->limit(6)
         ->get();
+
+
+        //Calculate average raing, ensure no null
+        $averageRating = round($product->reviews()->avg('rating') ?? 0, 1);
+
+        $hasPurchased = false;
+        $hasReviewed = false;
+
+        if (Auth::check())
+        {
+            $user = Auth::user();
+
+            //Kiểm tra người dùng đã mua sản phẩm hay chưa
+            $hasPurchased = OrderItem::whereHas('order', function($query) use ($user){
+                $query->where('user_id', $user->id)->where('status', 'completed');
+            })->where('product_id', $product->id)->exists();
+
+
+            //Kiểm tra người dùng đã danh giá sản phẩm hay chưa
+            $hasReviewed = Review::where('user_id', $user->id)
+                ->where('product_id', $product->id)
+                ->exists();
+        }
+
 
         // 2. [QUAN TRỌNG] Xử lý đường dẫn ảnh cho sản phẩm tương tự
         foreach ($relatedProducts as $related) {
@@ -97,7 +124,7 @@ class ProductController extends Controller
                 : asset('storage/uploads/products/default-product.png');
         }
 
-        return view('user.pages.product-detail',  compact('product',  'relatedProducts'));
+        return view('user.pages.product-detail',  compact('product',  'relatedProducts', 'hasPurchased', 'hasReviewed', 'averageRating'));
     }
 
 

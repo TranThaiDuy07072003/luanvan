@@ -187,6 +187,63 @@
 }
 
 
+/* =================================== */
+
+/* --- FIX LỖI PHÂN TRANG --- */
+
+/* ================================================== */
+/* FIX LỖI PHÂN TRANG (CĂN GIỮA TUYỆT ĐỐI)           */
+/* ================================================== */
+
+.ltn__pagination .pagination {
+    display: flex;
+    justify-content: center; /* Căn toàn bộ thanh phân trang ra giữa màn hình */
+    align-items: center;
+    gap: 5px; /* Khoảng cách giữa các nút */
+}
+
+.ltn__pagination .page-item .page-link {
+    width: 45px;            /* Cố định chiều rộng */
+    height: 45px;           /* Cố định chiều cao (bằng rộng để thành hình vuông) */
+    display: flex;          /* Dùng Flexbox để căn chỉnh nội dung bên trong */
+    justify-content: center; /* Căn giữa ngang (trái/phải) */
+    align-items: center;    /* Căn giữa dọc (trên/dưới) - QUAN TRỌNG ĐỂ HẾT LỆCH */
+    padding: 0 !important;  /* Bỏ padding để không bị vỡ kích thước */
+    border-radius: 0;       /* Nút vuông (nếu thích bo tròn thì sửa thành 50%) */
+    font-size: 16px;        /* Cỡ chữ */
+    font-weight: 700;       /* Chữ đậm */
+    color: #071c1f;         /* Màu chữ mặc định */
+    border: 1px solid #ededed; /* Viền mờ */
+    text-decoration: none;  /* Bỏ gạch chân */
+}
+
+/* Trạng thái đang chọn (Active) */
+.ltn__pagination .page-item.active .page-link {
+    background-color: #80b500 !important; /* Màu xanh của web bạn */
+    border-color: #80b500 !important;
+    color: #fff !important;
+}
+
+/* Trạng thái di chuột vào (Hover) */
+.ltn__pagination .page-item .page-link:hover {
+    background-color: #80b500;
+    color: #fff;
+    border-color: #80b500;
+    transition: all 0.3s ease; /* Hiệu ứng chuyển màu mượt */
+}
+
+/* Loại bỏ viền xanh mặc định của Bootstrap khi bấm vào */
+.page-link:focus {
+    box-shadow: none !important;
+}
+
+/* Chỉnh riêng cho 2 nút mũi tên Previous/Next (nếu muốn icon to hơn chút) */
+.ltn__pagination .page-item:first-child .page-link,
+.ltn__pagination .page-item:last-child .page-link {
+    font-size: 18px;
+}
+
+
 
 
 

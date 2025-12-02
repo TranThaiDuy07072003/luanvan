@@ -69,7 +69,7 @@
                                     </li>
                                     <li class="menu-icon"><a href="{{ route('products.index') }}">Cửa hàng</a>
                                     </li>
-                                    <li><a href="{{ route('faq') }}">Liên hệ</a></li>
+                                    <li><a href="{{ route('contact.index') }}">Liên hệ</a></li>
                                     <!-- <li class="special-link"><a href="contact.html">Liên hệ - get a quote</a></li> -->
                                 </ul>
                             </div>
@@ -86,8 +86,8 @@
                             </div>
                         </div>
                         <div class="header-search-1-form">
-                            <form id="#" method="get" action="#">
-                                <input type="text" name="search" value="" placeholder="Search here..." />
+                            <form id="#" method="GET" action="{{ route('search') }}">
+                                <input type="text" name="keyword" value="" placeholder="Tìm kiếm..." />
                                 <button type="submit">
                                     <span><i class="icon-search"></i></span>
                                 </button>

@@ -14,6 +14,7 @@ class Product extends Model
 
     protected $fillable = ['name', 'description', 'price', 'stock', 'category_id', 'status', 'slug', 'unit'];
 
+    protected $appends = ['average_rating', 'image_url'];
 
     // 1. Mỗi sản phẩm thuộc về 1 danh mục (Category)
     public function category()
@@ -67,6 +68,32 @@ class Product extends Model
     {
         return $this->hasOne(ProductImage::class)->orderBy('id', 'asc');
     }
+
+
+
+    public function getAverageRatingAttribute()
+    {
+        return $this->reviews->avg('rating') ?? 0;
+    }
+
+
+    // Accessor tự động lấy ảnh đầu tiên hoặc ảnh default
+    public function getImageUrlAttribute()
+    {
+        // Kiểm tra relation firstImage đã được load chưa
+        if ($this->relationLoaded('firstImage') && $this->firstImage) {
+            return asset('storage/' . $this->firstImage->image);
+        }
+
+        // Nếu chưa load relation hoặc không có ảnh, check lại trong DB (phòng hờ)
+        // Lưu ý: Nếu bạn luôn dùng with('firstImage') ở controller thì đoạn dưới này ít khi chạy, tốt cho performance
+        $image = $this->firstImage()->first();
+
+        return $image
+            ? asset('storage/' . $image->image)
+            : asset('storage/uploads/products/default-product.png');
+    }
+
 
 
 }

@@ -29,9 +29,9 @@ class Order extends Model
 
 
     // Mỗi đơn hàng thuộc về một địa chỉ giao hàng
-    public function shippingAddresses()
+    public function shippingAddress()
     {
-        return $this->belongsTo(ShippingAddress::class);   // nhánh 2 chân
+        return $this->belongsTo(ShippingAddress::class, 'shipping_address_id')->withTrashed();   // nhánh 2 chân
     }
 
 

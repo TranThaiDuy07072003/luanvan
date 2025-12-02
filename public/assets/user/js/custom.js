@@ -130,83 +130,77 @@ $(document).ready(function() {
 
 
     // Validate form address
-    $("#addAddressForm").submit(function(e) {
+    // --- SCRIPT 3: THÊM ĐỊA CHỈ (Đã sửa lỗi) ---
+    $("#addAddressForm").on('submit', function(e) {
+        // 1. CHẶN ĐỨNG việc reload trang ngay lập tức
         e.preventDefault();
 
-        let isvalid = true;
+        let form = $(this);
+        let btn = $('#btn-add-address'); // Nút submit
+
+        // 2. Khóa nút lại để tránh user bấm liên tục (Spam click)
+        let originalText = btn.text();
+        btn.prop('disabled', true).text('Đang lưu...');
+
+        // Xóa các thông báo lỗi cũ
         $('.error-message').remove();
 
-        let fullname = $('#full_name').val().trim();
-        let phone = $('#phone').val().trim();
-        let address = $('#address').val().trim();
-        let city = $('#city').val().trim();
+        // 3. Lấy dữ liệu từ form
+        let formData = new FormData(this);
 
-        // Validate fullname
-        if (fullname.length < 3) {
-            isvalid = false;
-            $('#full_name').after('<p class="error-message text-danger">Họ tên phải có ít nhất 3 ký tự.</p>');
-        }
+        // 4. Gửi AJAX
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
 
-        // Validate phone
-        let phoneRegex = /^[0-9]{10,11}$/;
-        if (!phoneRegex.test(phone)) {
-            isvalid = false;
-            $('#phone').after('<p class="error-message text-danger">Số điện thoại phải có 10-11 chữ số.</p>');
-        }
+            // Cấu hình CSRF Token (Rất quan trọng để Laravel nhận diện)
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
 
-        // Validate address
-        if (address.length < 5) {
-            isvalid = false;
-            $('#address').after('<p class="error-message text-danger">Địa chỉ phải có ít nhất 5 ký tự.</p>');
-        }
+            success: function(response) {
+                if (response.success) {
+                    // Thông báo thành công
+                    toastr.success(response.message, 'Thành công!');
 
-        // Validate city
-        if (city.length < 2) {
-            isvalid = false;
-            $('#city').after('<p class="error-message text-danger">Thành phố không được để trống.</p>');
-        }
+                    // Ẩn Modal
+                    $('#addAddressModal').modal('hide');
 
-        if (isvalid) {
-            let formData = new FormData(this);
+                    // Reset form cho sạch sẽ
+                    form[0].reset();
 
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                beforeSend: function() {
-                    toastr.info('Đang lưu địa chỉ...', 'Vui lòng chờ');
-                    $('button[type="submit"]').prop('disabled', true);
-                },
-                success: function(response) {
-                    // Laravel redirect → không trả JSON → nên dùng redirect JS
-                    toastr.success('Thêm địa chỉ thành công!', 'Thành công');
-                    setTimeout(() => {
-                        location.reload(); // Tải lại trang để thấy địa chỉ mới
+                    // Đợi 1 chút rồi reload trang để cập nhật danh sách
+                    setTimeout(function() {
+                        location.reload();
                     }, 1000);
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        let errors = xhr.responseJSON.errors;
-                        $('.error-message').remove(); // Xóa lỗi cũ
-                        $.each(errors, function(key, value) {
-                            let input = $('#' + key.replace('.', '_')); // fullname → full_name
-                            if (input.length) {
-                                input.after('<p class="error-message text-danger">' + value[0] + '</p>');
-                            }
-                        });
-                        toastr.error('Vui lòng kiểm tra lại thông tin.', 'Lỗi nhập liệu');
-                    } else {
-                        toastr.error('Lỗi hệ thống. Vui lòng thử lại.', 'Lỗi');
-                    }
-                },
-                complete: function() {
-                    $('button[type="submit"]').prop('disabled', false);
                 }
-            });
-        }
-    })
+            },
+
+            error: function(xhr) {
+                // Mở khóa nút nếu có lỗi để user sửa và gửi lại
+                btn.prop('disabled', false).text(originalText);
+
+                if (xhr.status === 422) {
+                    // Lỗi Validate (Nhập thiếu, sai định dạng...)
+                    let errors = xhr.responseJSON.errors;
+                    $.each(errors, function(key, value) {
+                        let input = $('#' + key); // Tìm ô input bị lỗi
+                        if (input.length) {
+                            input.after('<p class="error-message text-danger" style="font-size: 13px; margin-top: 5px;">' + value[0] + '</p>');
+                        }
+                    });
+                    toastr.error('Vui lòng kiểm tra lại thông tin.', 'Lỗi nhập liệu');
+                } else {
+                    // Lỗi hệ thống (500...)
+                    toastr.error('Có lỗi xảy ra, vui lòng thử lại sau.', 'Lỗi hệ thống');
+                    console.log(xhr.responseText); // Log ra console để dev xem
+                }
+            }
+        });
+    });
 
 
 
@@ -607,6 +601,142 @@ if(window.location.pathname !=='/cart'){
                 alert(xhr.responseJSON.error || 'Lỗi khi lấy địa chỉ');
             }
         });
+    });
+
+
+
+
+    /*********************************
+     * ĐÁNH GIÁ SẢN PHẨM
+    *********************************/
+    if(window.location.pathname.startsWith("/product"))
+    {
+        let selectedRating = 0;
+
+        // xử lý hover start (di chuột vào sao)
+        $(".rating-start").hover(function(){
+            let value = $(this).data("value");
+            highlightStarts(value);
+        }, function(){
+            highlightStarts(selectedRating);
+        });
+
+        $(".rating-start").click(function(e){
+            e.preventDefault();
+            selectedRating = $(this).data("value");
+            $("#rating-value").val(selectedRating);
+            highlightStarts(selectedRating);
+        });
+
+        function highlightStarts(value){
+            $(".rating-start i").each(function(){
+                let starValue = $(this).parent().data("value");
+                if(starValue <= value){
+                    $(this).removeClass("far").addClass("fas");
+                }else{
+                    $(this).removeClass("fas").addClass("far");
+                }
+            });
+        }
+
+
+
+        // xử lý xếp hạng gửi bằng AJAX
+        $("#review-form").submit(function (e) {
+            e.preventDefault();
+
+            let productId = $(this).data("product-id");
+            let rating = $("#rating-value").val();
+            let content = $("#review-content").val();
+
+            if (rating == 0)
+            {
+                $("#review-content").html(
+                    '<div class="alert alert-danger">Vui lòng chọn số sao!</div>'
+                );
+                return;
+            }
+
+            $.ajaxSetup({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+            });
+
+
+            $.ajax({
+                url: '/review',
+                type: "POST",
+                data:{
+                    product_id: productId,
+                    rating: rating,
+                    comment: content,
+                },
+                success: function (response){
+                    $("#review-content").val("");
+                    highlightStarts(0);
+                    selectedRating = 0;
+                    $(".ltn__comment-reply-area").hide();
+                    toastr.success(response.message);
+
+                    loadReviews(productId);
+                },
+                error: function (xhr){
+                    alert(xhr.responseJSON.error);
+                }
+            });
+
+        });
+
+
+
+        function loadReviews(productId)
+        {
+            $.ajax({
+                url: "/review/" + productId,
+                type: "GET",
+
+                success: function (response){
+                    $(".ltn__comment-inner").html(response);
+
+                },
+                error: function (xhr){
+                    alert(xhr.responseJSON.error);
+                }
+            });
+        }
+    }
+
+
+
+
+    /*********************************
+     *PAGE CONTACT
+    *********************************/
+    $("#contact-form").on("submit", function (e) {
+        let name = $('input[name="name"]').val();
+        let email = $('input[name="email"]').val();
+        let phone = $('input[name="phone"]').val();
+        let message = $('textarea[name="message"]').val();
+        let errorMessage = "";
+
+        if (name.length < 3) {
+            errorMessage += "Họ và tên phải có ít nhất 3 ký tự.<br>";
+        }
+
+        if (phone.length < 10 || phone.length > 11) {
+            errorMessage += "Số điện thoại phải từ 10-11 số.<br>";
+        }
+
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            errorMessage += "Email không hợp lệ.<br>";
+        }
+
+        if (errorMessage !== "") {
+            toastr.error(errorMessage, "Lỗi");
+            e.preventDefault();
+        }
     });
 
 

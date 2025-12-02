@@ -24,7 +24,7 @@
                                             </a>
                                         </div>
                                         <!-- <h6 class="slide-sub-title animated"><img src="img/icons/icon-img/1.png"
-                                                                                                        alt="#"> 100% genuine Products</h6> -->
+                                                                                                                alt="#"> 100% genuine Products</h6> -->
                                         <h1 class="slide-title animated ">Thực Phẩm Sạch <br> Đến Cho Mọi Nhà</h1>
                                         <div class="slide-brief animated">
                                             <p>Chúng Tôi Mang Đến Sự Trải Nghiệm <br>Đến Cho Khách Hàng.</p>
@@ -145,16 +145,9 @@
                                                     </div>
                                                     <div class="product-info">
                                                         <div class="product-ratting">
-                                                            <ul>
-                                                                <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                                <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                                <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                                <li><a href="#"><i
-                                                                            class="fas fa-star-half-alt"></i></a>
-                                                                </li>
-                                                                <li><a href="#"><i class="far fa-star"></i></a></li>
-                                                                <li class="review-total"> <a href="#"></a></li>
-                                                            </ul>
+                                                            @include('user.components.includes.rating', [
+                                                                'product' => $product,
+                                                        ])
                                                         </div>
                                                         <h2 class="product-title"><a
                                                                 href="{{ route('product.detail', $product->slug) }}">{{ $product->name }}</a>
@@ -260,39 +253,39 @@
                     <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                         <div class="ltn__product-item ltn__product-item-3 text-left">
                             <div class="product-img">
-                                <a href="#"><img src="{{ $product->image_url }}" alt="{{ $product->name }}"></a>
+                                <a href="{{ route('product.detail', $product->slug) }}"><img
+                                        src="{{ $product->image_url }}" alt="{{ $product->name }}"></a>
 
                                 <div class="product-hover-action">
                                     <ul>
                                         <li>
-                                            <a href="#" title="Xem Nhanh" data-bs-toggle="modal"
+                                            <a href="javascript:void(0)" title="Xem Nhanh" data-bs-toggle="modal"
                                                 data-bs-target="#quick_view_modal-{{ $product->id }}">
                                                 <i class="far fa-eye"></i>
                                             </a>
                                         </li>
-                                        <li>
-                                            <a href="#" title="Thêm Vào Giỏ Hàng" class="add-to-cart-btn"
-                                                data-id="{{ $product->id }}">
-                                                <i class="fas fa-shopping-cart"></i>
-                                            </a>
-                                        </li>
+
+
+                                        @if ($product->stock > 0 && $product->status == 'in_stock')
+                                            <li>
+                                                <a href="javascript:void(0)" title="Thêm Vào Giỏ Hàng"
+                                                    class="add-to-cart-btn" data-id="{{ $product->id }}">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </a>
+                                            </li>
+                                        @endif
 
                                     </ul>
                                 </div>
                             </div>
                             <div class="product-info">
                                 <div class="product-ratting">
-                                    <ul>
-                                        <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-star-half-alt"></i></a>
-                                        </li>
-                                        <li><a href="#"><i class="far fa-star"></i></a></li>
-                                        <li class="review-total"> <a href="#"></a></li>
-                                    </ul>
+                                    @include('user.components.includes.rating', [
+                                                'product' => $product,
+                                            ])
                                 </div>
-                                <h2 class="product-title"><a href="product-details.html">{{ $product->name }}</a>
+                                <h2 class="product-title"><a
+                                        href="{{ route('product.detail', $product->slug) }}">{{ $product->name }}</a>
                                 </h2>
                                 <div class="product-price">
                                     <span>{{ number_format($product->price, 0, ',', '.') }}

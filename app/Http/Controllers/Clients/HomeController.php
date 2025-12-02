@@ -28,7 +28,7 @@ class HomeController extends Controller
             // Đơn giản hóa Group By, chỉ cần group by ID của product
             ->groupBy('products.id')
             ->orderByDesc('total_sold')
-            ->limit(10)
+            ->limit(8)
             ->get();
 
         // SỬA LỖI 2: Thêm image_url cho sản phẩm bán chạy

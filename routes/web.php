@@ -4,9 +4,13 @@ use App\Http\Controllers\Clients\AccountController;
 use App\Http\Controllers\Clients\AuthController;
 use App\Http\Controllers\Clients\CartController;  // Use cho AuthController custom
 use App\Http\Controllers\Clients\CheckoutController;  // Use cho ProfileController từ Breeze (nếu cần)
+use App\Http\Controllers\Clients\ContactController;
 use App\Http\Controllers\Clients\HomeController;
+use App\Http\Controllers\Clients\OrderController;
 use App\Http\Controllers\Clients\PasswordController;
 use App\Http\Controllers\Clients\ProductController;
+use App\Http\Controllers\Clients\ReviewController;
+use App\Http\Controllers\Clients\SearchController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -73,6 +77,18 @@ Route::prefix('/')->group(function () {
 
         Route::post('/checkout', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder');
 
+        Route::get('/order/{id}', [OrderController::class, 'showOrder'])->name('order.show');
+
+        //hủy đơn hàng
+        Route::post('/order/{id}/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
+
+        //đánh giá sản phẩm
+        Route::post('/review', [ReviewController::class, 'createReview']);
+        //load đánh giá sản phẩm
+        Route::get('/review/{product}', [ReviewController::class, 'index']);
+
+
+
     });
 
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -82,19 +98,31 @@ Route::prefix('/')->group(function () {
     // Detail Product
     Route::get('/product/{slug}', [ProductController::class, 'detail'])->name('product.detail');
 
+
     // Handle Cart
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-
     // xóa giỏ hàng
     Route::post('/cart/remove', [CartController::class, 'removeFormMiniCart'])->name('cart.remove');
-
     // Xe đẩy trên cùng
     Route::get('/mini-cart', [CartController::class, 'loadMiniCart'])->name('cart.mini');
+
 
     // Xu ly trang gio hang
     Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.index');
     Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
     Route::post('/cart/remove-cart', [CartController::class, 'removeCartItem'])->name('cart.remove');
+
+
+    //Handle Contact
+    Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+    //gửi liên hệ
+    Route::post('/contact', [ContactController::class, 'sendContact'])->name('contact');
+
+
+    Route::get('/search', [SearchController::class, 'index'])->name('search');
+
+
+
 
     // Routes yêu cầu login (middleware 'auth') - giữ dashboard và profile từ Breeze
     Route::middleware('auth')->group(function () {
