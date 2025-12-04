@@ -484,4 +484,54 @@ $(document).ready(function(){
 
 
 
+
+    /*********************************
+     * MANAGEMENT - Order (quản lý quản trị đơn hàng, nghĩa là mình có thể quyết định xem
+     * có duyệt đơn hàng hay không)
+     *********************************/
+    $(document).on("click", ".confirm-order", function(e){
+        e.preventDefault();
+        let button = $(this);
+        let orderId = button.data("id");
+
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+        });
+
+
+        $.ajax({
+            type: "POST",
+            url: "order/confirm",
+            data: {
+                id: orderId,
+            },
+            success: function (response) {
+                if (response.status) {
+                    toastr.success(response.message);
+                    button
+                        .closest("tr")
+                        .find(".order-status")
+                        .html(
+                            '<span class="custom-badge badge badge-info">Đang giao hàng</span>'
+                        );
+                    button.hide();
+                } else {
+                    toastr.error(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
+            }
+        });
+
+
+
+    });
+
+
+
+
+
 });

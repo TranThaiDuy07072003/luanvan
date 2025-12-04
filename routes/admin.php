@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\OrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->group(function () {
@@ -55,6 +56,24 @@ Route::prefix('admin')->group(function () {
         Route::post('/product/update', [ProductController::class, 'updateProduct']);
         Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
     });
+
+
+
+
+    Route::middleware(['permission:manager_orders'])->group(function(){
+        Route::get('/orders' , [OrderController::class, 'index'])->name('admin.orders.index');
+
+        Route::post('/order/confirm', [OrderController::class, 'confirmOrder']);
+
+        //Xem chi tiết đơn mà khách đặt, sau đó mình gửi hóa đơn cho khách
+        Route::get('/order-detail/{id}' , [OrderController::class, 'showOrderDetail'])->name('admin.order-detail');
+
+
+    });
+
+
+
+
 
 
 });

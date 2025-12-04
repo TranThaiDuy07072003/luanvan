@@ -27,8 +27,19 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'stock'  => 'required|integer|min:0',
+            'unit'   => 'required|string|max:50',
 
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ], [
+            // Custom thông báo tiếng Việt cho thân thiện
+            'name.required'    => 'Tên sản phẩm không được để trống.',
+            'name.unique'      => 'Tên sản phẩm này đã tồn tại.',
+            'category_id.required' => 'Vui lòng chọn danh mục.',
+            'price.numeric'    => 'Giá tiền phải là dạng số.',
+            'stock.integer'    => 'Số lượng tồn kho phải là số nguyên.',
+            'images.required'  => 'Vui lòng chọn ít nhất một hình ảnh sản phẩm.',
+            
         ]);
 
         $slug = Str::slug($request->name).'-'.time();
