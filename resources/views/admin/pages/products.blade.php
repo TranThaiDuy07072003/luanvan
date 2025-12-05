@@ -144,7 +144,7 @@
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title" id="productModalLabel">Chỉnh
+                                                                    <h5 class="modal-title" id="productModalLabel"> Trang chỉnh
                                                                         sửa</h5>
                                                                     <button type="button" class="btn-close"
                                                                         data-dismiss="modal" aria-label="Close">

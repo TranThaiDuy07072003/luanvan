@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="images/favicon.ico" type="image/ico" />
+    <link rel="icon" href="{{ asset('assets/admin/images/favicon.png') }}" type="image/ico" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title')</title>
@@ -126,6 +126,9 @@
         <script src="{{ asset('assets/admin/vendors/pdfmake/build/vfs_fonts.js') }}"></script>
 
     @endif
+
+
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 
 
     <script src="{{ asset('assets/admin/js/custom.js') }}"></script>

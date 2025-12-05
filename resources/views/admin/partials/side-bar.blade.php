@@ -73,7 +73,7 @@
 
 
                     @if ($adminUser->role->permissions->contains('name', 'manager_contacts'))
-                        <li><a href="#"><i class="fa fa-edit"></i> Liên hệ </a></li>
+                        <li><a href="{{ route('admin.contacts.index') }}"><i class="fa fa-edit"></i> Liên hệ </a></li>
                     @endif
 
 
