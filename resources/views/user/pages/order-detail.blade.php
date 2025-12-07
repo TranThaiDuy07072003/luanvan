@@ -15,10 +15,9 @@
             <p>Trạng thái:
 
                 @if ($order->status == 'pending')
-                    <span class="badge bg-warning">Chờ xác
-                        nhận</span>
+                    <span class="badge bg-warning">Đang đóng gói</span>
                 @elseif($order->status == 'processing')
-                    <span class="badge bg-primary">Đang xử lý</span>
+                    <span class="badge bg-primary">Đang giao hàng</span>
                 @elseif($order->status == 'completed')
                     <span class="badge bg-success">Hoàn thành</span>
                 @elseif($order->status == 'canceled')
@@ -78,12 +77,24 @@
 
 
             @if ($order->status == 'pending')
-                <form action="{{ route('order.cancel' , $order->id) }}" method="POST"
+                <form action="{{ route('order.cancel', $order->id) }}" method="POST"
                     onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không ?');">
                     @csrf
 
                     <button type="submit" class="btn btn-danger mt-3">Hủy đơn hàng</button>
 
+                </form>
+            @endif
+
+
+            @if ($order->status == 'processing')
+                <form action="{{ route('order.complete', $order->id) }}" method="POST"
+                    onsubmit="return confirm('Bạn xác nhận đã nhận được hàng và sản phẩm không có vấn đề gì chứ?');">
+                    @csrf
+
+                    <button type="submit" class="btn btn-success mt-3">
+                        <i class="fas fa-check-circle"></i> Đã nhận được hàng
+                    </button>
                 </form>
             @endif
 
@@ -104,7 +115,8 @@
                                 <td>{{ $item->product->name }}</td>
 
                                 <td>
-                                    <a href="{{ route('product.detail' , $item->product->slug) }}" class="btn theme-btn-1 btn-effect-1">Đánh giá</a>
+                                    <a href="{{ route('product.detail', $item->product->slug) }}"
+                                        class="btn theme-btn-1 btn-effect-1">Đánh giá</a>
                                 </td>
 
 

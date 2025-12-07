@@ -56,3 +56,34 @@
 }
 
 
+.img-account{
+    width: 150px;
+    height: 150px;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #17a2b8; /* Màu xanh dương (Info) */
+    color: #ffffff; /* Chữ màu trắng cho dễ đọc */
+    transition: all 0.3s ease; /* Hiệu ứng chuyển màu mượt mà */
+}
+
+/* 2. Nút "Giao hàng" (hoặc Xác nhận) trong menu dropdown */
+.dropdown-menu .dropdown-item.confirm-order:hover {
+    background-color: #28a745; /* Màu xanh lá (Success) - Tạo cảm giác tích cực */
+    color: #ffffff;
+}
+
+
+
+
+
+/* Hộp thư admin*/
+.custom-message-top {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  white-space: unset !important;
+}

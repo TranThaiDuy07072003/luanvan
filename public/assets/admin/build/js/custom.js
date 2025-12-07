@@ -1,8 +1,8 @@
 /**
  * Resize function without multiple trigger
- * 
+ *
  * Usage:
- * $(window).smartresize(function(){  
+ * $(window).smartresize(function(){
  *     // code here
  * });
  */
@@ -16,8 +16,8 @@
             var obj = this, args = arguments;
             function delayed () {
                 if (!execAsap)
-                    func.apply(obj, args); 
-                timeout = null; 
+                    func.apply(obj, args);
+                timeout = null;
             }
 
             if (timeout)
@@ -25,11 +25,11 @@
             else if (execAsap)
                 func.apply(obj, args);
 
-            timeout = setTimeout(delayed, threshold || 100); 
+            timeout = setTimeout(delayed, threshold || 100);
         };
     };
 
-    // smartresize 
+    // smartresize
     jQuery.fn[sr] = function(fn){  return fn ? this.bind('resize', debounce(fn)) : this.trigger(sr); };
 
 })(jQuery,'smartresize');
@@ -611,7 +611,7 @@ function init_starrr() {
 
 function init_JQVmap() {
 
-    //console.log('check init_JQVmap [' + typeof (VectorCanvas) + '][' + typeof (jQuery.fn.vectorMap) + ']' );	
+    //console.log('check init_JQVmap [' + typeof (VectorCanvas) + '][' + typeof (jQuery.fn.vectorMap) + ']' );
 
     if (typeof (jQuery.fn.vectorMap) === 'undefined') { return; }
 
@@ -676,41 +676,37 @@ function init_skycons() {
 
 }
 
-
+//vòng tròn ở dashboard
 function init_chart_doughnut() {
 
     if (typeof (Chart) === 'undefined') { return; }
 
     console.log('init_chart_doughnut');
 
-    if ($('.canvasDoughnut').length) {
+    if ($('.canvasDoughnutCategory').length) {
 
-        var chart_doughnut_settings = {
+
+        $('.canvasDoughnutCategory').each(function () {
+            var chart_element = $(this);
+
+            var categoryLabels = JSON.parse(chart_element.attr('data-labels'));
+            var categoryCounts = JSON.parse(chart_element.attr('data-counts'));
+
+            var chart_doughnut_settings = {
             type: 'doughnut',
             tooltipFillColor: "rgba(51, 51, 51, 0.55)",
             data: {
-                labels: [
-                    "Symbian",
-                    "Blackberry",
-                    "Other",
-                    "Android",
-                    "IOS"
-                ],
+                labels: categoryLabels,
                 datasets: [{
-                    data: [15, 20, 30, 10, 30],
+                    data: categoryCounts,
+
                     backgroundColor: [
-                        "#BDC3C7",
-                        "#9B59B6",
-                        "#E74C3C",
-                        "#26B99A",
-                        "#3498DB"
+                        "#BDC3C7", "#9B59B6", "#E74C3C", "#26B99A", "#3498DB",
+                        "#F39C12", "#8E44AD", "#1ABC9C", "#C0392B", "#2ECC71"
                     ],
                     hoverBackgroundColor: [
-                        "#CFD4D8",
-                        "#B370CF",
-                        "#E95E4F",
-                        "#36CAAB",
-                        "#49A9EA"
+                        "#CFD4D8", "#B370CF", "#E95E4F", "#36CAAB", "#49A9EA",
+                        "#F39C15", "#9B59B6", "#16A085", "#D35400", "#27AE60"
                     ]
                 }]
             },
@@ -719,11 +715,7 @@ function init_chart_doughnut() {
                 responsive: false
             }
         }
-
-        $('.canvasDoughnut').each(function () {
-
-            var chart_element = $(this);
-            var chart_doughnut = new Chart(chart_element, chart_doughnut_settings);
+            new Chart(chart_element, chart_doughnut_settings);
 
         });
 
@@ -5036,4 +5028,4 @@ $(document).ready(function () {
     init_autosize();
     init_autocomplete();
 
-});	
+});

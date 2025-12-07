@@ -29,17 +29,29 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'stock'  => 'required|integer|min:0',
             'unit'   => 'required|string|max:50',
-
+            'images' => 'required', // Thêm bắt buộc chọn ảnh nếu muốn
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ], [
-            // Custom thông báo tiếng Việt cho thân thiện
-            'name.required'    => 'Tên sản phẩm không được để trống.',
-            'name.unique'      => 'Tên sản phẩm này đã tồn tại.',
-            'category_id.required' => 'Vui lòng chọn danh mục.',
-            'price.numeric'    => 'Giá tiền phải là dạng số.',
-            'stock.integer'    => 'Số lượng tồn kho phải là số nguyên.',
-            'images.required'  => 'Vui lòng chọn ít nhất một hình ảnh sản phẩm.',
-            
+            // --- DỊCH TIẾNG VIỆT TẠI ĐÂY ---
+            'name.required' => 'Tên sản phẩm không được để trống.',
+            'name.max' => 'Tên sản phẩm không được quá 255 ký tự.',
+
+            'category_id.required' => 'Vui lòng chọn danh mục sản phẩm.',
+
+            'price.required' => 'Vui lòng nhập giá tiền.',
+            'price.numeric' => 'Giá tiền phải là dạng số.',
+            'price.min' => 'Giá tiền không được nhỏ hơn 0.',
+
+            'stock.required' => 'Vui lòng nhập số lượng tồn kho.',
+            'stock.integer' => 'Số lượng phải là số nguyên.',
+            'stock.min' => 'Số lượng không được nhỏ hơn 0.',
+
+            'unit.required' => 'Vui lòng chọn đơn vị tính.',
+
+            'images.required' => 'Vui lòng chọn ít nhất một hình ảnh.',
+            'images.*.image' => 'File tải lên phải là hình ảnh.',
+            'images.*.mimes' => 'Ảnh phải có đuôi: jpeg, png, jpg, gif, svg.',
+            'images.*.max' => 'Dung lượng ảnh không được quá 2MB.',
         ]);
 
         $slug = Str::slug($request->name).'-'.time();

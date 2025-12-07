@@ -105,8 +105,8 @@
                                 <div class="card">
 
                                     <h5 class="collapsed ltn__card-title">
-                                        <input type="radio" name="payment_method" value="zalopay" id="payment_zalopay"
-                                            >
+                                        <input type="radio" name="payment_method" value="vnpay" id="payment_vnpay">
+                                        
                                         <label for="payment_zalopay">
                                             VNPay <img src="{{ asset('assets/user/img/icons/payment-3.png') }}"
                                                 alt="javascript:void(0)">

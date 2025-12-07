@@ -24,7 +24,7 @@
                             <div class="col-md-4 col-sm-4  profile_details">
                                 <div class="well profile_view">
                                     <div class="col-sm-12">
-                                        <h4 class="brief text-uppercase"><i>{{ $user->role->name }}</i></h4>
+                                        <h4 class="brief text-uppercase"><i>{{ optional($user->role)->name }}</i></h4>
                                         <div class="left col-md-7 col-sm-7">
                                             <h2>{{ $user->name }}</h2>
                                             <p><strong>Email: </strong> {{ $user->email }}

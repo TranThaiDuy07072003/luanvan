@@ -121,9 +121,11 @@
 
                                                         <td class="order-status">
                                                             @if ($order->status == 'pending')
-                                                                <span class="custom-badge badge badge-warning">Đợi xác nhận</span>
+                                                                <span class="custom-badge badge badge-warning">Đang đóng
+                                                                    gói</span>
                                                             @elseif ($order->status == 'processing')
-                                                                <span class="custom-badge badge badge-info">Đang giao hàng</span>
+                                                                <span class="custom-badge badge badge-info">Đang giao
+                                                                    hàng</span>
                                                             @elseif ($order->status == 'completed')
                                                                 <span class="custom-badge badge badge-success">Hoàn
                                                                     thành</span>
@@ -134,11 +136,12 @@
 
 
                                                         <td>
-                                                            @if ($order->payment->status == 'pending')
-                                                                <span class="custom-badge badge badge-danger">Chưa thanh
+                                                            {{-- Kiểm tra bảng Payment: Nếu tồn tại VÀ trạng thái KHÁC pending (tức là paid/completed) --}}
+                                                            @if ($order->payment && $order->payment->status != 'pending')
+                                                                <span class="custom-badge badge badge-success">Đã thanh
                                                                     toán</span>
                                                             @else
-                                                                <span class="custom-badge badge badge-success">Đã thanh
+                                                                <span class="custom-badge badge badge-danger">Chưa thanh
                                                                     toán</span>
                                                             @endif
                                                         </td>
@@ -164,10 +167,12 @@
                                                                     @if ($order->status == 'pending')
                                                                         <a class="dropdown-item confirm-order"
                                                                             href="javascript:void(0)"
-                                                                            data-id="{{ $order->id }}">Xác nhận</a>
+                                                                            data-id="{{ $order->id }}">Giao hàng</a>
                                                                     @endif
 
-                                                                    <a class="dropdown-item" target="_blank" href="{{ route('admin.order-detail', ['id' => $order->id]) }}">Xem chi tiết</a>
+                                                                    <a class="dropdown-item" target="_blank"
+                                                                        href="{{ route('admin.order-detail', ['id' => $order->id]) }}">Xem
+                                                                        chi tiết</a>
 
                                                                 </div>
                                                             </div>
@@ -181,12 +186,14 @@
 
                                         @foreach ($orders as $order)
                                             {{-- Modal địa chỉ --}}
-                                            <div class="modal fade" id="addressShippingModal-{{ $order->id }}" tabindex="-1"
-                                                role="dialog" aria-labelledby="addressShippingModalLabel" aria-hidden="true">
+                                            <div class="modal fade" id="addressShippingModal-{{ $order->id }}"
+                                                tabindex="-1" role="dialog" aria-labelledby="addressShippingModalLabel"
+                                                aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="addressShippingModalLabel">Thông tin giao hàng</h5>
+                                                            <h5 class="modal-title" id="addressShippingModalLabel">Thông tin
+                                                                giao hàng</h5>
                                                             <button type="button" class="btn-close" data-dismiss="modal"
                                                                 aria-label="Close">
                                                                 <span aria-hidden="true"> &times; </span>
@@ -194,7 +201,7 @@
                                                         </div>
                                                         <div class="modal-body">
 
-                                                            <p>Người nhận: {{ $order->shippingAddress->full_name}}</p>
+                                                            <p>Người nhận: {{ $order->shippingAddress->full_name }}</p>
                                                             <p>Địa chỉ: {{ $order->shippingAddress->address }}</p>
                                                             <p>Thành phố: {{ $order->shippingAddress->city }}</p>
                                                             <p>Điện thoại: {{ $order->shippingAddress->phone }}</p>

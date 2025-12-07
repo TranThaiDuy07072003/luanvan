@@ -101,7 +101,8 @@
     <script src="{{ asset('assets/admin/vendors/moment/min/moment.min.js') }}"></script>
     <script src="{{ asset('assets/admin/vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 
-    <script src="{{ asset('assets/admin/build/js/custom.min.js') }}"></script>
+    {{-- custom theme circle --}}
+    <script src="{{ asset('assets/admin/build/js/custom.js') }}"></script>
 
     <!-- jQuery-toast -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

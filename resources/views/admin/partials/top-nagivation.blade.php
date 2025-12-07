@@ -9,84 +9,93 @@
                 <li class="nav-item dropdown open" style="padding-left: 15px;">
                     <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown"
                         data-toggle="dropdown" aria-expanded="false">
-                        <img src="images/img.jpg" alt="">John Doe
+                        <img src="{{ asset('storage/' . $userAdmin->avatar) }}" alt="">Admin
                     </a>
                     <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="javascript:;"> Profile</a>
-                        <a class="dropdown-item" href="javascript:;">
-                            <span class="badge bg-red pull-right">50%</span>
-                            <span>Settings</span>
-                        </a>
-                        <a class="dropdown-item" href="javascript:;">Help</a>
+                        <a class="dropdown-item" href="{{ route('admin.profile') }}"> Tài khoản</a>
+
                         <a class="dropdown-item" href="{{ route('admin.logout') }}"><i class="fa fa-sign-out pull-right"></i> Đăng xuất</a>
                     </div>
                 </li>
 
-                <li role="presentation" class="nav-item dropdown open">
+                <li  class="nav-item dropdown open">
                     <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1"
                         data-toggle="dropdown" aria-expanded="false">
                         <i class="fa fa-envelope-o"></i>
-                        <span class="badge bg-green">6</span>
+                        {{-- số tin nhắn --}}
+                        <span class="badge bg-green">{{ $messages->count() }}</span>
                     </a>
                     <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
-                        <li class="nav-item">
-                            <a class="dropdown-item">
-                                <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                                <span>
-                                    <span>John Smith</span>
-                                    <span class="time">3 mins ago</span>
-                                </span>
-                                <span class="message">
-                                    Film festivals used to be do-or-die moments for movie makers. They were where...
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="dropdown-item">
-                                <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                                <span>
-                                    <span>John Smith</span>
-                                    <span class="time">3 mins ago</span>
-                                </span>
-                                <span class="message">
-                                    Film festivals used to be do-or-die moments for movie makers. They were where...
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="dropdown-item">
-                                <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                                <span>
-                                    <span>John Smith</span>
-                                    <span class="time">3 mins ago</span>
-                                </span>
-                                <span class="message">
-                                    Film festivals used to be do-or-die moments for movie makers. They were where...
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="dropdown-item">
-                                <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                                <span>
-                                    <span>John Smith</span>
-                                    <span class="time">3 mins ago</span>
-                                </span>
-                                <span class="message">
-                                    Film festivals used to be do-or-die moments for movie makers. They were where...
-                                </span>
-                            </a>
-                        </li>
+                        @for ($i=0; $i < min(3, $messages->count()); $i++)
+                            <li class="nav-item">
+                                <a class="dropdown-item">
+                                    <span class="image"><img src="{{ asset('assets/admin/images/user.jpg') }}" alt="Profile Image" /></span>
+                                    <span>
+                                        <span>{{ $messages[$i]->full_name }}</span>
+                                        <span class="time">{{ $messages[$i]->created_at->diffForHumans() }}</span>
+                                    </span>
+                                    <span class="message custom-message-top">
+                                        {{ Str::limit($messages[$i]->message, 25) }}
+                                    </span>
+                                </a>
+                            </li>
+                        @endfor
+
                         <li class="nav-item">
                             <div class="text-center">
-                                <a class="dropdown-item">
-                                    <strong>See All Alerts</strong>
+                                <a class="dropdown-item" href="{{ route('admin.contacts.index') }}">
+                                    <strong>Xem tất cả liên hệ</strong>
                                     <i class="fa fa-angle-right"></i>
                                 </a>
                             </div>
                         </li>
                     </ul>
                 </li>
+
+
+                {{-- bản copy (phần thông báo) --}}
+                <li  class="nav-item dropdown open" style="margin-right: 12px">
+                    <a href="javascript:;" class="dropdown-toggle info-number"
+                        data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-bell-o"></i>
+                        {{-- số thông báo --}}
+                        <span class="badge bg-green">{{ $notifications->count() }}</span>
+                    </a>
+
+
+                    <ul class="dropdown-menu list-unstyled msg_list" role="menu">
+
+                        @for ($i=0; $i < min(3, $notifications->count()); $i++)
+                            <li class="nav-item">
+                                <a class="dropdown-item">
+                                    <span class="image"><img src="{{ asset('assets/admin/images/bell_notifications.jpg') }}" style="width: 30px; height: 30px;" alt="Profile Image" /></span>
+
+                                    <span>
+                                        <a href="{{ route('admin.notifications.index') }}"><span>{{ $notifications[$i]->title }}</span></a>
+                                        <span class="time">{{ $notifications[$i]->created_at->diffForHumans() }}</span>
+                                    </span>
+
+
+                                    <span class="message custom-message-top">
+                                        {{ Str::limit($notifications[$i]->message, 25) }}
+                                    </span>
+                                </a>
+                            </li>
+                        @endfor
+
+                        <li class="nav-item">
+
+                            <div class="text-center">
+                                <a class="dropdown-item" href="{{ route('admin.notifications.index') }}">
+                                    <strong>Xem tất cả thông báo</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </div>
+
+                        </li>
+                    </ul>
+                </li>
+
             </ul>
         </nav>
     </div>

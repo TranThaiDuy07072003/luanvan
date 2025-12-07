@@ -698,7 +698,229 @@ $(document).ready(function(){
 
 
 
+    /*********************************
+     * MANAGEMENT -Profile admin
+     *********************************/
+    // nút đổi mật khẩu
+    $(".form-change-pass").on("click", function(e){
+        e.preventDefault();
+        $("#change-password").toggle();
 
+        if($("#change-password").is(":visible")){
+            $(this).text("Đóng");
+        }else{
+            $(this).text("Đổi mật khẩu");
+        }
+
+    });
+
+    //click vào ảnh
+    $('.update-avatar').on('click', function (e) {
+        e.preventDefault();
+        $('#avatar').trigger('click');
+    });
+
+    //nút đổi ảnh
+    $('#avatar').on('change', function (e) {
+        let file = e.target.files[0];
+        if (file) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#avatar-preview').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(file);
+
+
+            //tạo formData để gửi ảnh đại diện admin
+            let formData = new FormData();
+            formData.append("type", "avatar");
+            formData.append("avatar", file);
+
+            updateProfile(formData);
+
+
+        } else {
+            $('#avatar-preview').attr('src', '');
+        }
+    });
+
+
+    //logic validate khi nhấn nút "cập nhật"
+    $("#update-profile").submit(function (e){
+        let valid = true;
+        let name = $("#name").val().trim();
+        let phone = $("#phone").val().trim();
+        let address = $("#address").val().trim();
+        e.preventDefault();
+
+        if(name.length < 3)
+        {
+            toastr.error(
+                "Họ và tên phải có ít nhất 3 ký tự."
+            );
+            valid = false;
+        }
+
+        let phoneRegex = /^0\d{9}$/;
+
+        if(!phoneRegex.test(phone)) {
+            toastr.error(
+                "Số điện thoại không hợp lệ. Phải có 10 số và bắt đầu bằng 0."
+            );
+            valid = false;
+        }
+
+        if(valid)
+        {
+            let formData = new FormData();
+            formData.append('type', "profile");
+            formData.append('name', name);
+            formData.append('phone', phone);
+            formData.append('address', address);
+
+            updateProfile(formData);
+        }
+
+    });
+
+
+
+    //bảng validate cái phần đổi mật khẩu
+    $("#change-password").submit(function (e){
+        let valid = true;
+        let current_password = $("#current_password").val().trim();
+        let new_password = $("#new_password").val().trim();
+        let confirm_password = $("#confirm_password").val().trim();
+        e.preventDefault();
+
+        if(current_password === "")
+        {
+            toastr.error(
+                "Bạn cần nhập đúng mật khẩu hiện tại."
+            );
+            valid = false;
+        }
+
+
+        if(new_password.length < 6) {
+            toastr.error(
+                "Mật khẩu mới phải có ít nhất 6 ký tự"
+            );
+            valid = false;
+        }
+
+
+        if(new_password !== confirm_password) {
+            toastr.error(
+                "Mật khẩu xác nhận không khớp."
+            );
+            valid = false;
+        }
+
+
+        if(valid)
+        {
+            let formData = new FormData();
+            formData.append("type", "password");
+            formData.append("current_password", current_password);
+            formData.append("new_password", new_password);
+            formData.append("confirm_password", confirm_password);
+
+            updateProfile(formData);
+        }
+
+    });
+
+
+    //logic cập nhật thông tin khi nhập chính xác
+    function updateProfile(formData)
+    {
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+            }
+        });
+
+
+        $.ajax({
+            url: "profile/update",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: "json",
+
+            success: function (response) {
+                if (response.status) {
+                    toastr.success(response.message);
+
+
+                    if(formData.get("type") === "profile"){
+                        console.log(formData.get("name"));
+
+                        $("#user-name").text(formData.get("name"));
+                        $("#user-address").text(formData.get("address"));
+
+                        $("#user-phone").text(formData.get("phone"));
+                    }
+
+                    if(formData.get("type") === "password"){
+                        $("#change-password")[0].reset();
+                    }
+
+                    if(formData.get("type") === "avatar"){
+                        $("#avatar-preview").attr("src", response.avatar_url);
+                    }
+
+
+
+                } else {
+                    toastr.error(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Có lỗi xảy ra: " + error);
+            }
+        });
+    }
+
+
+
+    /*********************************
+     * MANAGEMENT notification
+     *********************************/
+    $(document).on('click', '.notification-item', function(e) {
+        e.preventDefault(); // 1. QUAN TRỌNG: Ngăn không cho trình duyệt tự chuyển trang ngay lập tức
+
+        let noti_id = $(this).data("id");
+        let redirectUrl = $(this).attr('href'); // 2. Lưu lại cái link để tí nữa chuyển sau
+
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+            }
+        });
+
+        $.ajax({
+            url: "/admin/notification/update", // Thêm dấu / ở đầu để đảm bảo đường dẫn tuyệt đối
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: noti_id
+            },
+
+            success: function(response) {
+                // 3. Cập nhật thành công -> Mới bắt đầu chuyển trang
+                window.location.href = redirectUrl;
+            },
+
+            error: function(xhr, status, error) {
+                // Lỡ có lỗi server thì vẫn cho khách chuyển trang luôn (để họ đỡ bị kẹt lại)
+                console.log("Lỗi update status: " + error);
+                window.location.href = redirectUrl;
+            }
+        });
+    })
 
 
 

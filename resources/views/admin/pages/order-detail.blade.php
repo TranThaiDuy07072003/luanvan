@@ -129,7 +129,7 @@
                                         <p class="lead">Phương thức thanh toán:</p>
 
 
-                                        @if ($order->payment->payment_method == 'VNPay')
+                                        @if ($order->payment->payment_method == 'vnpay')
                                             <img src="{{ asset('assets/admin/images/paypal.png') }}" alt="Paypal">
                                         @else
                                             <img src="{{ asset('assets/admin/images/cash1.png') }}" width="80px"

@@ -77,6 +77,12 @@ Route::prefix('/')->group(function () {
 
         Route::post('/checkout', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder');
 
+
+        //thanh toán VNPay
+        // --- THÊM ROUTE NÀY ---
+        Route::get('/checkout/vnpay-return', [CheckoutController::class, 'vnpayReturn'])->name('vnpay.return');
+
+
         Route::get('/order/{id}', [OrderController::class, 'showOrder'])->name('order.show');
 
         //hủy đơn hàng
@@ -137,6 +143,11 @@ Route::prefix('/')->group(function () {
 
         // Thêm route cho logout (POST để bảo mật, tránh logout bằng GET)
         // Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+        Route::post('/order/{id}/complete', [OrderController::class, 'completeOrder'])->name('order.complete');
+
+
+
     });
 
 });
