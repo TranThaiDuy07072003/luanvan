@@ -81,7 +81,7 @@ Route::prefix('admin')->group(function () {
 
             Route::post('/order/confirm', [OrderController::class, 'confirmOrder']);
 
-            //Xem chi tiết đơn mà khách đặt, sau đó mình gửi hóa đơn cho khách
+            //Xem chi tiết đơn mà khách đặt, sau đó mình gửi hóa đơn cho khách nếu khách cần
             Route::get('/order-detail/{id}' , [OrderController::class, 'showOrderDetail'])->name('admin.order-detail');
 
 

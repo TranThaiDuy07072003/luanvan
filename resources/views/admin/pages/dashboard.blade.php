@@ -31,7 +31,7 @@
                 </div>
 
 
-                <div class="col-md-3 col-sm-4  tile_stats_count">
+                <div class="col-md-2 col-sm-4  tile_stats_count" style="overflow: unset">
                     <span class="count_top"><i class="fa fa-money"></i> Tổng doanh thu</span>
                     <div class="count">{{ number_format($orders->sum('total_price'), 0, 0) }} VNĐ</div>
                 </div>
@@ -44,6 +44,34 @@
 
 
         <div class="row">
+
+            {{-- Biểu đồ doanh thu --}}
+            <!-- bar chart -->
+            <div class="col-md-4 col-sm-4  ">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Biểu đồ doanh thu</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <canvas id="revenueBarChart"
+                    data-labels= '@json($monthlyRevenue->pluck('month')->toArray())'
+                    data-values='@json($monthlyRevenue->pluck('revenue')->toArray())'
+                                        ></canvas>
+                  </div>
+                </div>
+              </div>
+            <!-- /bar charts -->
+
+
+
             {{-- màu vòng tròn dashboard --}}
             <div class="col-md-4 col-sm-4 ">
                 <div class="x_panel tile fixed_height_320 overflow_hidden">
@@ -63,7 +91,7 @@
                         <table class="" style="width:100%">
                             <tr>
                                 <th style="width:37%;">
-                                    <p>Top 5</p>
+                                    <p>Top {{ $categories->count()}}</p>
                                 </th>
                                 <th>
                                     <div class="col-lg-7 col-md-7 col-sm-7 ">
@@ -104,8 +132,8 @@
             </div>
 
 
-
-            <div class="col-md-5 col-sm-5  ">
+            {{-- 3 Sản phẩm bán chạy nhất --}}
+            <div class="col-md-4 col-sm-4  ">
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>Sản phẩm bán chạy nhất <small>Danh sách</small></h2>
@@ -143,7 +171,7 @@
 
                                         <td>{{ $item->name }}</td>
 
-                                        <td>{{ number_format($item->price,0,',','.') }} VNĐ</td>
+                                        <td>{{ number_format($item->price, 0, ',', '.') }} VNĐ</td>
                                         <td>{{ $item->total_sold }}</td>
                                     </tr>
                                 @endforeach
@@ -156,6 +184,122 @@
             </div>
 
 
+            {{-- Số người dùng mới --}}
+            <div class="col-md-5 col-sm-5  ">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Người dùng mới <small>Danh sách</small></h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Khách hàng</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Trạng thái</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @for ($i = 0; $i < min(3, $users->count()); $i++)
+                                    <tr>
+                                        <td scope="row">{{ $users[$i]->id }}</td>
+                                        <td>{{ $users[$i]->name }}</td>
+                                        <td>{{ $users[$i]->phone_number }}</td>
+                                        <td>
+                                            @if ($users[$i]->status == 'banned')
+                                                <span class="custom-badge badge badge-warning">Bị chặn</span>
+                                            @elseif ($users[$i]->status == 'deleted')
+                                                <span class="custom-badge badge badge-danger">Đã xóa</span>
+                                            @elseif ($users[$i]->status == 'pending')
+                                                <span class="custom-badge badge badge-primary">Đợi kích hoạt</span>
+                                            @else
+                                                <span class="custom-badge badge badge-success">Đã kích hoạt</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endfor
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+
+            {{-- Những đơn hàng mới --}}
+            <div class="col-md-6 col-sm-6  ">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Đơn hàng mới <small>Danh sách</small></h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Khách hàng</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th>Ngày đặt hàng</th>
+                                    <th>Xem chi tiết</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @for ($i = 0; $i < min(3, $orders->count()); $i++)
+                                    <tr>
+                                        <td scope="row">{{ $orders[$i]->id }}</td>
+                                        <td>{{ $orders[$i]->shippingAddress->full_name }}</td>
+                                        <td>{{ number_format($orders[$i]->total_price, 0, ',', '.') }} vnd</td>
+                                        <td>
+                                            @if ($orders[$i]->status == 'pending')
+                                                <span class="custom-badge badge badge-warning">Đợi xác nhận</span>
+                                            @elseif ($orders[$i]->status == 'canceled')
+                                                <span class="custom-badge badge badge-danger">Đã hủy</span>
+                                            @elseif ($orders[$i]->status == 'processing')
+                                                <span class="custom-badge badge badge-success">Đang giao</span>
+                                            @else
+                                                <span class="custom-badge badge bg-green">Hoàn thành</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $orders[$i]->created_at->format('d-m-Y H:i:s') }}</td>
+                                        <td>
+                                            <a href="{{ route('admin.order-detail', ['id' => $orders[$i]->id]) }}"
+                                                class="btn btn-primary" target="_blank">
+                                                Xem chi tiết
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endfor
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
 
         </div>
 

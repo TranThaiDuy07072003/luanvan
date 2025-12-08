@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="{{ asset('assets/user/css/responsive.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/user/css/custom.css') }}">
 
+    <link rel="stylesheet" href="{{ asset('assets/user/css/chat.css') }}">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 
@@ -31,6 +33,8 @@
         </main>
 
         @include('user.partials.feature')
+
+        @include('user.partials.chat_ai')
         @include('user.partials.footer')
     </div>
 
@@ -54,6 +58,10 @@
     <script src="{{ asset('assets/user/js/custom.js') }}"></script>
 
     <script src="{{ asset('assets/user/css/custom.css') }}"></script>
+
+
+    <script src="{{ asset('assets/user/js/chat.js') }}"></script>
+
 
     <script>
         // 1. Setup CSRF Token cho mọi request AJAX

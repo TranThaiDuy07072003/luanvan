@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductRecipe extends Model
 {
-    protected $table = 'product_recipe'; // chỉ định đúng tên bảng trung gian
+    protected $table = 'product_recipes'; // chỉ định đúng tên bảng trung gian
 
     protected $fillable = ['recipe_id', 'product_id', 'quantity'];
 

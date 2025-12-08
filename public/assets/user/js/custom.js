@@ -1,4 +1,3 @@
-// const { data } = require("alpinejs");
 
 $(document).ready(function() {
 
@@ -741,6 +740,119 @@ if(window.location.pathname !=='/cart'){
 
 
 
+
+    // ======================================================
+    // LOGIC RIÊNG CHO POPUP MÓN ĂN (RECIPE)
+    // ======================================================
+
+    // 1. Mở Modal và load dữ liệu
+    $(document).on('click', '.btn-show-recipe', function(e) {
+        e.preventDefault();
+        let recipeId = $(this).data('id');
+        $('#ingredient-list').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x text-success"></i></div>');
+        $('#modalRecipe').modal('show');
+
+        $.ajax({
+            url: "/get-recipe-ingredients",
+            type: "POST",
+            data: { id: recipeId },
+            success: function(response) {
+                if (response.status) {
+                    $('#recipe-title').text('Nguyên liệu món: ' + response.recipe_name);
+                    $('#ingredient-list').html(response.html);
+                } else {
+                    $('#ingredient-list').html('<div class="text-danger text-center">'+response.message+'</div>');
+                }
+            },
+            error: function() {
+                $('#ingredient-list').html('<div class="text-danger text-center">Lỗi tải dữ liệu.</div>');
+            }
+        });
+    });
+
+    // 2. Xử lý nút CỘNG TRỪ trong Popup (Class riêng, không đụng code cũ)
+    $(document).on('click', '.btn-qty-minus', function() {
+        let input = $(this).next('input');
+        let val = parseInt(input.val());
+        if (val > 1) input.val(val - 1);
+    });
+
+    $(document).on('click', '.btn-qty-plus', function() {
+        let input = $(this).prev('input');
+        let val = parseInt(input.val());
+        let max = parseInt(input.data('max'));
+        if (val < max) input.val(val + 1);
+    });
+
+    // 3. Xử lý nút MUA của từng món (Lấy đúng số lượng cạnh nó)
+    $(document).on('click', '.btn-add-recipe-item', function(e) {
+        e.preventDefault();
+        let btn = $(this);
+        let id = btn.data('id');
+
+        // Tìm ô input nằm cùng dòng với nút bấm này
+        let quantity = btn.closest('.product-action-bhx').find('.input-qty-recipe').val();
+
+        // Hiệu ứng xoay xoay
+        let originalHtml = btn.html();
+        btn.html('<i class="fas fa-spinner fa-spin"></i>').prop('disabled', true);
+
+        // Gọi Ajax thêm vào giỏ (Dùng lại route cũ nhưng logic gọi mới)
+        $.ajax({
+            url: '/cart/add',
+            type: "POST",
+            data: {
+                product_id: id,
+                quantity: quantity
+            },
+            success: function(response) {
+                toastr.success("Đã thêm vào giỏ hàng!");
+                $('#cart_count').text(response.cart_count);
+
+                // Trả lại nút như cũ
+                btn.html('<i class="fas fa-check"></i>').prop('disabled', false);
+                setTimeout(() => { btn.html(originalHtml); }, 1500);
+            },
+            error: function() {
+                toastr.error("Lỗi thêm vào giỏ hàng");
+                btn.html(originalHtml).prop('disabled', false);
+            }
+        });
+    });
+
+    // 4. (Nâng cao) Xử lý nút "THÊM TẤT CẢ VÀO GIỎ"
+    $(document).on('click', '.btn-add-all-recipe', function() {
+        let items = [];
+        // Quét tất cả các món đang hiện trong popup
+        $('.btn-add-recipe-item').each(function() {
+            let id = $(this).data('id');
+            let qty = $(this).closest('.product-action-bhx').find('.input-qty-recipe').val();
+            items.push({ product_id: id, quantity: qty });
+        });
+
+        if(items.length === 0) return;
+
+        // Gửi mảng items về server (Bạn cần viết thêm Route xử lý mảng này nếu muốn)
+        // Hiện tại tạm thời loop ajax (cách đơn giản nhất cho sinh viên)
+        let count = 0;
+        $(this).html('<i class="fas fa-spinner fa-spin"></i> Đang xử lý...').prop('disabled', true);
+
+        items.forEach(item => {
+            $.ajax({
+                url: '/cart/add',
+                type: "POST",
+                data: item,
+                success: function(res) {
+                    count++;
+                    if(count === items.length) {
+                        toastr.success("Đã thêm tất cả nguyên liệu vào giỏ!");
+                        $('#cart_count').text(res.cart_count);
+                        setTimeout(() => { location.reload(); }, 1000); // Load lại trang để vào giỏ hàng luôn
+                    }
+                }
+            });
+        });
+    });
 
 
 

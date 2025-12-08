@@ -23,6 +23,8 @@
     <!-- Responsive css -->
     <link rel="stylesheet" href="{{ asset('assets/user/css/responsive.css') }}">
 
+    <link rel="stylesheet" href="{{ asset('assets/user/css/chat.css') }}">
+
     <!-- jQuery-toast-CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
@@ -40,7 +42,7 @@
 
          <div style="margin-top: 100px;"></div> <!-- Tạo khoảng trống -->
 
-
+         @include('user.partials.chat_ai')
          @include('user.partials.footer_home') <!-- Đường dẫn của footer_home -->
 
 
@@ -76,6 +78,9 @@
 
     <!-- Custom JS -->
     <script src="{{ asset('assets/user/js/custom.js') }}"></script>
+
+    <script src="{{ asset('assets/user/js/chat.js') }}"></script>
+
 
 </body>
 

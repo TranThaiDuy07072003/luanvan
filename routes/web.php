@@ -3,12 +3,14 @@
 use App\Http\Controllers\Clients\AccountController;
 use App\Http\Controllers\Clients\AuthController;
 use App\Http\Controllers\Clients\CartController;  // Use cho AuthController custom
+use App\Http\Controllers\Clients\ChatController;
 use App\Http\Controllers\Clients\CheckoutController;  // Use cho ProfileController từ Breeze (nếu cần)
 use App\Http\Controllers\Clients\ContactController;
 use App\Http\Controllers\Clients\HomeController;
 use App\Http\Controllers\Clients\OrderController;
 use App\Http\Controllers\Clients\PasswordController;
 use App\Http\Controllers\Clients\ProductController;
+use App\Http\Controllers\Clients\RecipeController;
 use App\Http\Controllers\Clients\ReviewController;
 use App\Http\Controllers\Clients\SearchController;
 use App\Http\Controllers\ProfileController;
@@ -127,6 +129,18 @@ Route::prefix('/')->group(function () {
 
     Route::get('/search', [SearchController::class, 'index'])->name('search');
 
+
+    //chatbox
+    Route::get('/chat/messages', [ChatController::class, 'fetchMessages']);
+    Route::post('/chat/send', [ChatController::class, 'sendMessage']);
+
+
+
+    // Trang xem món ăn
+    Route::get('/goi-y-mon-an', [RecipeController::class, 'index'])->name('client.recipes');
+
+    // Ajax lấy nguyên liệu
+    Route::post('/get-recipe-ingredients', [RecipeController::class, 'getIngredients'])->name('get.recipe.ingredients');
 
 
 

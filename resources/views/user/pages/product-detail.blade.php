@@ -16,17 +16,17 @@
                             <div class="col-md-6">
                                 <div class="ltn__shop-details-img-gallery">
                                     <div class="ltn__shop-details-large-img">
-                                        <div class="single-large-img">
+                                        @foreach ($product->images as $image)
+                                             <div class="single-large-img">
 
-                                            @foreach ($product->images as $image)
                                                 <a href="{{ asset('storage/' . $image->image) }}"
                                                     data-rel="lightcase:myCollection">
                                                     <img src="{{ asset('storage/' . $image->image) }}"
                                                         alt="{{ $product->name }}">
                                                 </a>
-                                            @endforeach
 
-                                        </div>
+                                            </div>
+                                        @endforeach
 
                                     </div>
                                     <div class="ltn__shop-details-small-img slick-arrow-2">
@@ -202,7 +202,7 @@
                                     </div>
 
                                     <!-- Đánh giá sản phẩm -->
-                                    @if (Auth::check() && $hasReviewed && !$hasReviewed)
+                                    @if (Auth::check() && $hasPurchased && !$hasReviewed)
                                         <div class="ltn__comment-reply-area ltn__form-box mb-30">
                                             <form id="review-form" data-product-id={{ $product->id }}>
                                                 <h4 class="title-2">Thêm đánh giá</h4>
