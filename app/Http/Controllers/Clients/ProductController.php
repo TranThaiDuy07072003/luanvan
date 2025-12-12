@@ -17,30 +17,24 @@ class ProductController extends Controller
         $categories = Category::withCount('products')->get();
         $products = Product::with('firstImage')->whereIn('status', ['in_stock', 'out_of_stock'])->paginate(9);
 
-
         /** @var \App\Models\Product $product */
         foreach ($products as $product) {
             $product->image_url = $product->firstImage?->image
-            ? asset('storage/' . $product->firstImage->image)
+            ? asset('storage/'.$product->firstImage->image)
                 : asset('storage/uploads/products/default-product.png');
         }
 
         return view('user.pages.products', compact('categories', 'products'));
     }
 
-
-
-
-
-    public function filter(Request $request){
+    public function filter(Request $request)
+    {
         $query = Product::with('firstImage')->whereIn('status', ['in_stock', 'out_of_stock']);
 
         // Lọc Category
-        if($request->has('category_id')&& $request->category_id != '')
-        {
+        if ($request->has('category_id') && $request->category_id != '') {
             $query->where('category_id', $request->category_id);
         }
-
 
         if ($request->has('sort_by')) {
             switch ($request->sort_by) {
@@ -59,16 +53,15 @@ class ProductController extends Controller
             }
         } else {
 
-             $query->orderBy('id', 'desc');
+            $query->orderBy('id', 'desc');
         }
-
 
         $products = $query->paginate(9)->withQueryString();
 
         /** @var \App\Models\Product $product */
         foreach ($products as $product) {
             $product->image_url = $product->firstImage?->image
-            ? asset('storage/' . $product->firstImage->image)
+            ? asset('storage/'.$product->firstImage->image)
                 : asset('storage/uploads/products/default-product.png');
         }
 
@@ -83,52 +76,67 @@ class ProductController extends Controller
 
 
 
-    public function detail($slug)
+    public function filterByCategory($id)
     {
-        $product = Product::with( ['category', 'images', 'reviews.user'])->where( 'slug',  $slug)->firstOrFail();
+        $categories = Category::withCount('products')->get();
+        $selectedCategory = Category::findOrFail($id);
 
-        // Get products in the same category
-        $relatedProducts = Product::where( 'category_id',  $product->category_id)
-        ->where('id',  '!=',  $product->id)
-        ->limit(6)
-        ->get();
+        $products = Product::with('firstImage')
+            ->where('category_id', $id)
+            ->whereIn('status', ['in_stock', 'out_of_stock'])
+            ->paginate(9);
 
-
-        //Calculate average raing, ensure no null
-        $averageRating = round($product->reviews()->avg('rating') ?? 0, 1);
-
-        $hasPurchased = false;
-        $hasReviewed = false;
-
-        if (Auth::check())
-        {
-            $user = Auth::user();
-
-            //Kiểm tra người dùng đã mua sản phẩm hay chưa
-            $hasPurchased = OrderItem::whereHas('order', function($query) use ($user){
-                $query->where('user_id', $user->id)->where('status', 'completed');
-            })->where('product_id', $product->id)->exists();
-
-
-            //Kiểm tra người dùng đã danh giá sản phẩm hay chưa
-            $hasReviewed = Review::where('user_id', $user->id)
-                ->where('product_id', $product->id)
-                ->exists();
-        }
-
-
-        // 2. [QUAN TRỌNG] Xử lý đường dẫn ảnh cho sản phẩm tương tự
-        foreach ($relatedProducts as $related) {
-            $related->image_url = $related->firstImage
-                ? asset('storage/' . $related->firstImage->image)
+        /** @var \App\Models\Product $product */
+        foreach ($products as $product) {
+            $product->image_url = $product->firstImage?->image
+                ? asset('storage/'.$product->firstImage->image)
                 : asset('storage/uploads/products/default-product.png');
         }
 
-        return view('user.pages.product-detail',  compact('product',  'relatedProducts', 'hasPurchased', 'hasReviewed', 'averageRating'));
+        return view('user.pages.products', compact('categories', 'products', 'selectedCategory'));
     }
 
 
 
 
 
+    public function detail($slug)
+    {
+        $product = Product::with(['category', 'images', 'reviews.user'])->where('slug', $slug)->firstOrFail();
+
+        // lấy sản phẩm cùng danh mục
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->limit(6)
+            ->get();
+
+        // tính điểm đánh giá trung bình
+        $averageRating = round($product->reviews()->avg('rating') ?? 0, 1);
+
+        $hasPurchased = false;
+        $hasReviewed = false;
+
+        if (Auth::check()) {
+            $user = Auth::user();
+
+            // Kiểm tra người dùng đã mua sản phẩm hay chưa
+            $hasPurchased = OrderItem::whereHas('order', function ($query) use ($user) {
+                $query->where('user_id', $user->id)->where('status', 'completed');
+            })->where('product_id', $product->id)->exists();
+
+            // Kiểm tra người dùng đã danh giá sản phẩm hay chưa
+            $hasReviewed = Review::where('user_id', $user->id)
+                ->where('product_id', $product->id)
+                ->exists();
+        }
+
+        // 2. [QUAN TRỌNG] Xử lý đường dẫn ảnh cho sản phẩm tương tự
+        foreach ($relatedProducts as $related) {
+            $related->image_url = $related->firstImage
+                ? asset('storage/'.$related->firstImage->image)
+                : asset('storage/uploads/products/default-product.png');
+        }
+
+        return view('user.pages.product-detail', compact('product', 'relatedProducts', 'hasPurchased', 'hasReviewed', 'averageRating'));
+    }
 }

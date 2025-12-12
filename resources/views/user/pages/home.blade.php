@@ -23,8 +23,7 @@
                                                 <i class="fa fa-play"></i>
                                             </a>
                                         </div>
-                                        <!-- <h6 class="slide-sub-title animated"><img src="img/icons/icon-img/1.png"
-                                                                                                                alt="#"> 100% genuine Products</h6> -->
+
                                         <h1 class="slide-title animated ">Thực Phẩm Sạch <br> Đến Cho Mọi Nhà</h1>
                                         <div class="slide-brief animated">
                                             <p>Chúng Tôi Mang Đến Sự Trải Nghiệm <br>Đến Cho Khách Hàng.</p>
@@ -65,12 +64,12 @@
                     <div class="col-12">
                         <div class="ltn__category-item ltn__category-item-3 text-center">
                             <div class="ltn__category-item-img">
-                                <a href="shop.html">
+                                <a href="{{ route('products.byCategory', $category->id) }}">
                                     <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}">
                                 </a>
                             </div>
                             <div class="ltn__category-item-name">
-                                <h5><a href="shop.html">{{ $category->name }}</a></h5>
+                                <h5><a href="{{ route('products.byCategory', $category->id) }}">{{ $category->name }}</a></h5>
                                 <h6>({{ $category->products->count() }} sản phẩm)</h6>
                             </div>
                         </div>

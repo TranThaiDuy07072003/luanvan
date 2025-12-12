@@ -19,10 +19,11 @@ class RecipeController extends Controller
     // 2. Ajax lấy nguyên liệu (Popup)
     public function getIngredients(Request $request)
     {
-        $recipe = Recipe::with('products')->find($request->id);
+        $recipe = Recipe::with(['products' => function ($q) {
+            $q->with('images'); // đổi từ firstImage sang images
+        }])->find($request->id);
 
         if ($recipe) {
-            // Render file blade vừa tạo ở Bước 1
             $html_content = view('user.components.modals.recipe_ingredients_list', [
                 'products' => $recipe->products,
             ])->render();

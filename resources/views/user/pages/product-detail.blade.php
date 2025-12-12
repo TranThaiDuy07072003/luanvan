@@ -104,35 +104,17 @@
                                         </ul>
                                     </div>
 
-                                    {{-- <div class="ltn__product-details-menu-3">
-                                        <ul>
-                                            <li>
-                                                <a href="#" class="" title="Wishlist" data-bs-toggle="modal"
-                                                    data-bs-target="#liton_wishlist_modal">
-                                                    <i class="far fa-heart"></i>
-                                                    <span>Add to Wishlist</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="" title="Compare" data-bs-toggle="modal"
-                                                    data-bs-target="#quick_view_modal">
-                                                    <i class="fas fa-exchange-alt"></i>
-                                                    <span>Compare</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div> --}}
 
                                     <hr>
                                     <div class="ltn__social-media">
                                         <ul>
                                             <li>Chia sẻ:</li>
-                                            <li><a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                                            <li><a href="javascript:void(0)" title="Facebook"><i class="fab fa-facebook-f"></i></a>
                                             </li>
-                                            <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
-                                            <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a>
+                                            <li><a href="javascript:void(0)" title="Twitter"><i class="fab fa-twitter"></i></a></li>
+                                            <li><a href="javascript:void(0)" title="Linkedin"><i class="fab fa-linkedin"></i></a>
                                             </li>
-                                            <li><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                                            <li><a href="javascript:void(0)" title="Instagram"><i class="fab fa-instagram"></i></a>
                                             </li>
 
                                         </ul>

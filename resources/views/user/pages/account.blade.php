@@ -65,7 +65,7 @@
 
                                                                     <td>
                                                                         @if ($order->status == 'pending')
-                                                                            <span class="badge bg-warning">Đang đóng gói</span>
+                                                                            <span class="badge bg-warning">Đang xử lý</span>
                                                                         @elseif($order->status == 'processing')
                                                                             <span class="badge bg-primary">Đang giao hàng</span>
                                                                         @elseif($order->status == 'completed')

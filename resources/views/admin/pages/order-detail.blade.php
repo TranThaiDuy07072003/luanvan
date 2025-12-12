@@ -166,11 +166,11 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <!-- /.col -->
-                                </div>
-                                <!-- /.row -->
 
-                                <!-- this row will not appear when printing -->
+                                </div>
+
+
+                                
                                 <div class="row no-print">
                                     <div>
                                         @if ($order->status != 'canceled')

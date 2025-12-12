@@ -58,7 +58,7 @@ class Product extends Model
     // 6. Một sản phẩm có thể thuộc về nhiều công thức nấu ăn (Recipes) thông qua bảng trung gian Product_Recipe
     public function recipes()
     {
-        return $this->belongsToMany(Recipe::class, 'product_recipe')
+        return $this->belongsToMany(Recipe::class, 'product_recipes')
                     ->withPivot('quantity');   // lưu thêm số lượng trong bảng trung gian
     }
 

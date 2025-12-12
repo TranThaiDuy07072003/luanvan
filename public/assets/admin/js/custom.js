@@ -486,7 +486,7 @@ $(document).ready(function(){
 
 
     /*********************************
-     * MANAGEMENT - Order (quản lý quản trị đơn hàng, nghĩa là mình có thể quyết định xem
+     * MANAGEMENT - Order- Hành động (quản lý quản trị đơn hàng, nghĩa là mình có thể quyết định xem
      * có duyệt đơn hàng hay không)
      *********************************/
     $(document).on("click", ".confirm-order", function(e){
@@ -559,7 +559,7 @@ $(document).ready(function(){
                 }
             },
             error: function (xhr, status, error) {
-                alert("An error occurred: " + error);
+                alert("Có lỗi xảy ra: " + error);
             },
         });
     });

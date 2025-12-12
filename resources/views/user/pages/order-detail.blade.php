@@ -15,7 +15,7 @@
             <p>Trạng thái:
 
                 @if ($order->status == 'pending')
-                    <span class="badge bg-warning">Đang đóng gói</span>
+                    <span class="badge bg-warning">Đang chuẩn bị hàng</span>
                 @elseif($order->status == 'processing')
                     <span class="badge bg-primary">Đang giao hàng</span>
                 @elseif($order->status == 'completed')

@@ -149,7 +149,7 @@
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
                                         <label class="custom-file-upload" for="product-images"> Chọn ảnh </label>
-                                        <input type="file" name="images[]" id="product-images" accept="image/*">
+                                        <input type="file" name="images[]" id="product-images" accept="image/*" multiple>
 
                                         <div id="image-preview-container"></div>
 

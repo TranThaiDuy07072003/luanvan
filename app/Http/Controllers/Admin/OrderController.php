@@ -9,12 +9,47 @@ use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with('orderItems', 'shippingAddress', 'user', 'payment')->orderByDesc('id')->get();
+        $query = Order::with(['orderItems', 'shippingAddress', 'user', 'payment']);
+
+        // Lọc theo trạng thái đơn hàng
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Lọc theo trạng thái thanh toán
+        if ($request->filled('payment_status')) {
+            if ($request->payment_status === 'paid') {
+                // Đơn đã thanh toán
+                $query->whereHas('payment', function ($q) {
+                    $q->where('status', '!=', 'pending');
+                });
+            } elseif ($request->payment_status === 'unpaid') {
+                // Đơn chưa thanh toán
+                $query->where(function ($q) {
+                    $q->whereDoesntHave('payment')
+                        ->orWhereHas('payment', function ($subQ) {
+                            $subQ->where('status', 'pending');
+                        });
+                });
+            }
+        }
+
+        // (Tùy chọn) Lọc theo ngày tạo đơn
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('created_at', [
+                $request->start_date.' 00:00:00',
+                $request->end_date.' 23:59:59',
+            ]);
+        }
+
+        $orders = $query->orderByDesc('id')->get();
 
         return view('admin.pages.orders', compact('orders'));
     }
+
+
 
     // Chuyển đơn hàng sang "đang giao hàng"
     public function confirmOrder(Request $request)
@@ -36,6 +71,7 @@ class OrderController extends Controller
         ]);
     }
 
+
     // Xem chi tiết đơn đặt mà khách hàng đã đặt
     public function showOrderDetail($id)
     {
@@ -43,6 +79,8 @@ class OrderController extends Controller
 
         return view('admin.pages.order-detail', compact('order'));
     }
+
+
 
     // Gửi mail cho khách
     public function sendMailInvoice(Request $request)
@@ -54,7 +92,7 @@ class OrderController extends Controller
 
             Mail::send('admin.emails.invoice', compact('order'), function ($message) use ($order) {
                 $message->to($order->user->email)
-                    ->subject('Hóa đơn đặt tour của khách hàng '.$order->shippingAddress->full_name);
+                    ->subject('Hóa đơn đặt hàng của khách hàng '.$order->shippingAddress->full_name);
             });
 
             return response()->json([
@@ -69,7 +107,6 @@ class OrderController extends Controller
             ]);
         }
     }
-
 
 
     // Admin hủy đơn hàng
@@ -97,7 +134,4 @@ class OrderController extends Controller
             'message' => 'Đơn hàng không tồn tại!',
         ]);
     }
-
-
-
 }

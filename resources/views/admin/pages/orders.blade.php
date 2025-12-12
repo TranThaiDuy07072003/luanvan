@@ -32,49 +32,57 @@
                         </div>
                         <div class="x_content">
 
-                            {{-- <div class="filter-box mb-4"
+                            <div class="filter-box mb-4"
                                 style="margin-bottom: 20px; padding: 15px; background: #f7f7f7; border: 1px solid #e6e9ed;">
-                                <form action="{{ route('admin.products.index') }}" method="GET">
+                                <form action="{{ route('admin.orders.index') }}" method="GET">
                                     <div class="row align-items-end">
-                                        <div class="col-md-4">
-                                            <label><strong>Lọc theo Danh mục:</strong></label>
-                                            <select name="category_id" class="form-control">
-                                                <option value="">-- Tất cả danh mục --</option>
-                                                @foreach ($categories as $cate)
-                                                    <option value="{{ $cate->id }}"
-                                                        {{ request('category_id') == $cate->id ? 'selected' : '' }}>
-                                                        {{ $cate->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
 
-
+                                        {{-- Lọc theo trạng thái đơn hàng --}}
                                         <div class="col-md-4">
-                                            <label><strong>Lọc theo Trạng thái:</strong></label>
+                                            <label><strong>Trạng thái đơn hàng:</strong></label>
                                             <select name="status" class="form-control">
                                                 <option value="">-- Tất cả --</option>
-                                                <option value="in_stock"
-                                                    {{ request('status') == 'in_stock' ? 'selected' : '' }}>Còn hàng
+                                                <option value="pending"
+                                                    {{ request('status') == 'pending' ? 'selected' : '' }}>Đang đóng gói
                                                 </option>
-                                                <option value="out_of_stock"
-                                                    {{ request('status') == 'out_of_stock' ? 'selected' : '' }}>Hết hàng
+                                                <option value="processing"
+                                                    {{ request('status') == 'processing' ? 'selected' : '' }}>Đang giao hàng
                                                 </option>
+                                                <option value="completed"
+                                                    {{ request('status') == 'completed' ? 'selected' : '' }}>Hoàn thành
+                                                </option>
+                                                <option value="canceled"
+                                                    {{ request('status') == 'canceled' ? 'selected' : '' }}>Đã hủy</option>
                                             </select>
                                         </div>
 
+                                        {{-- Lọc theo trạng thái thanh toán --}}
                                         <div class="col-md-4">
-                                            <button type="submit" class="btn btn-primary" style="margin-top: 5px;">
+                                            <label><strong>Trạng thái thanh toán:</strong></label>
+                                            <select name="payment_status" class="form-control">
+                                                <option value="">-- Tất cả --</option>
+                                                <option value="paid"
+                                                    {{ request('payment_status') == 'paid' ? 'selected' : '' }}>Đã thanh
+                                                    toán</option>
+                                                <option value="unpaid"
+                                                    {{ request('payment_status') == 'unpaid' ? 'selected' : '' }}>Chưa thanh
+                                                    toán</option>
+                                            </select>
+                                        </div>
+
+                                        {{-- Nút lọc --}}
+                                        <div class="col-md-4">
+                                            <button type="submit" class="btn btn-primary mt-2">
                                                 <i class="fa fa-filter"></i> Lọc dữ liệu
                                             </button>
-                                            <a href="{{ route('admin.products.index') }}" class="btn btn-secondary"
-                                                style="margin-top: 5px;">
+                                            <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary mt-2">
                                                 <i class="fa fa-refresh"></i> Reset
                                             </a>
                                         </div>
                                     </div>
                                 </form>
-                            </div> --}}
+                            </div>
+
 
 
                             <div class="row">
@@ -92,6 +100,7 @@
                                                     <th>Tài khoản</th>
                                                     <th>Thông tin người đặt</th>
                                                     <th>Tổng tiền</th>
+                                                    <th>Ngày đặt hàng</th>
                                                     <th>Trạng thái đơn hàng</th>
                                                     <th>Trạng thái thanh toán</th>
                                                     <th>Chi tiết đơn hàng</th>
@@ -116,7 +125,13 @@
                                                                 data-target="#addressShippingModal-{{ $order->id }}">{{ $order->shippingAddress->address }}</a>
                                                         </th>
 
+
                                                         <td>{{ number_format($order->total_price, 0, ',', '.') }}VND</td>
+
+
+
+                                                        <td>{{ $order->created_at->format('d/m/Y') }}</td>
+
 
 
                                                         <td class="order-status">
@@ -136,7 +151,7 @@
 
 
                                                         <td>
-                                                            {{-- Kiểm tra bảng Payment: Nếu tồn tại VÀ trạng thái KHÁC pending (tức là paid/completed) --}}
+                                                            {{-- Kiểm tra bảng Payment: Nếu tồn tại và trạng thái khác với pending (tức là paid/completed) --}}
                                                             @if ($order->payment && $order->payment->status != 'pending')
                                                                 <span class="custom-badge badge badge-success">Đã thanh
                                                                     toán</span>
@@ -212,14 +227,14 @@
                                                 </div>
                                             </div>
 
-                                            {{-- Modal chi tiết đơn hàng --}}
+                                            {{-- Modal chi tiết cái đơn hàng --}}
                                             <div class="modal fade" id="orderItemsModal-{{ $order->id }}" tabindex="-1"
                                                 role="dialog" aria-labelledby="orderItemsModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="orderItemsModalLabel">Chi tiết hóa
-                                                                đơn</h5>
+                                                            <h5 class="modal-title" id="orderItemsModalLabel">Chi tiết
+                                                                đơn mua</h5>
                                                             <button type="button" class="btn-close" data-dismiss="modal"
                                                                 aria-label="Close">
                                                                 <span aria-hidden="true"> &times; </span>

@@ -10,13 +10,13 @@ $(document).ready(function() {
     });
 
 
-    // Xác thực form đăng ký trước khi submit (validate register form)
+    // Xác thực form đăng ký trước khi submit
     $("#register-form").submit(function(e) {
 
         let name = $('input[name="name"]').val().trim();
         let email = $('input[name="email"]').val().trim();
         let password = $('input[name="password"]').val();
-        let confirmPassword = $('input[name="password_confirmation"]').val();  // Giữ để khớp view
+        let confirmPassword = $('input[name="password_confirmation"]').val();
 
         let errorMessages = "";
 
@@ -128,20 +128,18 @@ $(document).ready(function() {
 
 
 
-    // Validate form address
-    // --- SCRIPT 3: THÊM ĐỊA CHỈ (Đã sửa lỗi) ---
+    // Validate form địa chỉ
+    // --- SCRIPT 3: THÊM ĐỊA CHỈ ---
     $("#addAddressForm").on('submit', function(e) {
-        // 1. CHẶN ĐỨNG việc reload trang ngay lập tức
         e.preventDefault();
 
         let form = $(this);
         let btn = $('#btn-add-address'); // Nút submit
 
-        // 2. Khóa nút lại để tránh user bấm liên tục (Spam click)
+        // 2. Khóa nút lại để tránh user bấm liên tục spam
         let originalText = btn.text();
         btn.prop('disabled', true).text('Đang lưu...');
 
-        // Xóa các thông báo lỗi cũ
         $('.error-message').remove();
 
         // 3. Lấy dữ liệu từ form
@@ -155,23 +153,16 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
 
-            // Cấu hình CSRF Token (Rất quan trọng để Laravel nhận diện)
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
 
             success: function(response) {
                 if (response.success) {
-                    // Thông báo thành công
                     toastr.success(response.message, 'Thành công!');
-
-                    // Ẩn Modal
                     $('#addAddressModal').modal('hide');
-
-                    // Reset form cho sạch sẽ
                     form[0].reset();
 
-                    // Đợi 1 chút rồi reload trang để cập nhật danh sách
                     setTimeout(function() {
                         location.reload();
                     }, 1000);
@@ -179,11 +170,9 @@ $(document).ready(function() {
             },
 
             error: function(xhr) {
-                // Mở khóa nút nếu có lỗi để user sửa và gửi lại
                 btn.prop('disabled', false).text(originalText);
 
                 if (xhr.status === 422) {
-                    // Lỗi Validate (Nhập thiếu, sai định dạng...)
                     let errors = xhr.responseJSON.errors;
                     $.each(errors, function(key, value) {
                         let input = $('#' + key); // Tìm ô input bị lỗi
@@ -195,7 +184,7 @@ $(document).ready(function() {
                 } else {
                     // Lỗi hệ thống (500...)
                     toastr.error('Có lỗi xảy ra, vui lòng thử lại sau.', 'Lỗi hệ thống');
-                    console.log(xhr.responseText); // Log ra console để dev xem
+                    console.log(xhr.responseText);
                 }
             }
         });
@@ -214,7 +203,7 @@ $(document).ready(function() {
 
 
         $.ajax({
-            url: '/products/filter', // (Lỗi 4: Sửa thành URL tuyệt đối)
+            url: '/products/filter',
             type: "GET",
             data: {
                 category_id: category_id,
@@ -223,7 +212,7 @@ $(document).ready(function() {
             beforeSend: function() {
                 // $("#loading-spinner").show();
                 // $("#liton_product_grid").hide();
-                // $("#pagination-links").hide(); // Ẩn cả phân trang cũ
+                // $("#pagination-links").hide();
             },
             success: function(response) {
                 // Cập nhật lại lưới sản phẩm
@@ -234,10 +223,10 @@ $(document).ready(function() {
             complete: function() {
                 // $("#loading-spinner").hide();
                 // $("#liton_product_grid").show();
-                // $("#pagination-links").show(); // Hiện phân trang mới
+                // $("#pagination-links").show();
             },
             error: function(xhr) {
-                console.error(xhr.responseText); // Dùng console.error để xem lỗi rõ hơn
+                console.error(xhr.responseText);
                 alert('Có lỗi xảy ra khi lọc sản phẩm!');
             }
         });
@@ -248,7 +237,7 @@ $(document).ready(function() {
 
     $(".category-filter").click(function(){
         $(".category-filter").removeClass('active'); // Xóa 'active' ở tất cả các link
-        $(this).addClass('active'); // Thêm 'active' CHỈ cho link vừa bấm
+        $(this).addClass('active'); // Thêm 'active' chỉ cho link vừa bấm
         fetchProducts();
     })
 
@@ -265,7 +254,7 @@ $(document).ready(function() {
     // Khi click vào link phân trang (AJAX)
     // Cần lắng nghe trên document vì link này bị thay đổi liên tục
     $(document).on('click', '#pagination-links .pagination a', function(e) {
-        e.preventDefault(); // Ngăn chuyển trang
+        e.preventDefault();
         let url = $(this).attr('href'); // Lấy URL của trang (ví dụ: /products/filter?page=2)
 
         if (!url) return;
@@ -275,10 +264,10 @@ $(document).ready(function() {
         let sort_by = $("#sort-by").val();
 
         $.ajax({
-            url: url, // Gửi đến URL của trang được click
+            url: url,
             type: "GET",
             data: {
-                category_id: category_id, // Gửi kèm bộ lọc
+                category_id: category_id, 
                 sort_by: sort_by,
             },
              beforeSend: function() {
@@ -350,49 +339,49 @@ $(document).ready(function() {
 
 
 
-if(window.location.pathname !=='/cart'){
-    $(document).on('click', '.qtybutton', function() {
-
-        var $button = $(this);
-        var $input = $button.siblings('input');
-        var oldValue = parseInt($input.val());
-        var maxStock = parseInt($input.data('max'));
-
-            if ($button.hasClass('inc')) {
-                if (oldValue < maxStock) {
-                    $input.val(oldValue + 1);
-                }
-            } else {
-                if (oldValue > 1) {
-                    $input.val(oldValue - 1);
-                }
-            }
-        });
-
-    }else{
+    if(window.location.pathname !=='/cart'){
         $(document).on('click', '.qtybutton', function() {
 
-            let $button = $(this);
-            let $input = $button.siblings('input');
-            let oldValue = parseInt($input.val());
-            let maxStock = parseInt($input.data('max'));
-            let productId = $input.data('id');
-            let newValue = oldValue;
+            var $button = $(this);
+            var $input = $button.siblings('input');
+            var oldValue = parseInt($input.val());
+            var maxStock = parseInt($input.data('max'));
+
+                if ($button.hasClass('inc')) {
+                    if (oldValue < maxStock) {
+                        $input.val(oldValue + 1);
+                    }
+                } else {
+                    if (oldValue > 1) {
+                        $input.val(oldValue - 1);
+                    }
+                }
+            });
+
+        }else {
+            $(document).on('click', '.qtybutton', function() {
+
+                let $button = $(this);
+                let $input = $button.siblings('input');
+                let oldValue = parseInt($input.val());
+                let maxStock = parseInt($input.data('max'));
+                let productId = $input.data('id');
+                let newValue = oldValue;
 
 
-            if ($button.hasClass('inc') && oldValue < maxStock) {
-                newValue = oldValue + 1;
+                if ($button.hasClass('inc') && oldValue < maxStock) {
+                    newValue = oldValue + 1;
 
-            } else if($button.hasClass('dec') && oldValue > 1) {
-                newValue = oldValue - 1;
-            }
+                } else if($button.hasClass('dec') && oldValue > 1) {
+                    newValue = oldValue - 1;
+                }
 
-            if(newValue != oldValue)
-            {
-                updateCart(productId, newValue, $input);
-            }
-        });
-    }
+                if(newValue != oldValue)
+                {
+                    updateCart(productId, newValue, $input);
+                }
+            });
+        }
 
 
     // Add to cart

@@ -106,6 +106,9 @@ Route::prefix('/')->group(function () {
     // Detail Product
     Route::get('/product/{slug}', [ProductController::class, 'detail'])->name('product.detail');
 
+    Route::get('/products/category/{id}', [ProductController::class, 'filterByCategory'])->name('products.byCategory');
+
+
 
     // Handle Cart
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');

@@ -30,7 +30,7 @@ class OrderConfirmation extends Mailable
     }
 
     // 2. Cấu hình nội dung (View)
-    // Bạn sửa 'view.name' thành đường dẫn view invoice của bạn
+    
     public function content(): Content
     {
         return new Content(

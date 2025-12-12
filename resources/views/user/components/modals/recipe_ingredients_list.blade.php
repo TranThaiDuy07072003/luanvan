@@ -6,7 +6,7 @@
             <div class="product-img">
                 <a href="{{ route('product.detail', $product->slug) }}" target="_blank">
                     {{-- SỬA LỖI ẢNH: Dùng image_url --}}
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" style="height: 100px; width: 100%; object-fit: contain; margin: 0 auto;">
+                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" style="height: 100px; width: 100%; object-fit: contain; margin: 0 auto;">
                 </a>
             </div>
             <div class="product-info mt-2">

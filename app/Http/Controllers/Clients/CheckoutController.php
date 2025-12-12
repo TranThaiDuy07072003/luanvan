@@ -21,7 +21,7 @@ class CheckoutController extends Controller
         $user = Auth::user();
         $cartItems = CartItem::with('product')->where('user_id', $user->id)->get();
 
-        // Check tồn kho (Code cũ của bạn)
+        // Check tồn kho
         foreach ($cartItems as $item) {
             $product = $item->product;
             if (! $product || $product->status == 'out_of_stock') {
@@ -65,7 +65,7 @@ class CheckoutController extends Controller
         return response()->json(['success' => true, 'data' => $address]);
     }
 
-    // --- HÀM XỬ LÝ ĐẶT HÀNG (Đã sửa đổi) ---
+    // hàm xử lý đặt hàng
     public function placeOrder(Request $request)
     {
         $user = Auth::user();
@@ -77,7 +77,7 @@ class CheckoutController extends Controller
 
         DB::beginTransaction();
         try {
-            // 1. Tạo đơn hàng (Chung cho cả COD và VNPay)
+            // 1. Tạo đơn hàng chung cho COD và VNPay
             $order = new Order;
             $order->user_id = $user->id;
             $order->shipping_address_id = $request->address_id;
@@ -87,7 +87,7 @@ class CheckoutController extends Controller
             $order->status = 'pending';
             $order->save();
 
-            // 2. Lưu chi tiết đơn hàng & Trừ kho
+            // 2. Lưu chi tiết đơn hàng & Trừ kho (phòng thủ)
             foreach ($cartItems as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
@@ -128,7 +128,6 @@ class CheckoutController extends Controller
             }
             // ------------------------------
 
-            // --- PHÂN LUỒNG THANH TOÁN ---
 
             // Trường hợp 1: Thanh toán VNPay
             if ($request->payment_method == 'vnpay') {
@@ -149,7 +148,7 @@ class CheckoutController extends Controller
         }
     }
 
-    // --- HÀM TẠO URL VNPAY (Mới) ---
+    // tạo hàm url VNPay
     private function createVNPayUrl($order)
     {
         $vnp_Url = env('VNP_URL');
@@ -202,12 +201,10 @@ class CheckoutController extends Controller
         return redirect($vnp_Url);
     }
 
-    // --- HÀM XỬ LÝ KHI KHÁCH QUAY VỀ TỪ VNPAY (Mới) ---
+    // HÀM XỬ LÝ KHI KHÁCH QUAY VỀ TỪ VNPAY
     public function vnpayReturn(Request $request)
     {
-        // Kiểm tra chữ ký bảo mật (Tránh giả mạo)
-        // (Logic check hash ở đây có thể thêm vào nếu cần bảo mật cao hơn,
-        // nhưng với đồ án thì check ResponseCode là ổn)
+
 
         // 00 là mã thành công của VNPay
         if ($request->vnp_ResponseCode == '00') {
