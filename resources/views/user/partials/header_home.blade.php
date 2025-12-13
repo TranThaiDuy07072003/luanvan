@@ -69,6 +69,7 @@
                                     </li>
                                     <li class="menu-icon"><a href="{{ route('products.index') }}">Cửa hàng</a>
                                     </li>
+                                     <li class="menu-icon"><a href="{{ route('client.recipes') }}">Gợi ý món ăn</a> </li>
                                     <li><a href="{{ route('contact.index') }}">Liên hệ</a></li>
                                     <!-- <li class="special-link"><a href="contact.html">Liên hệ - get a quote</a></li> -->
                                 </ul>

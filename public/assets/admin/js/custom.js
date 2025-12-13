@@ -616,7 +616,6 @@ $(document).ready(function(){
 
     //khi click từng mục trong khu vực "Liên hệ khách hàng"
     $(document).on("click", ".contact-item", function (e) {
-        // Get contact data from clicked item
         let contactName = $(this).data("name");
         let contactEmail = $(this).data("email");
         let contactMessage = $(this).data("message");

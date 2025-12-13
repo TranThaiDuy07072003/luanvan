@@ -51,7 +51,7 @@
 
                     </div>
                     <div class="ltn__pagination-area text-center">
-                        <div class="ltn__pagination">
+                        <div class="ltn__pagination" id="pagination-links">
 
                             {!! $products->links('user.components.pagination.pagination_custom') !!}
 
@@ -83,7 +83,7 @@
 
                             </ul>
                         </div>
-                        
+
 
                         <!-- Search Widget -->
                         <div class="widget ltn__search-widget">

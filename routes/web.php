@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\Clients\AccountController;
 use App\Http\Controllers\Clients\AuthController;
-use App\Http\Controllers\Clients\CartController;  // Use cho AuthController custom
+use App\Http\Controllers\Clients\CartController;
 use App\Http\Controllers\Clients\ChatController;
-use App\Http\Controllers\Clients\CheckoutController;  // Use cho ProfileController từ Breeze (nếu cần)
+use App\Http\Controllers\Clients\CheckoutController;
 use App\Http\Controllers\Clients\ContactController;
 use App\Http\Controllers\Clients\HomeController;
 use App\Http\Controllers\Clients\OrderController;
@@ -151,15 +151,14 @@ Route::prefix('/')->group(function () {
     Route::middleware('auth')->group(function () {
         Route::get('/dashboard', function () {
             return view('dashboard');
-        })->name('dashboard');  // Có thể thêm 'verified' nếu dùng email verification: ->middleware('verified')
+        })->name('dashboard');  
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
         Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 
-        // Thêm route cho logout (POST để bảo mật, tránh logout bằng GET)
-        // Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 
         Route::post('/order/{id}/complete', [OrderController::class, 'completeOrder'])->name('order.complete');
 
@@ -169,5 +168,5 @@ Route::prefix('/')->group(function () {
 
 });
 
-// Comment require auth.php để tránh xung đột với custom routes (uncomment nếu cần full Breeze features như forgot password)
+
 require __DIR__.'/admin.php';

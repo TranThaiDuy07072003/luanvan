@@ -253,40 +253,32 @@ $(document).ready(function() {
 
     // Khi click vào link phân trang (AJAX)
     // Cần lắng nghe trên document vì link này bị thay đổi liên tục
-    $(document).on('click', '#pagination-links .pagination a', function(e) {
-        e.preventDefault();
-        let url = $(this).attr('href'); // Lấy URL của trang (ví dụ: /products/filter?page=2)
+    $(document).on('click', '#pagination-links a', function(e) {
+        e.preventDefault(); // Chặn load lại trang
+
+        let url = $(this).attr('href'); // Link này đã chứa sẵn category_id & sort_by do Controller tạo
 
         if (!url) return;
 
-        // Lấy category và sort_by hiện tại
-        let category_id = $(".category-filter.active").data('id') || '';
-        let sort_by = $("#sort-by").val();
-
+        // Chỉ cần gửi URL là đủ, không cần gửi thêm data category_id nữa
         $.ajax({
             url: url,
             type: "GET",
-            data: {
-                category_id: category_id, 
-                sort_by: sort_by,
-            },
-             beforeSend: function() {
-                // $("#loading-spinner").show();
-                // $("#liton_product_grid").hide();
-                // $("#pagination-links").hide();
+            beforeSend: function() {
+                // Hiệu ứng loading nếu muốn
+                $("#liton_product_grid").css("opacity", "0.5");
             },
             success: function(response) {
                 $("#liton_product_grid").html(response.products_html);
                 $("#pagination-links").html(response.pagination_html);
-                // Tự động cuộn lên đầu danh sách sản phẩm
+
+                // Cuộn lên
                 $('html, body').animate({
-                    scrollTop: $("#liton_product_grid").offset().top - 150 // Cuộn lên
+                    scrollTop: $("#liton_product_grid").offset().top - 150
                 }, 500);
             },
             complete: function() {
-                // $("#loading-spinner").hide();
-                // $("#liton_product_grid").show();
-                // $("#pagination-links").show();
+                $("#liton_product_grid").css("opacity", "1");
             },
             error: function (xhr) {
                 alert('Có lỗi khi chuyển trang!');

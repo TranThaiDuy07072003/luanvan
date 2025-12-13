@@ -38,6 +38,7 @@
                                 <div class="col-sm-3 mail_list_column" style="overflow-y: scroll; max-height: 500px">
                                     <label class="badge bg-green"
                                         style="width: 100%; line-height: 2; font-size: 16px;">Liên hệ khách hàng</label>
+
                                     @foreach ($contacts as $contact)
                                         <a href="javascript:void(0)" class="contact-item" data-name="{{ $contact->full_name }}" data-email="{{ $contact->email }}"
                                             data-message="{{ $contact->message }}" data-id="{{ $contact->id }}" data-is_replied="{{ $contact->is_replied }}" >
@@ -54,6 +55,7 @@
                                             </div>
                                         </a>
                                     @endforeach
+
                                 </div>
                                 <!-- /MAIL LIST -->
 

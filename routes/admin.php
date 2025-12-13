@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\RecipeController;
 use App\Http\Middleware\DefaultAdminData;
 use Illuminate\Support\Facades\Route;
 
@@ -72,6 +73,22 @@ Route::prefix('admin')->group(function () {
             Route::post('/product/update', [ProductController::class, 'updateProduct']);
             Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
         });
+
+
+        // ROUTE QUẢN LÝ MÓN ĂN (RECIPES)
+        // (Tạm thời chưa phân quyền permission, ai login admin cũng vào được)
+        Route::group(['prefix' => 'recipes'], function () {
+            Route::get('/', [RecipeController::class, 'index'])->name('admin.recipes.index');
+            Route::get('/add', [RecipeController::class, 'create'])->name('admin.recipes.add');
+            Route::post('/add', [RecipeController::class, 'store']);
+
+            Route::post('/update', [RecipeController::class, 'update']);
+            Route::post('/delete', [RecipeController::class, 'destroy'])->name('admin.recipes.delete');
+
+            // Route Ajax tìm kiếm sản phẩm cho Select2
+            Route::get('/search-products', [RecipeController::class, 'searchProducts'])->name('admin.recipes.search_products');
+        });
+
 
 
 

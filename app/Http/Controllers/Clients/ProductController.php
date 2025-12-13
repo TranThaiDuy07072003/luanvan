@@ -12,17 +12,34 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
-    public function index()
+    // File: ProductController.php
+
+    public function index(Request $request) // Nhớ thêm Request $request vào
     {
         $categories = Category::withCount('products')->get();
-        $products = Product::with('firstImage')->whereIn('status', ['in_stock', 'out_of_stock'])->paginate(9);
 
-        /** @var \App\Models\Product $product */
+        // Thêm withQueryString để giữ tham số trên URL
+        $products = Product::with('firstImage')
+            ->whereIn('status', ['in_stock', 'out_of_stock'])
+            ->paginate(9)
+            ->withQueryString();
+
+        // Xử lý ảnh (code cũ của bạn)
         foreach ($products as $product) {
             $product->image_url = $product->firstImage?->image
-            ? asset('storage/'.$product->firstImage->image)
+                ? asset('storage/'.$product->firstImage->image)
                 : asset('storage/uploads/products/default-product.png');
         }
+
+        // --- ĐOẠN MỚI THÊM VÀO ---
+        // Kiểm tra nếu là AJAX (bấm phân trang) thì trả về JSON
+        if ($request->ajax()) {
+            return response()->json([
+                'products_html' => view('user.components.products_grid', compact('products'))->render(),
+                'pagination_html' => $products->links('user.components.pagination.pagination_custom')->toHtml(),
+            ]);
+        }
+        // -------------------------
 
         return view('user.pages.products', compact('categories', 'products'));
     }
@@ -74,8 +91,6 @@ class ProductController extends Controller
 
     }
 
-
-
     public function filterByCategory($id)
     {
         $categories = Category::withCount('products')->get();
@@ -95,10 +110,6 @@ class ProductController extends Controller
 
         return view('user.pages.products', compact('categories', 'products', 'selectedCategory'));
     }
-
-
-
-
 
     public function detail($slug)
     {

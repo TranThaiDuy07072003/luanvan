@@ -58,6 +58,7 @@
 
     <link rel="stylesheet" href="{{ asset('assets/admin/css/custom1.css') }}">
 
+    @yield('styles') {{-- Nơi để các trang con nhét CSS riêng vào --}}
 </head>
 
 <body class="nav-md">
@@ -128,7 +129,7 @@
 
     @endif
 
-    
+
 
 
     {{-- trình giống word --}}
@@ -138,6 +139,7 @@
     <script src="{{ asset('assets/admin/js/custom.js') }}"></script>
 
 
+    @yield('scripts') {{-- Nơi để các trang con nhét JS riêng vào --}}
 </body>
 
 </html>

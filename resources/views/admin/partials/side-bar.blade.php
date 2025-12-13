@@ -1,7 +1,8 @@
 <div class="col-md-3 left_col">
     <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: 0;">
-            <a href="{{ route('admin.dashboard') }}" class="site_title"><i class="fa fa-paw"></i> <span>NongSanSach</span></a>
+            <a href="{{ route('admin.dashboard') }}" class="site_title"><i class="fa fa-paw"></i>
+                <span>NongSanSach</span></a>
         </div>
 
         <div class="clearfix"></div>
@@ -36,7 +37,8 @@
 
                     @if ($adminUser->role->permissions->contains('name', 'manager_users'))
                         <li>
-                            <a href="{{ route('admin.users.index') }}"><i class="fa fa-users"></i> Quản lý người dùng </a>
+                            <a href="{{ route('admin.users.index') }}"><i class="fa fa-users"></i> Quản lý người dùng
+                            </a>
                         </li>
                     @endif
 
@@ -64,11 +66,19 @@
 
                             </ul>
                         </li>
+
+                        <li><a><i class="fa fa-cutlery"></i> Quản lý món ăn <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu">
+                                <li><a href="{{ route('admin.recipes.add') }}">Thêm món ăn</a></li>
+                                <li><a href="{{ route('admin.recipes.index') }}">Danh sách món ăn</a></li>
+                            </ul>
+                        </li>
                     @endif
 
 
                     @if ($adminUser->role->permissions->contains('name', 'manager_orders'))
-                        <li><a href="{{ route('admin.orders.index') }}"><i class="fa fa-edit"></i> Quản lý đơn hàng </a></li>
+                        <li><a href="{{ route('admin.orders.index') }}"><i class="fa fa-edit"></i> Quản lý đơn hàng
+                            </a></li>
                     @endif
 
 

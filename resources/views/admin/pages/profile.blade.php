@@ -30,7 +30,7 @@
                             <div class="col-md-3 col-sm-3  profile_left">
                                 <div class="profile_img">
                                     <div id="crop-avatar">
-                                        <!-- Current avatar -->
+                                        <!-- ảnh đại diện hiện tại -->
                                         <img class="img-responsive avatar-view img-account"
                                         id="avatar-preview" src="{{ asset('storage/' . ($user->avatar ?? 'uploads/users/default-avatar.png')) }}" alt="Avatar"
                                             title="Avatar">

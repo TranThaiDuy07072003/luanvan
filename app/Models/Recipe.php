@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Recipe extends Model
 {
+    public $timestamps = false;
     protected $fillable = ['name', 'slug', 'description', 'image'];
 
     // Một Recipe có thể chứa nhiều Product thông qua bảng trung gian product_recipe

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Clients;  // Thêm chữ \Clients vào
+namespace App\Http\Controllers\Clients;
 
 use App\Http\Controllers\Controller;
 use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // <--- QUAN TRỌNG: THÊM DÒNG NÀY
+use Illuminate\Support\Facades\Auth;
 
 // use function Pest\Laravel\session;
 
@@ -100,7 +100,6 @@ class CartController extends Controller
 
             CartItem::where('user_id', Auth::id())->where('product_id', $request->product_id)->delete();
 
-            // --- SỬA Ở ĐÂY: sum('quantity') ---
             $cartCount = CartItem::where('user_id', Auth::id())->sum('quantity');
 
         } else {
@@ -110,7 +109,7 @@ class CartController extends Controller
             unset($cart[$request->product_id]);
             session()->put('cart', $cart);
 
-            // --- SỬA Ở ĐÂY: tính tổng mảng ---
+            // tính tổng mảng
             $cartCount = array_sum(array_column($cart, 'quantity'));
         }
 

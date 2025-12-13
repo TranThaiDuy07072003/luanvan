@@ -7873,7 +7873,8 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   transition: all 0.3s ease 0s; }
 
 .ltn__category-item-img img {
-  display: inline-block; }
+  display: inline-block;
+  width: 50%; }
 
 .ltn__category-item-name {
   padding: 15px 20px 5px; }
