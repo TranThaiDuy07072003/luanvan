@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product; // <--- QUAN TRỌNG: Phải có dòng này mới tìm được sản phẩm
+use App\Models\Product;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -12,7 +12,7 @@ use Intervention\Image\Facades\Image;
 
 class RecipeController extends Controller
 {
-    // 1. Danh sách món ăn
+    //  Danh sách món ăn
     public function index()
     {
         $recipes = Recipe::withCount('products')->orderByDesc('id')->get();
@@ -20,13 +20,13 @@ class RecipeController extends Controller
         return view('admin.pages.recipes.index', compact('recipes'));
     }
 
-    // 2. Form Thêm món ăn
+    //  Form Thêm món ăn
     public function create()
     {
         return view('admin.pages.recipes.create');
     }
 
-    // 3. Xử lý Lưu món ăn
+    //  Xử lý Lưu món ăn
     public function store(Request $request)
     {
         $request->validate([
@@ -76,15 +76,13 @@ class RecipeController extends Controller
         return redirect()->route('admin.recipes.index')->with('success', 'Thêm món ăn thành công!');
     }
 
-    // 4. Ajax tìm kiếm sản phẩm (ĐÃ SỬA LỖI)
-    // 4. Ajax tìm kiếm sản phẩm (ĐÃ FIX LỖI DATABASE)
+
+    // ajax tìm kiếm sản phẩm
     public function searchProducts(Request $request)
     {
         try {
             $search = $request->term; // Từ khóa gõ vào
 
-            // 1. Bỏ chữ 'image' trong select vì bảng products không có cột này
-            // 2. Kèm theo quan hệ 'images' để lấy hình từ bảng phụ
             $products = Product::where('name', 'LIKE', "%{$search}%")
                 ->select('id', 'name', 'unit', 'price')
                 ->with('images') // Load quan hệ hình ảnh
@@ -99,7 +97,7 @@ class RecipeController extends Controller
                 if ($product->images && $product->images->count() > 0) {
                     // Lấy ảnh đầu tiên tìm thấy
                     $firstImage = $product->images->first();
-                    // Đường dẫn trong DB là 'uploads/products/...' nên cần thêm 'storage/'
+
                     $imageUrl = asset('storage/'.$firstImage->image);
                 }
 
@@ -133,7 +131,6 @@ class RecipeController extends Controller
             }
 
             // 2. Xóa sạch các nguyên liệu liên kết trong bảng trung gian (product_recipes)
-            // Nếu không làm bước này, database sẽ bị rác
             $recipe->products()->detach();
 
             // 3. Xóa món ăn khỏi database

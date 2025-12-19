@@ -15,7 +15,7 @@
                                 if ($product->images && $product->images->count() > 0) {
                                     $imgSrc = asset('storage/' . $product->images->first()->image);
                                 }
-                                // 3. Nếu không có, thử lấy từ cột image bảng chính (đề phòng dữ liệu cũ)
+                                // 3. Nếu không có, thử lấy từ cột image bảng chính
                                 elseif (!empty($product->image)) {
                                     $imgSrc = asset('storage/' . $product->image);
                                 }

@@ -51,7 +51,7 @@
 
                     </div>
                     <div class="ltn__pagination-area text-center">
-                        <div class="ltn__pagination" id="pagination-links">
+                        <div class="ltn__pagination" id="pagination-links"> {{--thanh phân trang --}}
 
                             {!! $products->links('user.components.pagination.pagination_custom') !!}
 
@@ -65,7 +65,7 @@
                             <h4 class="ltn__widget-title ltn__widget-title-border">Danh Mục Sản Phẩm</h4>
                             <ul>
 
-                                <!-- Thêm 1 link "Tất cả" để bỏ lọc -->
+                                <!-- "Tất cả" để bỏ lọc -->
                                 <li>
                                     <a href="javascript:void(0)" class="category-filter active" data-id="">Tất cả
                                        <span><i class="fas fa-long-arrow-alt-right"></i></span>
@@ -86,13 +86,13 @@
 
 
                         <!-- Search Widget -->
-                        <div class="widget ltn__search-widget">
+                        {{-- <div class="widget ltn__search-widget">
                             <h4 class="ltn__widget-title ltn__widget-title-border">Tìm Kiếm</h4>
                             <form action="#">
                                 <input type="text" name="search" placeholder="Nhập tên sản phẩm...">
                                 <button type="submit"><i class="fas fa-search"></i></button>
                             </form>
-                        </div>
+                        </div> --}}
 
                         <!-- Banner Widget -->
                         <div class="widget ltn__banner-widget">

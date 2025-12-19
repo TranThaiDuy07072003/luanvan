@@ -19,10 +19,10 @@
                 <div class="col-lg-6 offset-lg-3">
                     <div class="account-login-inner">
                         <form action="{{ route('register') }}" class="ltn__form-box contact-form-box" method="POST" id="register-form">
-                            @csrf  <!-- Giữ nguyên, bắt buộc cho CSRF protection trong Laravel -->
+                            @csrf
 
                             <input type="text" name="name" placeholder="Họ và tên" value="{{ old('name') }}" required>
-                            @error('name')  <!-- Giữ nguyên, hiển thị lỗi nếu validation fail (từ controller) -->
+                            @error('name')
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
 
@@ -47,7 +47,7 @@
                         </form>
                         <div class="by-agree text-center">
                             <p>Bằng cách tạo tài khoản, bạn đồng ý với:</p>
-                            <p><a href="#">CÁC ĐIỀU KHOẢN &nbsp; &nbsp; | &nbsp; &nbsp; CHÍNH SÁCH BẢO MẬT</a></p>
+                            <p><a href="javascript:void(0)">CÁC ĐIỀU KHOẢN &nbsp; &nbsp; | &nbsp; &nbsp; CHÍNH SÁCH BẢO MẬT</a></p>
                             <div class="go-to-btn mt-50">
                                 <a href="{{ route('login') }}">ĐÃ CÓ TÀI KHOẢN ?</a>
                             </div>

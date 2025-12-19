@@ -27,7 +27,7 @@ class CartController extends Controller
             return response()->json(['message' => 'Số lượng vượt quá tồn kho'], 400);
         }
 
-        // If logged in, save to database
+        //  nếu đăng nhập rồi thì lưu vào database
         if (Auth::check()) {
             $cartItem = CartItem::where('user_id', Auth::id())
                 ->where('product_id', $request->product_id)
@@ -44,11 +44,11 @@ class CartController extends Controller
                 ]);
             }
 
-            // --- SỬA Ở ĐÂY: Dùng sum('quantity') thay vì count() ---
+
             $cartCount = CartItem::where('user_id', Auth::id())->sum('quantity');
 
         } else {
-            // If not logged in, save to session
+            //  nếu chưa đăng nhập thì lưu sp ở session
             $cart = session()->get('cart', []);
 
             if (isset($cart[$request->product_id])) {
@@ -66,7 +66,7 @@ class CartController extends Controller
 
             session()->put('cart', $cart);
 
-            // --- SỬA Ở ĐÂY: Dùng array_column và array_sum để cộng tổng số lượng ---
+
             $cartCount = array_sum(array_column($cart, 'quantity'));
         }
 

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ActivationMail;
-use App\Models\CartItem; 
+use App\Models\CartItem;
 
 class AuthController extends Controller
 {
@@ -52,13 +52,12 @@ class AuthController extends Controller
             'activation_token' => $token,
         ]);
 
-        // SỬA: Gửi đúng tham số
         // Chỗ này lúc đăng ký gửi email kích hoạt
-        Mail::to($user->email)->send(new ActivationMail($token, $user));
+        Mail::to($user->email)->send(new ActivationMail($token, $user)); //cái biến email này bên table user, cột email bên phpadmin
 
         toastr()->success('Đăng ký thành công! Vui lòng kiểm tra email để kích hoạt tài khoản.');
 
-        return redirect()->route('login'); // ĐÚNG: về login
+        return redirect()->route('login');
     }
 
 
@@ -89,20 +88,21 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        // Migrate cart from session to database
-        $sessionCart = session('cart', []);
+        // gộp giỏ hàng session vào database
+        $sessionCart = session('cart', []); //lấy giỏ hàng đang có ở session
         if (!empty($sessionCart)) {
             foreach ($sessionCart as $productId => $item) {
+                // kiểm tra trong Database của user này đã có món này chưa
                 $existingCartItem = CartItem::where('user_id', Auth::id())
                     ->where('product_id', $productId)
                     ->first();
 
                 if ($existingCartItem) {
-                    // If product already in cart, add quantities
+                    
                     $existingCartItem->quantity += $item['quantity'];
                     $existingCartItem->save();
                 } else {
-                    // Add new item to cart
+
                     CartItem::create([
                         'user_id' => Auth::id(),
                         'product_id' => $productId,
@@ -110,7 +110,7 @@ class AuthController extends Controller
                     ]);
                 }
             }
-            // Clear session cart after migration
+
             session()->forget('cart');
         }
 

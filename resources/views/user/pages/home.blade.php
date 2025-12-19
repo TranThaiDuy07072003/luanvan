@@ -152,7 +152,7 @@
                                                                 href="{{ route('product.detail', $product->slug) }}">{{ $product->name }}</a>
                                                         </h2>
                                                         <div class="product-price">
-                                                            {{-- LOGIC: Hiện giá hoặc chữ HẾT HÀNG --}}
+                                                            {{-- Hiện giá hoặc chữ HẾT HÀNG --}}
                                                             @if ($product->stock > 0 && $product->status == 'in_stock')
                                                                 <span>{{ number_format($product->price, 0, ',', '.') }}
                                                                     VNĐ</span>
@@ -236,7 +236,7 @@
 
 
 
-    <!-- PRODUCT AREA START (product-item-3) -->
+    <!-- Sản phẩm bán chạy (product-item-3) -->
     <div class="ltn__product-area ltn__product-gutter pt-115 pb-70">
         <div class="container">
             <div class="row">
@@ -293,6 +293,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 @endforeach
 

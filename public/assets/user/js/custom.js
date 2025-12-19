@@ -265,7 +265,7 @@ $(document).ready(function() {
             url: url,
             type: "GET",
             beforeSend: function() {
-                // Hiệu ứng loading nếu muốn
+
                 $("#liton_product_grid").css("opacity", "0.5");
             },
             success: function(response) {
@@ -722,9 +722,9 @@ $(document).ready(function() {
 
 
 
-    // ======================================================
-    // LOGIC RIÊNG CHO POPUP MÓN ĂN (RECIPE)
-    // ======================================================
+    /*********************************
+     *PAGE RECIPE
+    *********************************/
 
     // 1. Mở Modal và load dữ liệu
     $(document).on('click', '.btn-show-recipe', function(e) {
@@ -751,7 +751,7 @@ $(document).ready(function() {
         });
     });
 
-    // 2. Xử lý nút CỘNG TRỪ trong Popup (Class riêng, không đụng code cũ)
+    // 2. Xử lý nút CỘNG TRỪ trong Popup 
     $(document).on('click', '.btn-qty-minus', function() {
         let input = $(this).next('input');
         let val = parseInt(input.val());

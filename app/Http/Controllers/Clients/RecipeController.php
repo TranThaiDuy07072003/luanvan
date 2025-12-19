@@ -8,19 +8,19 @@ use Illuminate\Http\Request;
 
 class RecipeController extends Controller
 {
-    // 1. Hiển thị trang danh sách món ăn
+
     public function index()
     {
-        $recipes = Recipe::all(); // Lấy tất cả món ăn
+        $recipes = Recipe::all();
 
-        return view('user.pages.recipes', compact('recipes')); // Trả về View bạn vừa tạo
+        return view('user.pages.recipes', compact('recipes'));
     }
 
-    // 2. Ajax lấy nguyên liệu (Popup)
+    //  Ajax lấy nguyên liệu Popup
     public function getIngredients(Request $request)
     {
         $recipe = Recipe::with(['products' => function ($q) {
-            $q->with('images'); // đổi từ firstImage sang images
+            $q->with('images');
         }])->find($request->id);
 
         if ($recipe) {

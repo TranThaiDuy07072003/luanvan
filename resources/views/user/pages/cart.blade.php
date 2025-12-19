@@ -98,6 +98,7 @@
                                         <tr>
                                             <td colspan="6" class="text-center">Giỏ hàng của bạn đang trống !</td>
                                         </tr>
+
                                     @endforelse
                                 </tbody>
                             </table>

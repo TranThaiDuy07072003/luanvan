@@ -186,13 +186,13 @@ class ChatController extends Controller
 
                     $aiReplyText = 'Xin lỗi, AI không thể xử lý lúc này.';
 
-                    \Log::error('AI API error', ['response' => $response->json()]);
+                    //\Log::error('AI API error', ['response' => $response->json()]);
 
                 }
 
             } catch (\Throwable $e) {
 
-                \Log::error('AI call error: '.$e->getMessage());
+                //\Log::error('AI call error: '.$e->getMessage());
 
                 $aiReplyText = 'Xin lỗi, hiện tại không thể kết nối AI.';
 

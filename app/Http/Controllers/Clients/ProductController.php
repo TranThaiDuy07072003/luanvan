@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
-    // File: ProductController.php
-
-    public function index(Request $request) // Nhớ thêm Request $request vào
+    public function index(Request $request)
     {
         $categories = Category::withCount('products')->get();
 
@@ -24,15 +22,15 @@ class ProductController extends Controller
             ->paginate(9)
             ->withQueryString();
 
-        // Xử lý ảnh (code cũ của bạn)
+
         foreach ($products as $product) {
             $product->image_url = $product->firstImage?->image
                 ? asset('storage/'.$product->firstImage->image)
                 : asset('storage/uploads/products/default-product.png');
         }
 
-        // --- ĐOẠN MỚI THÊM VÀO ---
-        // Kiểm tra nếu là AJAX (bấm phân trang) thì trả về JSON
+
+        // Kiểm tra nếu là AJAX (bấm phân trang) thì trả về json
         if ($request->ajax()) {
             return response()->json([
                 'products_html' => view('user.components.products_grid', compact('products'))->render(),
@@ -82,10 +80,10 @@ class ProductController extends Controller
                 : asset('storage/uploads/products/default-product.png');
         }
 
-        // SỬA LẠI: Trả về 2 key (products_html và pagination_html)
+        // trả về 2 key (products_html và pagination_html)
         return response()->json([
             'products_html' => view('user.components.products_grid', compact('products'))->render(),
-            // SỬA: Chỉ định rõ file custom pagination
+            // chỉ định rõ file custom pagination
             'pagination_html' => $products->links('user.components.pagination.pagination_custom')->toHtml(),
         ]);
 
@@ -111,6 +109,7 @@ class ProductController extends Controller
         return view('user.pages.products', compact('categories', 'products', 'selectedCategory'));
     }
 
+    //Chi tiết sản phẩm
     public function detail($slug)
     {
         $product = Product::with(['category', 'images', 'reviews.user'])->where('slug', $slug)->firstOrFail();
@@ -141,7 +140,7 @@ class ProductController extends Controller
                 ->exists();
         }
 
-        // 2. [QUAN TRỌNG] Xử lý đường dẫn ảnh cho sản phẩm tương tự
+        // đường dẫn ảnh cho sản phẩm tương tự
         foreach ($relatedProducts as $related) {
             $related->image_url = $related->firstImage
                 ? asset('storage/'.$related->firstImage->image)

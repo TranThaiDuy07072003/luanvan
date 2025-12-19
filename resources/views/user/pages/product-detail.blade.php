@@ -262,7 +262,7 @@
                                                 <i class="far fa-eye"></i>
                                             </a>
                                         </li>
-                                        {{-- LOGIC 1: CHỈ HIỆN NÚT MUA KHI CÒN HÀNG --}}
+                                        {{-- chỉ hiện nút mua khi còn hàng --}}
                                         @if ($product->stock > 0 && $product->status == 'in_stock')
                                             <li>
                                                 <a href="javascript:void(0)" title="Thêm Vào Giỏ Hàng"
@@ -285,7 +285,7 @@
                                         href="{{ route('product.detail', $product->slug) }}">{{ $product->name }}</a>
                                 </h2>
                                 <div class="product-price">
-                                    {{-- LOGIC 2: HIỆN GIÁ HOẶC CHỮ HẾT HÀNG --}}
+                                    {{-- hiện giá hoặc chữ hết hàng --}}
                                     @if ($product->stock > 0 && $product->status == 'in_stock')
                                         <span>{{ number_format($product->price, 0, ',', '.') }}VNĐ</span>
                                     @else

@@ -1,6 +1,6 @@
 <div class="ltn__product-tab-content-inner ltn__product-grid-view">
     <div class="row">
-        <!-- ltn__product-item -->
+        <!-- ltn__product-item , lưới sản phẩm -->
         @foreach ($products as $product)
             <div class="col-xl-4 col-sm-6 col-6">
                 <div class="ltn__product-item ltn__product-item-3 text-center">
@@ -41,7 +41,7 @@
                         </div>
                         <h2 class="product-title"><a href="{{ route('product.detail' , $product->slug) }}">{{ $product->name }}</a></h2>
                         <div class="product-price">
-                            {{-- LOGIC: Hiện giá hoặc chữ HẾT HÀNG --}}
+                            {{-- logic hiện giá hoặc chữ HẾT HÀNG --}}
                             @if ($product->stock > 0 && $product->status == 'in_stock')
                                 <span>{{ number_format($product->price, 0, ',', '.') }} VNĐ</span>
                             @else

@@ -20,7 +20,7 @@ class HomeController extends Controller
         }
 
 
-        // Tải thêm 'firstImage' để lấy ảnh
+        // Sản phẩm bán chạy
         $bestSellingProducts = Product::with('firstImage')
             ->join('order_items', 'products.id', '=', 'order_items.product_id')
             ->select('products.*') // Chọn tất cả cột từ bảng products
@@ -31,7 +31,6 @@ class HomeController extends Controller
             ->limit(8)
             ->get();
 
-        // SỬA LỖI 2: Thêm image_url cho sản phẩm bán chạy
         /** @var \App\Models\Product $product */
         foreach ($bestSellingProducts as $product) {
              $product->image_url = $product->firstImage?->image
@@ -41,4 +40,6 @@ class HomeController extends Controller
 
         return view('user.pages.home', compact('categories', 'bestSellingProducts'));
     }
+
+
 }

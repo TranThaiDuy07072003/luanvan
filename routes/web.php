@@ -31,7 +31,7 @@ Route::prefix('/')->group(function () {
         return view('user.pages.faq');
     })->name('faq');
 
-    // Routes cho authentication - dùng middleware 'guest' để chỉ cho phép khi chưa login (uncomment và thêm route register của bạn)
+    // Routes cho authentication - dùng middleware 'guest' để chỉ cho phép khi chưa login
     Route::middleware('guest')->group(function () {
         Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
         Route::post('/register', [AuthController::class, 'register']);
@@ -39,14 +39,14 @@ Route::prefix('/')->group(function () {
         Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [AuthController::class, 'login']);
 
-        // === QUÊN MẬT KHẨU ===
+        // quên mật khẩu
         Route::get('/forgot-password', [PasswordController::class, 'showForgotForm'])
             ->name('password.request');
 
         Route::post('/forgot-password', [PasswordController::class, 'sendResetLink'])
             ->name('password.email');
 
-        // === ĐẶT LẠI MẬT KHẨU ===
+        // đặt lại mật khẩu
         Route::get('/dat-lai-mat-khau/{token}', [PasswordController::class, 'showResetForm'])
             ->name('password.reset');
 
@@ -81,7 +81,6 @@ Route::prefix('/')->group(function () {
 
 
         //thanh toán VNPay
-        // --- THÊM ROUTE NÀY ---
         Route::get('/checkout/vnpay-return', [CheckoutController::class, 'vnpayReturn'])->name('vnpay.return');
 
 
@@ -110,7 +109,7 @@ Route::prefix('/')->group(function () {
 
 
 
-    // Handle Cart
+    // thêm sản phẩm vào giỏ
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     // xóa giỏ hàng
     Route::post('/cart/remove', [CartController::class, 'removeFormMiniCart'])->name('cart.remove');
@@ -140,9 +139,9 @@ Route::prefix('/')->group(function () {
 
 
     // Trang xem món ăn
-    Route::get('/goi-y-mon-an', [RecipeController::class, 'index'])->name('client.recipes');
+    Route::get('/menu', [RecipeController::class, 'index'])->name('client.recipes');
 
-    // Ajax lấy nguyên liệu
+    // ajax lấy nguyên liệu
     Route::post('/get-recipe-ingredients', [RecipeController::class, 'getIngredients'])->name('get.recipe.ingredients');
 
 
@@ -151,7 +150,7 @@ Route::prefix('/')->group(function () {
     Route::middleware('auth')->group(function () {
         Route::get('/dashboard', function () {
             return view('dashboard');
-        })->name('dashboard');  
+        })->name('dashboard');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

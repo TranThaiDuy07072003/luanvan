@@ -47,10 +47,10 @@
 
 /* Định dạng cho link danh mục khi được "active" */
 .widget.ltn__menu-widget ul li a.category-filter.active {
-    color: var(--ltm_secondary-color); /* Đổi màu chữ sang màu cam (màu phụ) */
-    font-weight: 700; /* In đậm chữ */
-    border-bottom: 2px solid var(--ltm_secondary-color); /* Thêm gạch chân màu cam */
-    padding-bottom: 3px; /* Thêm chút khoảng cách cho gạch chân */
+    color: var(--ltm__secondary-color); /* Đổi màu chữ sang màu cam (màu phụ) */
+    font-weight: bold; /* In đậm chữ */
+    text-decoration: underline;
+    
 }
 
 /* (Tùy chọn) Thêm hiệu ứng mượt mà khi chuyển */

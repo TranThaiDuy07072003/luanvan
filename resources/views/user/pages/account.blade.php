@@ -31,7 +31,7 @@
                                 <div class="col-lg-8">
                                     <div class="tab-content">
 
-                                        <!-- ... (Tab Dashboard và Orders giữ nguyên) ... -->
+                                        <!-- Tab Dashboard -->
                                         <div class="tab-pane fade active show" id="liton_tab_dashboard">
                                             <div class="ltn__myaccount-tab-content-inner">
                                                 <p>Xin chào <strong>{{ $user->email }}</strong> (không phải
@@ -43,6 +43,8 @@
                                                     và <span>chỉnh sửa mật khẩu và chi tiết tài khoản</span>.</p>
                                             </div>
                                         </div>
+
+                                        <!-- Orders -->
                                         <div class="tab-pane fade" id="liton_tab_orders">
                                             <div class="ltn__myaccount-tab-content-inner">
                                                 <div class="table-responsive" style="overflow-x: auto; overflow-y: scroll; max-height: 400px;">
@@ -88,9 +90,8 @@
                                             </div>
                                         </div>
 
-                                        <!-- ============================================= -->
-                                        <!-- PHẦN 1: SỬA LẠI TAB ĐỊA CHỈ (HTML) -->
-                                        <!-- ============================================= -->
+
+                                        <!-- phần địa chỉ-->
                                         <div class="tab-pane fade" id="liton_tab_address">
                                             <div class="ltn__myaccount-tab-content-inner">
                                                 <p>Các địa chỉ sau sẽ được sử dụng trên trang thanh toán theo mặc định.</p>
@@ -107,7 +108,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {{-- Đảm bảo $addresses được truyền từ Controller --}}
+
                                                             @if (isset($addresses) && $addresses->count() > 0)
                                                                 @foreach ($addresses as $address)
                                                                     <tr>
@@ -120,7 +121,7 @@
                                                                                 <span class="badge bg-success">Mặc
                                                                                     định</span>
                                                                             @else
-                                                                                <!-- THÊM CLASS "form-set-default" -->
+                                                                                <!-- nút chọn địa chỉ mặc định -->
                                                                                 <form
                                                                                     action="{{ route('account.addresses.update', $address->id) }}"
                                                                                     method="POST"
@@ -133,7 +134,7 @@
                                                                             @endif
                                                                         </td>
                                                                         <td>
-                                                                            <!-- THÊM CLASS "form-delete-address" và XÓA onclick="" -->
+                                                                            <!-- nút xóa địa chỉ-->
                                                                             <form
                                                                                 action="{{ route('account.addresses.delete', $address->id) }}"
                                                                                 method="POST"
@@ -159,15 +160,15 @@
                                                     data-bs-target="#addAddressModal">Thêm địa chỉ mới</button>
                                             </div>
                                         </div>
-                                        <!-- ============================================= -->
-                                        <!-- HẾT PHẦN SỬA TAB ĐỊA CHỈ -->
-                                        <!-- ============================================= -->
 
 
-                                        <!-- Modal Thêm Địa Chỉ (Giữ nguyên) -->
+
+
+
+                                        <!-- modal thêm địa chỉ -->
                                         <div class="modal fade" id="addAddressModal" tabindex="-1"
                                             aria-labelledby="addAddressModalLabel" aria-hidden="true">
-                                            <!-- ... (toàn bộ nội dung modal giữ nguyên) ... -->
+
                                             <div class="modal-dialog">
                                                 <div class="modal-content" style="padding: 5px 10px">
                                                     <div class="modal-header">
@@ -216,14 +217,14 @@
                                             </div>
                                         </div>
 
-                                        <!-- Tab Chi tiết tài khoản (Giữ nguyên) -->
+                                        <!-- Tab Chi tiết tài khoản -->
                                         <div class="tab-pane fade" id="liton_tab_account">
-                                            <!-- ... (toàn bộ nội dung tab giữ nguyên) ... -->
+
                                             <div class="ltn__myaccount-tab-content-inner">
                                                 <div class="ltn__form-box">
                                                     <form id="update-account-form"
                                                         action="{{ route('account.update') }}">
-                                                        <!-- ... (các input) ... -->
+                                                        <!-- các input -->
                                                         <div class="row mb-50">
                                                             <div class="col-md-6">
                                                                 <label for="ltn__name">Họ và tên:</label>
@@ -258,14 +259,14 @@
                                             </div>
                                         </div>
 
-                                        <!-- Tab Đổi mật khẩu (Giữ nguyên) -->
+                                        <!-- Tab Đổi mật khẩu -->
                                         <div class="tab-pane fade" id="liton_tab_password">
-                                            <!-- ... (toàn bộ nội dung tab giữ nguyên) ... -->
+
                                             <div class="ltn__myaccount-tab-content-inner">
                                                 <div class="ltn__form-box">
                                                     <form action="{{ route('account.change-password') }}" method="POST"
                                                         id="change-password-form">
-                                                        <!-- ... (các input) ... -->
+
                                                         <fieldset>
                                                             <div class="row">
                                                                 <div class="col-md-12">
@@ -304,13 +305,13 @@
 
 
 <!-- ============================================= -->
-<!-- PHẦN 2: SỬA LẠI TOÀN BỘ SCRIPT -->
+<!-- Script custom.js -->
 <!-- ============================================= -->
 @push('scripts')
     <script>
         $(document).ready(function() {
 
-            // --- SCRIPT 1: CẬP NHẬT THÔNG TIN ---
+            // cập nhật thông tin
             $('#update-account-form').on('submit', function(e) {
                 e.preventDefault();
                 let btn = $('#btn-update-info');
@@ -351,7 +352,7 @@
             });
 
 
-            // --- SCRIPT 2: ĐỔI MẬT KHẨU ---
+            // đổi mật khẩu
             $('#change-password-form').on('submit', function(e) {
                 e.preventDefault();
                 let form = $(this);
@@ -388,53 +389,9 @@
                 });
             });
 
-            // --- SCRIPT 3: THÊM ĐỊA CHỈ (Modal) ---
-            // $('#addAddressForm').on('submit', function(e) {
-            //     e.preventDefault();
-            //     let form = $(this);
-            //     let btn = $('#btn-add-address');
-            //     let originalText = btn.text();
-            //     btn.prop('disabled', true).text('Đang lưu...');
-            //     $('.error-message').remove();
-            //     let formData = new FormData(this);
-
-            //     $.ajax({
-            //         url: form.attr('action'),
-            //         type: 'POST',
-            //         data: formData,
-            //         contentType: false,
-            //         processData: false,
-            //         success: function(response) {
-            //             if (response.success) {
-            //                 toastr.success(response.message, 'Thành công!');
-            //                 $('#addAddressModal').modal('hide');
-            //                 setTimeout(function() {
-            //                     location.reload();
-            //                 }, 1000);
-            //             }
-            //         },
-            //         error: function(xhr) {
-            //             if (xhr.status === 422) {
-            //                 let errors = xhr.responseJSON.errors;
-            //                 $.each(errors, function(key, value) {
-            //                     let input = $('#' + key);
-            //                     input.after(
-            //                         '<p class="error-message text-danger" style="font-size: 0.9em;">' +
-            //                         value[0] + '</p>');
-            //                 });
-            //                 toastr.error('Vui lòng kiểm tra lại thông tin.', 'Lỗi nhập liệu');
-            //             } else {
-            //                 toastr.error('Có lỗi xảy ra, vui lòng thử lại.', 'Lỗi hệ thống');
-            //             }
-            //         },
-            //         complete: function() {
-            //             btn.prop('disabled', false).text(originalText);
-            //         }
-            //     });
-            // });
 
 
-            // --- SCRIPT 4: CHỌN ĐỊA CHỈ MẶC ĐỊNH (MỚI) ---
+            // chọn địa chỉ mặc định
             $(document).on('submit', '.form-set-default', function(e) {
                 e.preventDefault();
 
@@ -463,7 +420,8 @@
                 });
             });
 
-            // --- SCRIPT 5: XÓA ĐỊA CHỈ (MỚI) ---
+
+            // xóa địa chỉ
             $(document).on('submit', '.form-delete-address', function(e) {
                 e.preventDefault();
 

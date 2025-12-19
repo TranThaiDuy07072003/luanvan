@@ -97,7 +97,7 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <button type="button" class="btn btn-danger btn-sm btn-remove-row"><i
-                                                            class="fa fa-trash"></i></button>
+                                                            class="fa fa-close"></i></button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -148,7 +148,7 @@
                         <input type="text" readonly class="form-control unit-display" style="background: white; border: none;">
                     </td>
                     <td class="text-center">
-                        <button type="button" class="btn btn-danger btn-sm btn-remove-row"><i class="fa fa-trash"></i></button>
+                        <button type="button" class="btn btn-danger btn-sm btn-remove-row"><i class="fa fa-close"></i></button>
                     </td>
                 </tr>
             `;

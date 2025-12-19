@@ -53,7 +53,7 @@
                                                 <button class="btn btn-sm btn-primary">Sửa</button>
                                                 <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete-recipe"
                                                     data-id="{{ $recipe->id }}">
-                                                    <i class="fa fa-trash"></i> Xóa
+                                                    <i class="fa fa-close"></i> Xóa
                                                 </a>
                                             </td>
                                         </tr>
@@ -85,24 +85,24 @@
                     type: 'POST',
                     data: {
                         id: id,
-                        _token: $('meta[name="csrf-token"]').attr('content') // Token bảo mật Laravel
+                        _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     beforeSend: function() {
-                        btn.text('Đang xóa...'); // Hiệu ứng nhỏ cho người dùng biết
+                        btn.text('Đang xóa...');
                     },
                     success: function(response) {
                         if (response.status) {
-                            toastr.success(response.message); // Hiện thông báo xanh
-                            row.fadeOut(500, function() { $(this).remove(); }); // Hiệu ứng biến mất dòng đó
+                            toastr.success(response.message);
+                            row.fadeOut(500, function() { $(this).remove(); });
                         } else {
-                            toastr.error(response.message); // Hiện thông báo đỏ
-                            btn.html('<i class="fa fa-trash"></i> Xóa'); // Trả lại nút cũ
+                            toastr.error(response.message);
+                            btn.html('<i class="fa fa-close"></i> Xóa');
                         }
                     },
                     error: function(xhr) {
                         console.log(xhr);
                         toastr.error("Có lỗi xảy ra, vui lòng thử lại.");
-                        btn.html('<i class="fa fa-trash"></i> Xóa');
+                        btn.html('<i class="fa fa-close"></i> Xóa');
                     }
                 });
             }
