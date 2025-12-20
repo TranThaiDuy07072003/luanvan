@@ -47,7 +47,8 @@
                                         <!-- Orders -->
                                         <div class="tab-pane fade" id="liton_tab_orders">
                                             <div class="ltn__myaccount-tab-content-inner">
-                                                <div class="table-responsive" style="overflow-x: auto; overflow-y: scroll; max-height: 400px;">
+                                                <div class="table-responsive"
+                                                    style="overflow-x: auto; overflow-y: scroll; max-height: 400px;">
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
@@ -69,7 +70,8 @@
                                                                         @if ($order->status == 'pending')
                                                                             <span class="badge bg-warning">Đang xử lý</span>
                                                                         @elseif($order->status == 'processing')
-                                                                            <span class="badge bg-primary">Đang giao hàng</span>
+                                                                            <span class="badge bg-primary">Đang giao
+                                                                                hàng</span>
                                                                         @elseif($order->status == 'completed')
                                                                             <span class="badge bg-success">Hoàn thành</span>
                                                                         @elseif($order->status == 'canceled')
@@ -81,7 +83,8 @@
                                                                     <td>{{ number_format($order->total_price, 0, ',', '.') }}
                                                                         VND</td>
 
-                                                                    <td><a href="{{ route('order.show', $order->id) }}" class="btn btn-primary btn-sm">Xem</a></td>
+                                                                    <td><a href="{{ route('order.show', $order->id) }}"
+                                                                            class="btn btn-primary btn-sm">Xem</a></td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
@@ -182,33 +185,65 @@
                                                             id="addAddressForm">
                                                             @csrf
                                                             <div class="mb-3">
-                                                                <label for="full_name" class="form-lable">Tên người
-                                                                    dùng</label>
-                                                                <input type="text" class="form-control" id="full_name"
-                                                                    name="full_name" required>
+                                                                <label class="form-lable">Tên người dùng</label>
+                                                                <input type="text" class="form-control" name="full_name"
+                                                                    required placeholder="Nhập họ tên">
                                                             </div>
+
                                                             <div class="mb-3">
-                                                                <label for="address" class="form-lable">Địa chỉ</label>
-                                                                <input type="text" class="form-control" id="address"
-                                                                    name="address" required>
+                                                                <label class="form-lable">Số điện thoại</label>
+                                                                <input type="text" class="form-control" name="phone"
+                                                                    required placeholder="Nhập số điện thoại">
                                                             </div>
+
                                                             <div class="mb-3">
-                                                                <label for="city" class="form-lable">Thành phố</label>
-                                                                <input type="text" class="form-control" id="city"
-                                                                    name="city" required>
+                                                                <label class="form-lable">Tỉnh/Thành phố</label>
+                                                                <select class="form-control nice-select" id="tinh"
+                                                                    name="tinh" style="width: 100%;">
+                                                                    <option value="0">Tỉnh Thành</option>
+                                                                </select>
                                                             </div>
+
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-lable">Quận/Huyện</label>
+                                                                        <select class="form-control nice-select"
+                                                                            id="quan" name="quan"
+                                                                            style="width: 100%;">
+                                                                            <option value="0">Quận Huyện</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-lable">Phường/Xã</label>
+                                                                        <select class="form-control nice-select"
+                                                                            id="phuong" name="phuong"
+                                                                            style="width: 100%;">
+                                                                            <option value="0">Phường Xã</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
                                                             <div class="mb-3">
-                                                                <label for="phone" class="form-lable">Số điện
-                                                                    thoại</label>
-                                                                <input type="text" class="form-control" id="phone"
-                                                                    name="phone" required>
+                                                                <label class="form-lable">Địa chỉ cụ thể</label>
+                                                                <input type="text" class="form-control"
+                                                                    id="address_detail" required
+                                                                    placeholder="Số nhà, tên đường...">
                                                             </div>
+
+                                                            <input type="hidden" name="address" id="final_address">
+                                                            <input type="hidden" name="city" id="final_city">
+
                                                             <div class="mb-3 form-check">
                                                                 <input type="checkbox" class="form-check-input"
                                                                     id="default" name="default">
                                                                 <label for="default" class="form-lable">Đặt làm địa chỉ
                                                                     mặc định</label>
                                                             </div>
+
                                                             <button type="submit" id="btn-add-address"
                                                                 class="btn theme-btn-1 btn btn-block">Lưu địa chỉ</button>
                                                         </form>
@@ -308,8 +343,153 @@
 <!-- Script custom.js -->
 <!-- ============================================= -->
 @push('scripts')
+    <!-- jQuery Nice Select CSS & JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+
+    <style>
+        .nice-select .list {
+            z-index: 9999 !important;
+            max-height: 250px;
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        .nice-select {
+            width: 100%;
+            margin-bottom: 15px;
+            float: none;
+        }
+    </style>
+
     <script>
         $(document).ready(function() {
+
+            // Đợi 1 giây để đảm bảo thư viện NiceSelect đã load
+            setTimeout(function() {
+                $('select.nice-select').niceSelect();
+            }, 500);
+
+            // =======================================================
+            // 1. LOGIC CHỌN ĐỊA CHỈ 3 CẤP (Dùng FETCH để tránh CORS)
+            // =======================================================
+
+            // 1.1. Load Tỉnh/Thành
+            fetch('https://esgoo.net/api-tinhthanh/1/0.htm')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error === 0) {
+                        data.data.forEach(val => {
+                            $("#tinh").append(
+                                `<option value="${val.id}" data-name="${val.full_name}">${val.full_name}</option>`
+                                );
+                        });
+                        $("#tinh").niceSelect('update');
+                    }
+                })
+                .catch(error => console.error('Lỗi tải Tỉnh:', error));
+
+            // 1.2. Chọn Tỉnh -> Load Quận/Huyện
+            $("#tinh").change(function() {
+                let idtinh = $(this).val();
+                let tenTinh = $("#tinh option:selected").data('name');
+                $("#final_city").val(tenTinh); // Lưu tên tỉnh
+
+                // Reset Quận/Huyện & Phường/Xã
+                $("#quan").html('<option value="0">Chọn Quận/Huyện</option>');
+                $("#phuong").html('<option value="0">Chọn Phường/Xã</option>');
+                $("#quan").niceSelect('update');
+                $("#phuong").niceSelect('update');
+
+                if (idtinh == 0) return;
+
+                fetch(`https://esgoo.net/api-tinhthanh/2/${idtinh}.htm`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error === 0) {
+                            data.data.forEach(val => {
+                                $("#quan").append(
+                                    `<option value="${val.id}" data-name="${val.full_name}">${val.full_name}</option>`
+                                    );
+                            });
+                            $("#quan").niceSelect('update');
+                        }
+                    })
+                    .catch(error => console.error('Lỗi tải Quận:', error));
+            });
+
+            // 1.3. Chọn Quận -> Load Phường/Xã
+            $("#quan").change(function() {
+                let idquan = $(this).val();
+
+                // Reset Phường/Xã
+                $("#phuong").html('<option value="0">Chọn Phường/Xã</option>');
+                $("#phuong").niceSelect('update');
+
+                if (idquan == 0) return;
+
+                fetch(`https://esgoo.net/api-tinhthanh/3/${idquan}.htm`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error === 0) {
+                            data.data.forEach(val => {
+                                $("#phuong").append(
+                                    `<option value="${val.id}" data-name="${val.full_name}">${val.full_name}</option>`
+                                    );
+                            });
+                            $("#phuong").niceSelect('update');
+                        }
+                    })
+                    .catch(error => console.error('Lỗi tải Phường:', error));
+            });
+
+
+            // =======================================================
+            // 2. XỬ LÝ LƯU ĐỊA CHỈ (Submit Form)
+            // =======================================================
+            $('#addAddressForm').on('submit', function(e) {
+                e.preventDefault();
+
+                // Validate chọn đủ 3 cấp
+                if ($("#tinh").val() == 0 || $("#quan").val() == 0 || $("#phuong").val() == 0) {
+                    toastr.error("Vui lòng chọn đầy đủ Tỉnh, Huyện, Xã!");
+                    return;
+                }
+
+                // Gộp địa chỉ chuẩn: "Số nhà, Phường, Quận"
+                let soNha = $('#address_detail').val();
+                let phuong = $("#phuong option:selected").data('name');
+                let quan = $("#quan option:selected").data('name');
+
+                let fullAddress = `${soNha}, ${phuong}, ${quan}`;
+                $('#final_address').val(fullAddress);
+
+                // Gửi Ajax về Server
+                let form = $(this);
+                let btn = $('#btn-add-address');
+                let originalText = btn.text();
+                btn.prop('disabled', true).text('Đang lưu...');
+
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                            $('#addAddressModal').modal('hide');
+                            form[0].reset();
+                            setTimeout(() => location.reload(), 1000);
+                        }
+                    },
+                    error: function(xhr) {
+                        btn.prop('disabled', false).text(originalText);
+                        toastr.error('Lỗi khi lưu địa chỉ. Kiểm tra lại thông tin.');
+                    }
+                });
+            });
+
+
 
             // cập nhật thông tin
             $('#update-account-form').on('submit', function(e) {
@@ -331,7 +511,7 @@
                             toastr.success(response.message, 'Thành công!');
                             $('input[name="ltn__name"]').val(response.user.name);
                             $('input[name="ltn__phone_number"]').val(response.user
-                            .phone_number);
+                                .phone_number);
                             $('input[name="ltn__address"]').val(response.user.address);
                         }
                     },

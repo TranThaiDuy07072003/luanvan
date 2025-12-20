@@ -751,7 +751,7 @@ $(document).ready(function() {
         });
     });
 
-    // 2. Xử lý nút CỘNG TRỪ trong Popup 
+    // 2. Xử lý nút CỘNG TRỪ trong Popup
     $(document).on('click', '.btn-qty-minus', function() {
         let input = $(this).next('input');
         let val = parseInt(input.val());
@@ -836,6 +836,52 @@ $(document).ready(function() {
     });
 
 
+
+
+    /***********
+     * đổi địa chỉ tính ship
+     */
+
+    // --- XỬ LÝ ĐỔI ĐỊA CHỈ & TÍNH SHIP ---
+    $('#list_address').change(function() {
+        var addressId = $(this).val();
+
+        // 1. Điền thông tin vào form (Code cũ)
+        $.ajax({
+            url: '/checkout/get-address',
+            type: 'GET',
+            data: { address_id: addressId },
+            success: function(response) {
+                if (response.success) {
+                    $('input[name="ltn__name"]').val(response.data.full_name);
+                    // ... điền các ô khác ...
+
+                    // 2. TÍNH SHIP MỚI
+                    calculateShipping(addressId);
+                }
+            }
+        });
+    });
+
+    function calculateShipping(addressId) {
+        $('#shipping-fee').html('Wait...');
+        $.ajax({
+            url: '/checkout/get-shipping-fee',
+            type: 'GET',
+            data: { address_id: addressId },
+            success: function(res) {
+                if(res.success) {
+                    $('#shipping-fee').text(res.fee_formatted);
+                    $('#distance-info').text(res.distance_text);
+                    $('#total-price-display').text(res.grand_total);
+                }
+            }
+        });
+    }
+
+    // Gọi lần đầu khi vào trang
+    let defaultId = $('#list_address').val();
+    if(defaultId) calculateShipping(defaultId);
 
 
 });

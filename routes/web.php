@@ -80,6 +80,9 @@ Route::prefix('/')->group(function () {
         Route::post('/checkout', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder');
 
 
+        Route::get('/checkout/get-shipping-fee', [CheckoutController::class, 'getShippingFee'])->name('checkout.getShippingFee');
+
+
         //thanh toán VNPay
         Route::get('/checkout/vnpay-return', [CheckoutController::class, 'vnpayReturn'])->name('vnpay.return');
 

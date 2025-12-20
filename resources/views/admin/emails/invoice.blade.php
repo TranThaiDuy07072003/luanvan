@@ -10,6 +10,15 @@
     style="font-family: Arial, sans-serif; font-size: 16px; color: #333; line-height: 1.6; margin: 0; padding: 20px; background-color: #f9f9f9;">
     <div style="max-width: 700px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px;">
 
+        {{-- 1. TÍNH TOÁN LẠI SỐ TIỀN --}}
+        @php
+            $subTotal = 0;
+            foreach ($order->orderItems as $item) {
+                $subTotal += $item->price * $item->quantity;
+            }
+            $shippingFee = $order->total_price - $subTotal;
+        @endphp
+
         <p>Chào <strong>{{ $order->shippingAddress->full_name }}</strong>,</p>
         <p>Cảm ơn bạn đã đặt hàng tại <strong>NongSanSach</strong>. Dưới đây là chi tiết hóa đơn của bạn.</p>
 
@@ -29,7 +38,6 @@
                         Số điện thoại: {{ $order->shippingAddress->phone }}
                     </p>
                 </td>
-
                 <td>
                     <strong>Đến:</strong>
                     <p>
@@ -39,7 +47,6 @@
                         Email: dh52113526@student.stu.edu.vn
                     </p>
                 </td>
-
                 <td>
                     <strong>Thông tin khách hàng:</strong>
                     <p>
@@ -47,18 +54,16 @@
                         <b>Email: </b>{{ $order->user->email }}<br>
                         <b>Tài khoản: </b>{{ $order->user->name }}
                     </p>
-
                 </td>
-
             </tr>
         </table>
-
 
         <h3 style="margin-bottom: 10px;">Chi tiết đơn hàng:</h3>
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr style="background: #28a745; color: #fff;">
-                    <th style="padding: 10px; text-align: left;">Ảnh</th>
+                    {{-- SỬA Ở ĐÂY: Đổi Ảnh thành STT --}}
+                    <th style="padding: 10px; text-align: center; width: 50px;">STT</th>
                     <th style="padding: 10px; text-align: left;">Sản phẩm</th>
                     <th style="padding: 10px; text-align: right;">Giá</th>
                     <th style="padding: 10px; text-align: center;">Số lượng</th>
@@ -68,13 +73,14 @@
             <tbody>
                 @foreach ($order->orderItems as $item)
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 10px;">
-                            <img src="{{ $item->product->image_url }}" width="50" style="border-radius: 5px;">
+                        {{-- SỬA Ở ĐÂY: Dùng $loop->iteration để lấy số thứ tự 1, 2, 3... --}}
+                        <td style="padding: 10px; text-align: center;">
+                            <strong>{{ $loop->iteration }}</strong>
                         </td>
+
                         <td style="padding: 10px;">{{ $item->product->name }}</td>
                         <td style="padding: 10px; text-align: right;">
-                            {{ number_format($item->price, 0, ',', '.') }}
-                            VND
+                            {{ number_format($item->price, 0, ',', '.') }} VND
                         </td>
                         <td style="padding: 10px; text-align: center;">{{ $item->quantity }}</td>
                         <td style="padding: 10px; text-align: right;">
@@ -84,7 +90,6 @@
                 @endforeach
             </tbody>
         </table>
-
 
         <h3 style="margin-top: 20px;">Phương thức thanh toán:</h3>
         <p
@@ -99,28 +104,26 @@
             <tr>
                 <td style="padding: 10px;"><strong>Tiền hàng</strong></td>
                 <td style="padding: 10px; text-align: right;">
-                    {{ number_format( $order->total_price - 15000,  0,  ',', '.') }}
-                    VND</td>
+                    {{ number_format($subTotal, 0, ',', '.') }} VND
+                </td>
             </tr>
             <tr>
-                <td style="padding: 10px;"><strong>Shipping</strong></td>
+                <td style="padding: 10px;"><strong>Phí Vận Chuyển</strong></td>
                 <td style="padding: 10px; text-align: right;">
-                    {{ number_format( 15000,  0,  ',',  '.') }} VND
+                    {{ number_format($shippingFee, 0, ',', '.') }} VND
                 </td>
             </tr>
             <tr style="background: #28a745; color: #fff;">
                 <td style="padding: 10px;"><strong>Tổng tiền:</strong></td>
                 <td style="padding: 10px; text-align: right;">
-                    {{ number_format( $order->total_price,  0,  ',',  '.') }}
-                    VND</td>
+                    {{ number_format($order->total_price, 0, ',', '.') }} VND
+                </td>
             </tr>
         </table>
 
         <p style="text-align: center; font-size: 14px; color: #777; margin-top: 20px;">Cảm ơn bạn đã mua hàng! Nếu có
             bất kỳ câu hỏi nào, hãy liên hệ với chúng tôi.
         </p>
-
-
 
     </div>
 </body>
