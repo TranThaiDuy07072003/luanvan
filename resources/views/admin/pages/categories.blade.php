@@ -44,7 +44,8 @@
                                                 <tr>
                                                     <th>Hình Ảnh</th>
                                                     <th>Tên Danh Mục</th>
-                                                    <th>Slug</th>
+                                                    <th>Số lượng SP</th>
+                                                    {{-- <th>Slug</th> --}}
                                                     <th>Mô tả</th>
                                                     <th></th>
                                                     <th></th>
@@ -61,7 +62,8 @@
                                                                 alt="{{ $category->name }}" class="image-category">
                                                         </td>
                                                         <td>{{ $category->name }}</td>
-                                                        <td>{{ $category->slug }}</td>
+                                                        <td>{{ $category->products_count }}</td>
+                                                        {{-- <td>{{ $category->slug }}</td> --}}
                                                         <td>{{ $category->description }}</td>
                                                         <td>
                                                             <a class="btn btn-app btn-update-category" data-toggle="modal"

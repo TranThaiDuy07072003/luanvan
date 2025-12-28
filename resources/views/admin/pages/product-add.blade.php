@@ -134,6 +134,7 @@
                                             <option value="tui" {{ old('unit') == 'tui' ? 'selected' : '' }}>Túi</option>
                                             <option value="vi" {{ old('unit') == 'vi' ? 'selected' : '' }}>Vỉ</option>
                                             <option value="combo" {{ old('unit') == 'combo' ? 'selected' : '' }}>Combo</option>
+                                            <option value="thung" {{ old('unit') == 'thung' ? 'selected' : '' }}>Thùng</option>
                                         </select>
 
                                         @error('unit')

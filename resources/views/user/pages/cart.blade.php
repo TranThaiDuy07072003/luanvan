@@ -78,7 +78,7 @@
                                                 @endif
                                             </td>
 
-                                            <td class="cart-product-price">{{ number_format($item['price'], 0, ',', '.') }}đ
+                                            <td class="cart-product-price">{{ number_format($item['price'], 0, ',', '.') }} VNĐ
                                             </td>
 
                                             <td class="cart-product-quantity">
@@ -91,7 +91,7 @@
                                                 </div>
                                             </td>
 
-                                            <td class="cart-product-subtotal">{{ number_format($subtotal, 0, ',', '.') }}đ
+                                            <td class="cart-product-subtotal">{{ number_format($subtotal, 0, ',', '.') }} VNĐ
                                             </td>
                                         </tr>
                                     @empty
@@ -106,25 +106,25 @@
 
                         @if (!empty($cartItems) && count($cartItems) > 0)
                             <div class="shoping-cart-total mt-50">
-                                <h4>Tổng Giỏ Hàng</h4>
+                                {{-- <h4>Tổng Giỏ Hàng</h4> --}}
                                 <table class="table">
                                     <tbody>
                                         <tr>
-                                            <td>Tổng Tiền Hàng</td>
+                                            <td> <strong>Tổng Tiền Hàng</strong> </td>
                                             <td><span
-                                                    class="cart-total">{{ number_format($cartTotal, 0, ',', '.') }}VNĐ</span>
+                                                    class="cart-total">{{ number_format($cartTotal, 0, ',', '.') }} VNĐ</span>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        {{-- <tr>
                                             <td>Phí Vận Chuyển</td>
                                             <td>15.000VND</td>
-                                        </tr>
-                                        <tr>
+                                        </tr> --}}
+                                        {{-- <tr>
                                             <td><strong>Tổng Cộng</strong></td>
                                             <td><strong><span
                                                         class="cart-grand-total">{{ number_format($cartTotal + 15000, 0, ',', '.') }}VNĐ</span></strong>
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                     </tbody>
                                 </table>
 

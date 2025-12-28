@@ -23,16 +23,16 @@ class ProductController extends Controller
     public function addProduct(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:products,name',
             'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock'  => 'required|integer|min:0',
             'unit'   => 'required|string|max:50',
-            'images' => 'required', // Thêm bắt buộc chọn ảnh nếu muốn
+            'images' => 'required',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ], [
-            // --- DỊCH TIẾNG VIỆT TẠI ĐÂY ---
+            'name.unique' => 'Tên sản phẩm này đã tồn tại, vui lòng chọn tên khác.',
             'name.required' => 'Tên sản phẩm không được để trống.',
             'name.max' => 'Tên sản phẩm không được quá 255 ký tự.',
 
@@ -56,7 +56,6 @@ class ProductController extends Controller
 
         $slug = Str::slug($request->name).'-'.time();
 
-        // Create product
 
         $product = Product::create([
             'name' => $request->name,
@@ -69,19 +68,19 @@ class ProductController extends Controller
             'status' => 'in_stock',
         ]);
 
-        // Handle images upload
+        //xử lý tải hình ảnh
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $imageName = time().'_'.uniqid().'.'.$image->getClientOriginalExtension();
                 $path = 'uploads/products/'.$imageName;
 
-                $resizedImage = Image::make($image)->resize(600, 600)->encode();
+                $resizedImage = Image::make($image)->resize(600, 600)->encode(); //tiết kiệm dung lượng ảnh
 
                 Storage::disk('public')->put($path, $resizedImage);
 
-                ProductImage::create([
-                    'product_id' => $product->id,
+                ProductImage::create([ //quan hệ 1 nhiều
+                    'product_id' => $product->id, //khóa ngoại để biết tấm hình này thuộc sản phẩm nào
                     'image' => $path,
                 ]);
             }
@@ -90,33 +89,26 @@ class ProductController extends Controller
         return redirect()->route('admin.product.add')->with('success', 'Sản phẩm đã được thêm thành công!');
     }
 
-    // public function index()
-    // {
-    //     $products = Product::with('category', 'images')->get();
-    //     return view('admin.pages.products', compact('products'));
-    // }
 
-    // Nhớ import Request nếu chưa có: use Illuminate\Http\Request;
 
     public function index(Request $request)
     {
-        // 1. Khởi tạo Query (Chưa lấy dữ liệu vội)
+        //khởi tạo query để lấy sản phẩm
         $query = Product::with(['category', 'firstImage'])->orderBy('id', 'desc');
 
-        // 2. Kiểm tra nếu có lọc Danh mục
+        //kiểm tra nếu có lọc danh mục
         if ($request->has('category_id') && $request->category_id != null) {
             $query->where('category_id', $request->category_id);
         }
 
-        // 3. Kiểm tra nếu có lọc Trạng thái (Làm thêm cho xịn)
+        //lọc trạng thái
         if ($request->has('status') && $request->status != null) {
             $query->where('status', $request->status);
         }
 
-        // 4. Lấy dữ liệu (Lúc này mới chạy câu lệnh SQL)
+        //lấy dữ liệu
         $products = $query->get();
 
-        // 5. Xử lý ảnh (Logic cũ của bạn)
         foreach ($products as $product) {
             if ($product->firstImage) {
                 $product->image_url = asset('storage/'.$product->firstImage->image);
@@ -127,7 +119,6 @@ class ProductController extends Controller
 
         $categories = Category::all();
 
-        // 6. Trả về View
         return view('admin.pages.products', compact('products', 'categories'));
     }
 
@@ -136,7 +127,6 @@ class ProductController extends Controller
 
     public function updateProduct(Request $request)
     {
-        // 1. Validate
         $request->validate([
             'id' => 'required|exists:products,id',
             'name' => 'required|string|max:255',
@@ -144,12 +134,12 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'status' => 'required|in:in_stock,out_of_stock', // Thêm validate cho status
+            'status' => 'required|in:in_stock,out_of_stock',
         ]);
 
         $product = Product::findOrFail($request->id);
 
-        $newStatus = $request->status; // Lấy cái Admin đang chọn trong ô Select
+        $newStatus = $request->status; //lấy cái admin đang chọn trong ô select
 
         // Chỉ can thiệp tự động trong 1 trường hợp duy nhất:
         // Nếu kho thực sự hết hàng (<=0) thì dù Admin chọn "Còn hàng" cũng phải ép về "Hết hàng"
@@ -165,7 +155,7 @@ class ProductController extends Controller
             'price' => $request->price,
             'stock' => $request->stock ?? 0,
             'unit' => $request->unit ?? 'kg',
-            'status' => $newStatus, // Lưu trạng thái chốt hạ
+            'status' => $newStatus,
         ]);
 
 
@@ -194,7 +184,7 @@ class ProductController extends Controller
             }
         }
 
-        //Trả về dữ liệu mới nhất cho Client
+        //trả về dữ liệu mới nhất cho bên client
         $product->load('category', 'images');
         $firstImage = $product->images->first();
         $imageUrl = $firstImage ? asset('storage/'.$firstImage->image) : asset('storage/uploads/products/default-product.png');
@@ -232,11 +222,20 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($request->id);
 
-        // --- RÀNG BUỘC NGHIỆP VỤ MỚI ---
+
         if ($product->status == 'in_stock') {
             return response()->json([
                 'status' => false,
                 'message' => 'Không thể xóa! Sản phẩm đang trạng thái "Còn hàng". Vui lòng chuyển sang "Hết hàng" trước khi xóa.'
+            ]);
+        }
+
+
+        
+        if ($product->orderItems()->count() > 0) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Không thể xóa! Sản phẩm này đã có trong đơn hàng của khách. Vui lòng chỉ chuyển sang trạng thái "Ngừng kinh doanh".'
             ]);
         }
 

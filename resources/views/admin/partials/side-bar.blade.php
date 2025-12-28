@@ -14,7 +14,7 @@
             </div>
             <div class="profile_info">
                 <span>Xin chào,</span>
-                <h2>Quản trị viên</h2>
+                <h2>{{ $userAdmin->name }}</h2>
             </div>
         </div>
         <!-- /menu profile quick info -->

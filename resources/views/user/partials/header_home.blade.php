@@ -1,6 +1,6 @@
-<!-- HEADER AREA START (header-5) -->
+
 <header class="ltn__header-area ltn__header-5 ltn__header-transparent-- gradient-color-4---">
-    <!-- ltn__header-top-area start -->
+
     <div class="ltn__header-top-area">
         <div class="container">
             <div class="row">
@@ -21,14 +21,14 @@
                                     <!-- ltn__social-media -->
                                     <div class="ltn__social-media">
                                         <ul>
-                                            <li><a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                                            <li><a href="javascript:void(0)" title="Facebook"><i class="fab fa-facebook-f"></i></a>
                                             </li>
-                                            <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                                            <li><a href="javascript:void(0)" title="Twitter"><i class="fab fa-twitter"></i></a>
                                             </li>
 
-                                            <li><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                                            <li><a href="javascript:void(0)" title="Instagram"><i class="fab fa-instagram"></i></a>
                                             </li>
-                                            <li><a href="#" title="Dribbble"><i class="fab fa-dribbble"></i></a>
+                                            <li><a href="javascript:void(0)" title="Dribbble"><i class="fab fa-dribbble"></i></a>
                                             </li>
                                         </ul>
                                     </div>
@@ -40,9 +40,9 @@
             </div>
         </div>
     </div>
-    <!-- ltn__header-top-area end -->
 
-    <!-- ltn__header-middle-area start -->
+
+
     <div
         class="ltn__header-middle-area ltn__header-sticky ltn__sticky-bg-white sticky-active-into-mobile ltn__logo-right-menu-option plr--9---">
         <div class="container">
@@ -114,7 +114,7 @@
                                     @endauth
                                     @guest
                                         <li><a href="/login">Đăng nhập</a></li>
-                                        <li><a href="/register">Đăng kí</a></li>
+                                        <li><a href="/register">Đăng ký</a></li>
                                     @endguest
                                 </ul>
                             </li>
@@ -155,9 +155,9 @@
             </div>
         </div>
     </div>
-    <!-- ltn__header-middle-area end -->
+
 </header>
-<!-- HEADER AREA END -->
+
 
 
 

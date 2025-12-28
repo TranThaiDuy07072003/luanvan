@@ -49,7 +49,7 @@
                                             </select>
                                         </div>
 
-                                        {{-- Bạn có thể thêm lọc theo Trạng thái ở đây nếu muốn --}}
+                                        
                                         <div class="col-md-4">
                                             <label><strong>Lọc theo Trạng thái:</strong></label>
                                             <select name="status" class="form-control">
@@ -91,7 +91,7 @@
                                                     <th>Hình Ảnh</th>
                                                     <th>Tên Sản Phẩm</th>
                                                     <th>Danh Mục</th>
-                                                    <th>Slug</th>
+                                                    {{-- <th>Slug</th> --}}
                                                     <th>Mô tả</th>
                                                     <th>Số lượng</th>
                                                     <th>Giá</th>
@@ -114,7 +114,7 @@
 
                                                         <td>{{ $product->name }}</td>
                                                         <td>{{ $product->category->name ?? 'Danh mục đã bị xóa' }}</td>
-                                                        <td>{{ $product->slug }}</td>
+                                                        {{-- <td>{{ $product->slug }}</td> --}}
                                                         <td>{{ $product->description }}</td>
                                                         <td>{{ $product->stock }}</td>
                                                         <td>{{ number_format($product->price, 0, ',', '.') }}VND</td>

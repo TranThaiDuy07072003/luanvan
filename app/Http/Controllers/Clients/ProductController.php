@@ -42,6 +42,7 @@ class ProductController extends Controller
         return view('user.pages.products', compact('categories', 'products'));
     }
 
+
     public function filter(Request $request)
     {
         $query = Product::with('firstImage')->whereIn('status', ['in_stock', 'out_of_stock']);
@@ -89,6 +90,7 @@ class ProductController extends Controller
 
     }
 
+
     public function filterByCategory($id)
     {
         $categories = Category::withCount('products')->get();
@@ -109,6 +111,7 @@ class ProductController extends Controller
         return view('user.pages.products', compact('categories', 'products', 'selectedCategory'));
     }
 
+    
     //Chi tiết sản phẩm
     public function detail($slug)
     {

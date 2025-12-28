@@ -101,7 +101,7 @@ $(document).ready(function(){
 
 
     /*********************************
-     * MANAGEMENT USERS
+     * MANAGEMENT CATEGORY
      *********************************/
 
 
@@ -204,7 +204,7 @@ $(document).ready(function(){
 
                         </tr>`;
 
-                        // Replace the old row with the new row
+                        // thay thế hàng cũ bằng hàng mới
                         $('#category-row-' + categoryId).replaceWith(newRow);
                         $('#modalUpdate-' + categoryId).modal('hide');
 
@@ -250,7 +250,7 @@ $(document).ready(function(){
             success: function (response) {
                 if (response.status) {
                     toastr.success(response.message);
-                    // Remove the deleted category row from the table
+                    // Xóa
                     row.remove();
                 } else {
                     toastr.error(response.message);
@@ -443,7 +443,7 @@ $(document).ready(function(){
         let productId = button.data("id");
 
         let status = button.data("status"); // Lấy trạng thái từ nút bấm
-        // --- KIỂM TRA NGAY TẠI ĐÂY ---
+
         if (status === 'in_stock') {
             toastr.warning('Sản phẩm đang bán (Còn hàng) không được phép xóa! Vui lòng chuyển trạng thái sang Hết hàng trước.');
             return; // Dừng lại ngay, không chạy tiếp code bên dưới
@@ -468,7 +468,7 @@ $(document).ready(function(){
             success: function (response) {
                 if (response.status) {
                     toastr.success(response.message);
-                    // Remove the deleted product row from the table
+                    
                     row.remove();
                 } else {
                     toastr.error(response.message);

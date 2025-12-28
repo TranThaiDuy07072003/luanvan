@@ -26,7 +26,7 @@
                                                 <i class="icon-call"></i>
                                             </div>
                                             <div class="footer-address-info">
-                                                <p><a href="tel:+0123-456789">+0123-456789</a></p>
+                                                <p><a href="javascript:void(0)">0999-999-999</a></p>
                                             </div>
                                         </li>
                                         <li>
@@ -34,7 +34,7 @@
                                                 <i class="icon-mail"></i>
                                             </div>
                                             <div class="footer-address-info">
-                                                <p><a href="mailto:dh52113526@student.stu.edu.vn">dh52113526@student.stu.edu.vn</a>
+                                                <p><a href="javascript:void(0)">dh52113526@student.stu.edu.vn</a>
                                                 </p>
                                             </div>
                                         </li>
@@ -42,10 +42,10 @@
                                 </div>
                                 <div class="ltn__social-media mt-20">
                                     <ul>
-                                        <li><a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                                        <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
-                                        <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
-                                        <li><a href="#" title="Youtube"><i class="fab fa-youtube"></i></a></li>
+                                        <li><a href="javascript:void(0)" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                                        <li><a href="javascript:void(0)" title="Twitter"><i class="fab fa-twitter"></i></a></li>
+                                        <li><a href="javascript:void(0)" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
+                                        <li><a href="javascript:void(0)" title="Youtube"><i class="fab fa-youtube"></i></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -57,7 +57,7 @@
                                     <ul>
                                         <li><a href="{{ route('about') }}">Về chúng tôi</a></li>
                                         <li><a href="shop.html">Sản phẩm</a></li>
-                                        <li><a href="faq.html">FAQ</a></li>
+                                        <li><a href="{{ route('faq') }}">FAQ</a></li>
                                         <li><a href="contact.html">Liên hệ</a></li>
                                     </ul>
                                 </div>

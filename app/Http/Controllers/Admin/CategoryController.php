@@ -15,9 +15,10 @@ class CategoryController extends Controller
         return view('admin.pages.categories-add');
     }
 
+
+
     public function addCategory(Request $request)
     {
-        // Validate the request data
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -46,7 +47,10 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = Category::all();
+        // withCount('products'): Laravel sẽ tự đếm số sản phẩm và thêm cột 'products_count' vào kết quả.
+        // Cách này cực nhanh, chỉ tốn 1 câu lệnh SQL.
+        $categories = Category::withCount('products')->get();
+
         return view('admin.pages.categories', compact('categories'));
     }
 
@@ -69,7 +73,7 @@ class CategoryController extends Controller
 
             if($request->hasFile("image")){
                 if($category->image) {
-                    // Delete old image
+                    // xóa ảnh cũ
                     Storage::disk('public')->delete($category->image);
                 }
 
@@ -114,7 +118,6 @@ class CategoryController extends Controller
                 ], 404);
             }
 
-            // --- ĐOẠN CODE KIỂM TRA RÀNG BUỘC (Thêm mới) ---
             // Đếm số sản phẩm đang thuộc danh mục này
             $productCount = $category->products()->count();
 
@@ -125,7 +128,6 @@ class CategoryController extends Controller
                     'message' => 'Không thể xóa! Danh mục này đang chứa ' . $productCount . ' sản phẩm. Vui lòng xóa hết sản phẩm trong danh mục này trước.'
                 ]);
             }
-            // ------------------------------------------------
 
             // Nếu không còn sản phẩm (số lượng = 0) thì mới chạy xuống đây để xóa
 
@@ -150,6 +152,40 @@ class CategoryController extends Controller
                 'message' => 'Đã xảy ra lỗi khi xóa danh mục: ' . $th->getMessage()
             ], 500);
         }
+    }
+
+
+
+
+
+
+    // Viết xuống cuối file CategoryController.php
+    public function demoStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required'
+        ]);
+
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+
+            $fileName = time() . '_' . $file->getClientOriginalName();
+
+            $imagePath = $file->storeAs('uploads/categories', $fileName, 'public');
+        }
+
+        $slug = Str::slug($request->name);
+
+        Category::create([
+            'name' => $request->name,
+            'slug' => $slug,
+            'description' => $request->description,
+            'image' => $imagePath
+        ]);
+
+        return "Thêm danh mục: " . $request->name . " thành công! (Dữ liệu đã vào DB thật)";
     }
 
 

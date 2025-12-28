@@ -128,7 +128,11 @@ Route::prefix('admin')->group(function () {
 
 
 
-
+    // Route Demo
+    Route::get('/demo-category', function () {
+        return view('admin.pages.demo-add');
+    });
+    Route::post('/demo-category', [CategoryController::class, 'demoStore'])->name('demo.store');
 
 
 

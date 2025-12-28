@@ -320,8 +320,8 @@
                             <h1 class="section-title white-color">0999-999-999</h1>
                         </div>
                         <div class="btn-wrapper">
-                            <a href="tel:+123456789" class="theme-btn-1 btn btn-effect-1">GỌI NGAY</a>
-                            <a href="contact.html" class="btn btn-transparent btn-effect-4 white-color">LIÊN HỆ
+                            <a href="javascript:void(0)" class="theme-btn-1 btn btn-effect-1">GỌI NGAY</a>
+                            <a href="{{ route('contact.index') }}" class="btn btn-transparent btn-effect-4 white-color">LIÊN HỆ
                                 CHÚNG TÔI</a>
                         </div>
                     </div>
