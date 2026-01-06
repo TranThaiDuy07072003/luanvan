@@ -90,7 +90,7 @@ class ProductController extends Controller
     }
 
 
-
+    // danh sách sản phẩm
     public function index(Request $request)
     {
         //khởi tạo query để lấy sản phẩm
@@ -158,7 +158,7 @@ class ProductController extends Controller
             'status' => $newStatus,
         ]);
 
-
+        // nếu có ảnh mới tải lên
         if ($request->hasFile('images')) {
 
             $oldImages = ProductImage::where('product_id', $product->id)->get();
@@ -231,7 +231,7 @@ class ProductController extends Controller
         }
 
 
-        
+        //kiểm tra nếu sản phẩm đã có trong đơn hàng thì không cho xóa
         if ($product->orderItems()->count() > 0) {
             return response()->json([
                 'status' => false,

@@ -59,7 +59,7 @@ class Product extends Model
     public function recipes()
     {
         return $this->belongsToMany(Recipe::class, 'product_recipes')
-                    ->withPivot('quantity');   // lưu thêm số lượng trong bảng trung gian
+                    ->withPivot('quantity');   
     }
 
 

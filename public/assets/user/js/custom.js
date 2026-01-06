@@ -129,23 +129,21 @@ $(document).ready(function() {
 
 
     // Validate form địa chỉ
-    // --- SCRIPT 3: THÊM ĐỊA CHỈ ---
+    // thêm địa chỉ mới
     $("#addAddressForm").on('submit', function(e) {
         e.preventDefault();
 
         let form = $(this);
         let btn = $('#btn-add-address'); // Nút submit
 
-        // 2. Khóa nút lại để tránh user bấm liên tục spam
+        // khóa nút lại để tránh user bấm liên tục spam
         let originalText = btn.text();
         btn.prop('disabled', true).text('Đang lưu...');
 
         $('.error-message').remove();
 
-        // 3. Lấy dữ liệu từ form
         let formData = new FormData(this);
 
-        // 4. Gửi AJAX
         $.ajax({
             url: form.attr('action'),
             type: 'POST',
@@ -182,7 +180,6 @@ $(document).ready(function() {
                     });
                     toastr.error('Vui lòng kiểm tra lại thông tin.', 'Lỗi nhập liệu');
                 } else {
-                    // Lỗi hệ thống (500...)
                     toastr.error('Có lỗi xảy ra, vui lòng thử lại sau.', 'Lỗi hệ thống');
                     console.log(xhr.responseText);
                 }
@@ -252,15 +249,13 @@ $(document).ready(function() {
 
 
     // Khi click vào link phân trang (AJAX)
-    // Cần lắng nghe trên document vì link này bị thay đổi liên tục
     $(document).on('click', '#pagination-links a', function(e) {
         e.preventDefault(); // Chặn load lại trang
 
-        let url = $(this).attr('href'); // Link này đã chứa sẵn category_id & sort_by do Controller tạo
+        let url = $(this).attr('href');
 
         if (!url) return;
 
-        // Chỉ cần gửi URL là đủ, không cần gửi thêm data category_id nữa
         $.ajax({
             url: url,
             type: "GET",
@@ -314,23 +309,19 @@ $(document).ready(function() {
     $(document).on('click', '.ltn__shop-details-small-img .single-small-img', function() {
         let $this = $(this);
 
-        // 1. Lấy đường dẫn ảnh từ thẻ img con
         let newImageSrc = $this.find('img').attr('src');
 
-        // 2. Tìm thẻ ảnh lớn (trong khung bên trái)
         let $largeImgContainer = $this.closest('.ltn__shop-details-img-gallery').find('.ltn__shop-details-large-img .single-large-img img');
 
-        // 3. Thay đổi src của ảnh lớn
         $largeImgContainer.attr('src', newImageSrc);
 
-        // (Tùy chọn) Thêm hiệu ứng active cho ảnh nhỏ đang chọn
         $('.ltn__shop-details-small-img .single-small-img').removeClass('active-img'); // Xóa active cũ
         $this.addClass('active-img'); // Thêm active mới
     });
 
 
 
-
+    // Xử lý nút cộng trừ số lượng
     if(window.location.pathname !=='/cart'){
         $(document).on('click', '.qtybutton', function() {
 
@@ -376,12 +367,12 @@ $(document).ready(function() {
         }
 
 
-    // Add to cart
+    // Xử lý nút Thêm vào giỏ hàng trong trang Chi tiết sản phẩm
     $(document).on('click', '.add-to-cart-btn', function(e) {
         e.preventDefault();
 
         let productId = $(this).data('id');
-        // DÒNG MỚI (Tìm theo class cha, chắc chắn trúng):
+
         let quantity = $(this).closest('.ltn__product-details-menu-2').find('input[name="qtybutton"]').val();
         //let quantity = $(this).closest('li').prev().find('.cart-plus-minus-box').val();
 
@@ -441,13 +432,14 @@ $(document).ready(function() {
         });
     });
 
+    // Đóng xe đẩy
     $(document).on('click', '.ltn__utilize-close', function(){
         $('#ltn__utilize-cart-menu').removeClass("ltn__utilize-open");
         $('.ltn__utilize-overlay').hide(); //nó là class
     });
 
 
-    //remove product from cart
+    // Xóa sản phẩm trong mini cart
     $(document).on('click', '.mini-cart-item-delete', function(){
         let productId = $(this).data('id');
         $.ajax({
@@ -470,8 +462,7 @@ $(document).ready(function() {
 /*********************************
      *PAGE CARTs
 *********************************/
-    //Xu ly cap nhat so luong san pham trong trang gio hang
-    // 1. Hàm cập nhật số lượng (Sửa lỗi nhảy số lung tung)
+    //cập nhật số lượng ở giỏ hàng lớn (Đồng bộ sang giỏ bé)
     function updateCart(productId, quantity, $input){
         $.ajaxSetup({
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
@@ -488,7 +479,7 @@ $(document).ready(function() {
                 // Cập nhật ô input
                 $input.val(response.quantity);
 
-                // Cập nhật thành tiền của dòng đó (Server đã tính giúp rồi)
+                // Cập nhật thành tiền của dòng đó
                 $input.closest('tr').find('.cart-product-subtotal').text(response.subtotal + 'VNĐ');
 
                 // Cập nhật tổng tiền giỏ hàng
@@ -498,26 +489,22 @@ $(document).ready(function() {
                 // Cập nhật số lượng trên ICON (Giỏ bé)
                 $('#cart_count').text(response.cart_count);
 
-                // --- ĐỒNG BỘ GIỎ BÉ (MINI CART) ---
-                // Cập nhật số lượng và giá trong Mini Cart tương ứng
-                // Tìm dòng sản phẩm trong mini cart dựa vào ID (cần đảm bảo mini cart có class định danh)
+                // đồng bộ sang giỏ bé (mini cart)
                 let $miniItem = $('.mini-cart-item-delete[data-id="'+productId+'"]').closest('.mini-cart-item');
                 if($miniItem.length > 0) {
-                    // Update text: "5 x 100.000"
                     let priceText = $miniItem.find('.mini-cart-quantity').text().split('x')[1]; // Lấy lại phần giá
                     $miniItem.find('.mini-cart-quantity').text(response.quantity + ' x ' + priceText);
                 }
             },
             error: function(xhr) {
                 alert(xhr.responseJSON.error || 'Lỗi cập nhật');
-                // Reset lại số cũ nếu lỗi
                 $input.val(parseInt($input.val()) - 1);
             }
         });
     }
 
 
-    // 2. Sự kiện XÓA ở GIỎ LỚN (Đồng bộ sang Giỏ Bé)
+    // Xóa sản phẩm ở giỏ hàng lớn
     $('.remove-from-cart').on('click', function(e){
         e.preventDefault();
         let button = $(this);
@@ -529,18 +516,15 @@ $(document).ready(function() {
             type: 'POST',
             data: { product_id: productId },
             success:function(response) {
-                // Xóa dòng ở giỏ lớn
                 row.remove();
 
-                // Cập nhật tiền
                 $('.cart-total').text(response.total + 'VNĐ');
                 $('.cart-grand-total').text(response.grandTotal + 'VNĐ');
 
-                // Cập nhật số lượng trên ICON
+                // Cập nhật số lượng trên icon (Giỏ bé)
                 $('#cart_count').text(response.cart_count);
 
-                // --- QUAN TRỌNG: XÓA LUÔN MÓN ĐÓ Ở GIỎ BÉ (MINI CART) ---
-                // Tìm nút xóa trong mini cart có cùng ID và xóa cha của nó
+                //tìm nút xóa trong mini cart có cùng id và xóa cha của nó
                 $('.mini-cart-item-delete[data-id="'+productId+'"]').closest('.mini-cart-item').remove();
 
                 // Nếu xóa hết sạch thì reload trang để hiện giỏ trống
@@ -669,7 +653,7 @@ $(document).ready(function() {
         });
 
 
-
+        // hàm load lại đánh giá
         function loadReviews(productId)
         {
             $.ajax({
@@ -758,6 +742,7 @@ $(document).ready(function() {
         if (val > 1) input.val(val - 1);
     });
 
+    // nút cộng
     $(document).on('click', '.btn-qty-plus', function() {
         let input = $(this).prev('input');
         let val = parseInt(input.val());
@@ -774,11 +759,9 @@ $(document).ready(function() {
         // Tìm ô input nằm cùng dòng với nút bấm này
         let quantity = btn.closest('.product-action-bhx').find('.input-qty-recipe').val();
 
-        // Hiệu ứng xoay xoay
         let originalHtml = btn.html();
         btn.html('<i class="fas fa-spinner fa-spin"></i>').prop('disabled', true);
 
-        // Gọi Ajax thêm vào giỏ (Dùng lại route cũ nhưng logic gọi mới)
         $.ajax({
             url: '/cart/add',
             type: "POST",
@@ -790,7 +773,6 @@ $(document).ready(function() {
                 toastr.success("Đã thêm vào giỏ hàng!");
                 $('#cart_count').text(response.cart_count);
 
-                // Trả lại nút như cũ
                 btn.html('<i class="fas fa-check"></i>').prop('disabled', false);
                 setTimeout(() => { btn.html(originalHtml); }, 1500);
             },
@@ -801,10 +783,10 @@ $(document).ready(function() {
         });
     });
 
-    // 4. (Nâng cao) Xử lý nút "THÊM TẤT CẢ VÀO GIỎ"
+    // 4.xử lý nút "THÊM TẤT CẢ VÀO GIỎ"
     $(document).on('click', '.btn-add-all-recipe', function() {
         let items = [];
-        // Quét tất cả các món đang hiện trong popup
+
         $('.btn-add-recipe-item').each(function() {
             let id = $(this).data('id');
             let qty = $(this).closest('.product-action-bhx').find('.input-qty-recipe').val();
@@ -813,8 +795,7 @@ $(document).ready(function() {
 
         if(items.length === 0) return;
 
-        // Gửi mảng items về server (Bạn cần viết thêm Route xử lý mảng này nếu muốn)
-        // Hiện tại tạm thời loop ajax (cách đơn giản nhất cho sinh viên)
+        // Gửi mảng items về server
         let count = 0;
         $(this).html('<i class="fas fa-spinner fa-spin"></i> Đang xử lý...').prop('disabled', true);
 
@@ -828,7 +809,7 @@ $(document).ready(function() {
                     if(count === items.length) {
                         toastr.success("Đã thêm tất cả nguyên liệu vào giỏ!");
                         $('#cart_count').text(res.cart_count);
-                        setTimeout(() => { location.reload(); }, 1000); // Load lại trang để vào giỏ hàng luôn
+                        setTimeout(() => { location.reload(); }, 1000);
                     }
                 }
             });
@@ -842,7 +823,7 @@ $(document).ready(function() {
      * đổi địa chỉ tính ship
      */
 
-    // --- XỬ LÝ ĐỔI ĐỊA CHỈ & TÍNH SHIP ---
+    //xử lý đổi địa chỉ tính ship
     $('#list_address').change(function() {
         var addressId = $(this).val();
 

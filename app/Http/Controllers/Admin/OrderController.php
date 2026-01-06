@@ -51,6 +51,7 @@ class OrderController extends Controller
 
 
 
+
     // Chuyển đơn hàng sang "đang giao hàng"
     public function confirmOrder(Request $request)
     {
@@ -72,6 +73,7 @@ class OrderController extends Controller
     }
 
 
+
     // Xem chi tiết đơn đặt mà khách hàng đã đặt
     public function showOrderDetail($id)
     {
@@ -79,6 +81,7 @@ class OrderController extends Controller
 
         return view('admin.pages.order-detail', compact('order'));
     }
+
 
 
 
@@ -109,6 +112,7 @@ class OrderController extends Controller
     }
 
 
+
     // Admin hủy đơn hàng
     public function cancelOrder(Request $request)
     {
@@ -116,7 +120,7 @@ class OrderController extends Controller
         $order = Order::find($id);
         if ($order) {
             foreach ($order->orderItems as $item) {
-                // Update product stock
+                // hoàn lại số lượng sản phẩm vào kho
                 $item->product->increment('stock', $item->quantity);
             }
 
@@ -134,4 +138,7 @@ class OrderController extends Controller
             'message' => 'Đơn hàng không tồn tại!',
         ]);
     }
+
+
+
 }

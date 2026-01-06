@@ -468,7 +468,7 @@ $(document).ready(function(){
             success: function (response) {
                 if (response.status) {
                     toastr.success(response.message);
-                    
+
                     row.remove();
                 } else {
                     toastr.error(response.message);
@@ -489,6 +489,7 @@ $(document).ready(function(){
      * MANAGEMENT - Order- Hành động (quản lý quản trị đơn hàng, nghĩa là mình có thể quyết định xem
      * có duyệt đơn hàng hay không)
      *********************************/
+    //giao hàng
     $(document).on("click", ".confirm-order", function(e){
         e.preventDefault();
         let button = $(this);

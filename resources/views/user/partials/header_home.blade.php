@@ -7,8 +7,8 @@
                 <div class="col-md-7">
                     <div class="ltn__top-bar-menu">
                         <ul>
-                            <li><a href="locations.html"><i class="icon-placeholder"></i> TP.HCM, Việt Nam</a></li>
-                            <li><a href="mailto:dh52113526@student.stu.edu.vn?Subject=Contact%20with%20to%20you"><i
+                            <li><a href="javascript:void(0)"><i class="icon-placeholder"></i> TP.HCM, Việt Nam</a></li>
+                            <li><a href="javascript:void(0)"><i
                                         class="icon-mail"></i> dh52113526@student.stu.edu.vn</a></li>
                         </ul>
                     </div>

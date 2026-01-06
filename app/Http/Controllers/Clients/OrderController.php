@@ -27,6 +27,7 @@ class OrderController extends Controller
             ->firstOrFail();
 
         foreach ($order->orderItems as $item) {
+            // Hoàn trả lại số lượng tồn kho cho sản phẩm
             $item->product->increment('stock', $item->quantity);
         }
 
@@ -35,6 +36,7 @@ class OrderController extends Controller
 
         return redirect()->back()->with('success', 'Đơn hàng đã được hủy thành công.');
     }
+
 
 
     public function completeOrder($id)

@@ -1,4 +1,4 @@
-<!-- Floating Chat -->
+{{-- <!-- Floating Chat -->
 <div id="chat-widget">
   <div id="chat-toggle">💬</div>
 
@@ -14,4 +14,4 @@
       <button id="send-btn">Gửi</button>
     </div>
   </div>
-</div>
+</div> --}}

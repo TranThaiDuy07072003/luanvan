@@ -2187,9 +2187,22 @@ function init_charts() {
                 scales: {
                     yAxes: [{
                         ticks: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            // --- THÊM ĐOẠN NÀY ĐỂ FORMAT TIỀN ---
+                            callback: function(value, index, values) {
+                                return value.toLocaleString('vi-VN') + ' VNĐ';
+                            }
+                            // ------------------------------------
                         }
                     }]
+                },
+                // Thêm cái này để khi rê chuột vào cột nó cũng hiện tiền đẹp
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            return Number(tooltipItem.yLabel).toLocaleString('vi-VN') + ' VNĐ';
+                        }
+                    }
                 }
             }
         });

@@ -30,7 +30,7 @@
                                                 <div class="ltn__product-item ltn__product-item-3 text-center">
                                                     <div class="product-img">
                                                         <a href="{{ route('product.detail', $product->slug) }}">
-                                                            {{-- Sử dụng Accessor image_url (xem hướng dẫn Model bên dưới) --}}
+                                                            
                                                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
                                                         </a>
 
@@ -53,7 +53,7 @@
                                                                     </a>
                                                                 </li>
 
-                                                                {{-- Logic ẩn nút thêm giỏ hàng nếu hết hàng --}}
+                                                                {{-- ẩn nút thêm giỏ hàng nếu hết hàng --}}
                                                                 @if ($product->stock > 0 && $product->status == 'in_stock')
                                                                     <li>
                                                                         <a href="javascript:void(0)"
@@ -69,7 +69,7 @@
                                                     </div>
 
                                                     <div class="product-info">
-                                                        {{-- Giữ nguyên phần rating và title của bạn --}}
+
                                                         <div class="product-ratting">
                                                             @include('user.components.includes.rating', [
                                                                 'product' => $product,
@@ -102,9 +102,9 @@
                             </div>
                         </div>
 
-                        {{-- NGHIỆP VỤ: Phân trang (Pagination) --}}
+                        {{--Phân trang (Pagination) --}}
                         <div class="ltn__pagination-area text-center">
-                            {{-- Thêm class d-flex justify-content-center vào thẻ div này --}}
+
                             <div class="ltn__pagination d-flex justify-content-center">
                                 {{ $products->links('pagination::bootstrap-4') }}
                             </div>

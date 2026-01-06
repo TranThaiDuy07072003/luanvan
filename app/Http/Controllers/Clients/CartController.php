@@ -119,7 +119,7 @@ class CartController extends Controller
         ]);
     }
 
-    // view-cart
+    //trang giỏ hàng lớn
     public function viewCart()
     {
         if (Auth::check()) {

@@ -63,7 +63,7 @@
                                             <strong>* NongSanSach.vn</strong>
                                             <br>- 180 Cao Lỗ, phường 4 quận 8
                                             <br>- Thành phố: Hồ Chí Minh
-                                            <br>- Số điện thoại: 0999-868-686
+                                            <br>- Số điện thoại: 0999-999-999
                                             <br>- Email: dh52113526@student.stu.edu.vn
                                         </address>
                                     </div>
@@ -127,17 +127,17 @@
                                                 <tbody>
                                                     <tr>
                                                         <th style="width:50%">Tiền hàng:</th>
-                                                        {{-- SỬA Ở ĐÂY: Dùng biến $subTotal đã tính --}}
+                                                        {{-- dùng biến $subTotal đã tính --}}
                                                         <td>{{ number_format($subTotal, 0, ',', '.') }}VND</td>
                                                     </tr>
                                                     <tr>
                                                         <th>Tiền vận chuyển</th>
-                                                        {{-- SỬA Ở ĐÂY: Dùng biến $shippingFee đã tính --}}
+                                                        {{-- dùng biến $shippingFee đã tính --}}
                                                         <td>{{ number_format($shippingFee, 0, ',', '.') }}VND</td>
                                                     </tr>
                                                     <tr>
                                                         <th>Tổng cộng: </th>
-                                                        {{-- Tổng tiền giữ nguyên vì lấy trực tiếp từ DB --}}
+                                                        {{-- Tổng tiền được lấy trực tiếp từ DB --}}
                                                         <td>{{ number_format($order->total_price, 0, ',', '.') }}VND</td>
                                                     </tr>
                                                 </tbody>

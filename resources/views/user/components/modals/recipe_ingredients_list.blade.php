@@ -8,14 +8,14 @@
                     <div class="product-img">
                         <a href="{{ route('product.detail', $product->slug) }}" target="_blank">
                             @php
-                                // 1. Mặc định là ảnh rỗng
+                                //mặc định là ảnh rỗng
                                 $imgSrc = 'https://placehold.co/100x100?text=No+Image';
 
-                                // 2. Ưu tiên lấy từ bảng phụ (product_images) do Admin upload vào đây
+                                //ưu tiên lấy từ bảng phụ (product_images) do Admin upload vào đây
                                 if ($product->images && $product->images->count() > 0) {
                                     $imgSrc = asset('storage/' . $product->images->first()->image);
                                 }
-                                // 3. Nếu không có, thử lấy từ cột image bảng chính
+                                //nếu không có thử lấy từ cột image bảng chính
                                 elseif (!empty($product->image)) {
                                     $imgSrc = asset('storage/' . $product->image);
                                 }
@@ -35,7 +35,7 @@
                         <div class="product-price" style="margin-bottom: 10px;">
                             @if ($product->stock > 0 && $product->status == 'in_stock')
                                 <span
-                                    style="color: #d0021b; font-weight: bold;">{{ number_format($product->price, 0, ',', '.') }}₫</span>
+                                    style="color: #d0021b; font-weight: bold;">{{ number_format($product->price, 0, ',', '.') }} VNĐ</span>
                             @else
                                 <span style="color: #999;">Hết hàng</span>
                             @endif

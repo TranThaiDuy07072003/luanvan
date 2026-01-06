@@ -25,14 +25,16 @@ class CheckoutController extends Controller
         $user = Auth::user();
         $cartItems = CartItem::with('product')->where('user_id', $user->id)->get();
 
-        // Check tồn kho
+        //check tồn kho
         foreach ($cartItems as $item) {
             $product = $item->product;
+            //nếu sản phẩm không tồn tại hoặc hết hàng
             if (! $product || $product->status == 'out_of_stock') {
                 toastr()->error('Sản phẩm "'.($product->name ?? 'Không xác định').'" đã hết hàng.');
 
                 return redirect()->route('cart.index');
             }
+            //nếu tồn kho không đủ
             if ($product->stock < $item->quantity) {
                 toastr()->error('Sản phẩm "'.$product->name.'" không đủ số lượng.');
 
@@ -40,11 +42,13 @@ class CheckoutController extends Controller
             }
         }
 
+        //tính tổng giỏ hàng
         $cartTotal = 0;
         foreach ($cartItems as $item) {
             $cartTotal += $item->product->price * $item->quantity;
         }
 
+        //lấy địa chỉ giao hàng
         $addresses = ShippingAddress::where('user_id', $user->id)->get();
         $defaultAddress = $addresses->where('default', 1)->first();
 
@@ -56,8 +60,8 @@ class CheckoutController extends Controller
 
         $hasError = false;
 
-        // --- SỬA ĐOẠN NÀY: Tính phí ship ngay lần đầu tải trang ---
-        // Gọi hàm tính phí cho địa chỉ mặc định
+        //tính phí ship ngay lần đầu tải trang
+        //gọi hàm tính phí cho địa chỉ mặc định
         $shippingData = $this->calculateShippingFee($defaultAddress->id);
         $shippingFee = $shippingData['fee'];
         $distance = $shippingData['distance']; // Lấy thêm khoảng cách để hiển thị
@@ -68,8 +72,8 @@ class CheckoutController extends Controller
             'cartItems',
             'cartTotal',
             'hasError',
-            'shippingFee', // Truyền biến này sang View
-            'distance'     // Truyền biến này sang View
+            'shippingFee',
+            'distance'  //khoảng cách
         ));
 
         return view('user.pages.checkout', compact('addresses', 'defaultAddress', 'cartItems', 'cartTotal', 'hasError'));
@@ -85,7 +89,7 @@ class CheckoutController extends Controller
         return response()->json(['success' => true, 'data' => $address]);
     }
 
-    // hàm xử lý đặt hàng
+    //hàm xử lý đặt hàng
     public function placeOrder(Request $request)
     {
         $user = Auth::user();
@@ -121,6 +125,7 @@ class CheckoutController extends Controller
                 ]);
 
                 $product = $item->product;
+                //nếu tồn kho không đủ
                 if ($product->stock < $item->quantity) {
                     throw new \Exception('Sản phẩm "'.$product->name.'" không đủ hàng.');
                 }
@@ -142,7 +147,7 @@ class CheckoutController extends Controller
 
             DB::commit(); // Lưu dữ liệu vào DB thành công
 
-            // --- THÊM ĐOẠN GỬI MAIL NÀY ---
+            //gửi email xác nhận đơn hàng
             if ($request->payment_method == 'cash') {
                 try {
                     Mail::to($user->email)->send(new OrderConfirmation($order));
@@ -150,15 +155,14 @@ class CheckoutController extends Controller
                     \Illuminate\Support\Facades\Log::error('Lỗi gửi mail: '.$e->getMessage());
                 }
             }
-            // ------------------------------
+
 
             // Trường hợp 1: Thanh toán VNPay
             if ($request->payment_method == 'vnpay') {
-                // Gọi hàm tạo URL VNPay và chuyển hướng khách hàng
                 return $this->createVNPayUrl($order);
             }
 
-            // Trường hợp 2: Thanh toán COD (Tiền mặt) - Code cũ của bạn
+            // Trường hợp 2: Thanh toán COD (Tiền mặt)
             toastr()->success('Đặt hàng thành công !');
 
             return redirect()->route('account');
@@ -246,7 +250,7 @@ class CheckoutController extends Controller
                     'paid_at' => now(),
                 ]);
 
-                // --- THÊM ĐOẠN GỬI MAIL NÀY ---
+                //gửi email xác nhận đơn hàng
                 try {
                     Mail::to($order->user->email)->send(new OrderConfirmation($order));
                 } catch (\Exception $e) {
@@ -266,10 +270,7 @@ class CheckoutController extends Controller
         return redirect()->route('checkout');
     }
 
-    // --- HÀM TÍNH PHÍ SHIP TỰ ĐỘNG (Dùng chung cho cả Ajax và Submit) ---
-    // --- HÀM TÍNH PHÍ SHIP THÔNG MINH (Có thử lại nếu không tìm thấy) ---
-    // --- HÀM TÍNH PHÍ SHIP (BỎ QUA SỐ NHÀ - CHỈ TÍNH TỪ PHƯỜNG/XÃ) ---
-    // --- HÀM TÍNH PHÍ SHIP (LOGIC MỚI: BỎ SỐ NHÀ ĐỂ TÌM CHO DỄ) ---
+    // Hàm tính phí vận chuyển dựa trên địa chỉ
     private function calculateShippingFee($addressId)
     {
         $address = ShippingAddress::find($addressId);
@@ -279,10 +280,6 @@ class CheckoutController extends Controller
 
         $apiKey = env('TRACK_ASIA_KEY');
         $url = 'https://nominatim.openstreetmap.org/search';
-
-        // Dữ liệu từ form 3 cấp lưu vào DB có dạng: "Số nhà, Phường, Quận"
-        // Ví dụ: "127/A, Phường 1, Thành phố Cà Mau"
-        // City: "Tỉnh Cà Mau"
 
         $parts = explode(',', $address->address);
         $geoQuery = '';
@@ -368,7 +365,7 @@ class CheckoutController extends Controller
 
         $response = Http::withHeaders([
             'User-Agent' => 'LaravelApp/1.0', // Nominatim yêu cầu User-Agent
-        ])->withoutVerifying() // ← THÊM DÒNG NÀY để bỏ qua SSL check
+        ])->withoutVerifying()
             ->timeout(10)
             ->get($url, $params);
 
@@ -397,7 +394,7 @@ class CheckoutController extends Controller
 
         return response()->json([
             'success' => true,
-            'fee' => $data['fee'], // <--- QUAN TRỌNG: Phải trả về số nguyên để JS cộng trừ
+            'fee' => $data['fee'],
             'fee_formatted' => number_format($data['fee'], 0, ',', '.').' VNĐ',
             'grand_total' => number_format($cartTotal + $data['fee'], 0, ',', '.').' VNĐ',
             'distance_text' => $data['distance'] > 0 ? '(Khoảng cách: '.$data['distance'].' km)' : '',
