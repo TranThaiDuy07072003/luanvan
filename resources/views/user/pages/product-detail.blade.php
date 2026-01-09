@@ -6,6 +6,13 @@
 
 @section('content')
 
+    @php
+        $isExpired = false;
+        if($product->expiry_date) {
+            $isExpired = \Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($product->expiry_date));
+        }
+    @endphp
+    
     <!-- SHOP DETAILS AREA START -->
     <div class="ltn__shop-details-area pb-85">
         <div class="container">
@@ -51,7 +58,7 @@
                                     <h3>{{ $product->name }}</h3>
                                     <div class="product-price">
                                         {{-- LOGIC GIÁ --}}
-                                        @if ($product->stock > 0 && $product->status == 'in_stock')
+                                        @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
                                             <span>{{ number_format($product->price, 0, ',', '.') }} VNĐ</span>
                                         @else
                                             <span style="color: #ff0000; font-weight: bold; font-size: 24px;">HẾT
@@ -74,7 +81,7 @@
                                     <div class="ltn__product-details-menu-2">
                                         <ul>
                                             {{-- LOGIC NÚT MUA --}}
-                                            @if ($product->stock > 0 && $product->status == 'in_stock')
+                                            @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
                                                 <li>
                                                     <div class="cart-plus-minus">
                                                         <div class="dec qtybutton">-</div>
@@ -247,6 +254,15 @@
             <div class="row ltn__related-product-slider-one-active slick-arrow-1">
                 <!-- ltn__product-item -->
                 @foreach ($relatedProducts as $product)
+
+                    @php
+                        // 1. Tính toán xem có bị hết hạn không
+                        $isExpired = false;
+                        if($product->expiry_date) {
+                            $isExpired = \Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($product->expiry_date));
+                        }
+                    @endphp
+
                     <div class="col-lg-12">
                         <div class="ltn__product-item ltn__product-item-3 text-center">
                             <div class="product-img">
@@ -263,7 +279,7 @@
                                             </a>
                                         </li>
                                         {{-- chỉ hiện nút mua khi còn hàng --}}
-                                        @if ($product->stock > 0 && $product->status == 'in_stock')
+                                        @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
                                             <li>
                                                 <a href="javascript:void(0)" title="Thêm Vào Giỏ Hàng"
                                                     class="add-to-cart-btn" data-id="{{ $product->id }}">
@@ -286,7 +302,7 @@
                                 </h2>
                                 <div class="product-price">
                                     {{-- hiện giá hoặc chữ hết hàng --}}
-                                    @if ($product->stock > 0 && $product->status == 'in_stock')
+                                    @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
                                         <span>{{ number_format($product->price, 0, ',', '.') }}VNĐ</span>
                                     @else
                                         <span style="color: #ff0000; font-weight: bold; font-size: 16px;">HẾT HÀNG</span>

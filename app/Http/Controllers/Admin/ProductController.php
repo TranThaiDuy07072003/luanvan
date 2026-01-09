@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use Carbon\Carbon; // thư viện xử lý thời gian
 
 class ProductController extends Controller
 {
@@ -29,6 +30,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'stock'  => 'required|integer|min:0',
             'unit'   => 'required|string|max:50',
+            'expiry_date' => 'required|date', // <--- THÊM VALIDATE CHO EXPIRY DATE
             'images' => 'required',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ], [
@@ -52,6 +54,9 @@ class ProductController extends Controller
             'images.*.image' => 'File tải lên phải là hình ảnh.',
             'images.*.mimes' => 'Ảnh phải có đuôi: jpeg, png, jpg, gif, svg.',
             'images.*.max' => 'Dung lượng ảnh không được quá 2MB.',
+
+            'expiry_date.required' => 'Vui lòng nhập hạn sử dụng.',
+            'expiry_date.date' => 'Hạn sử dụng không hợp lệ.',
         ]);
 
         $slug = Str::slug($request->name).'-'.time();
@@ -66,6 +71,7 @@ class ProductController extends Controller
             'stock' => $request->stock ?? 0,
             'unit' => $request->unit ?? 'kg',
             'status' => 'in_stock',
+            'expiry_date' => $request->expiry_date, // <--- LƯU HẠN SỬ DỤNG
         ]);
 
         //xử lý tải hình ảnh
@@ -106,6 +112,13 @@ class ProductController extends Controller
             $query->where('status', $request->status);
         }
 
+
+        // --- LOGIC LỌC CẬN DATE (NẾU MUỐN LÀM SAU NÀY) ---
+        // if ($request->has('filter_date') && $request->filter_date == 'expired') {
+        //     $query->where('expiry_date', '<', Carbon::now());
+        // }
+
+
         //lấy dữ liệu
         $products = $query->get();
 
@@ -135,6 +148,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required|in:in_stock,out_of_stock',
+            'expiry_date' => 'required|date', // <--- THÊM VALIDATE CHO EXPIRY DATE
         ]);
 
         $product = Product::findOrFail($request->id);
@@ -156,6 +170,7 @@ class ProductController extends Controller
             'stock' => $request->stock ?? 0,
             'unit' => $request->unit ?? 'kg',
             'status' => $newStatus,
+            'expiry_date' => $request->expiry_date, // <--- UPDATE HẠN SỬ DỤNG
         ]);
 
         // nếu có ảnh mới tải lên
@@ -189,6 +204,25 @@ class ProductController extends Controller
         $firstImage = $product->images->first();
         $imageUrl = $firstImage ? asset('storage/'.$firstImage->image) : asset('storage/uploads/products/default-product.png');
 
+
+        // --- TÍNH TOÁN MÀU SẮC ĐỂ TRẢ VỀ CHO AJAX ---
+        // $rowStyle = '';
+        $expiryBadge = '';
+
+        if ($product->expiry_date) {
+            $expiry = Carbon::parse($product->expiry_date);
+            $now = Carbon::now();
+
+            if ($now->gt($expiry)) {
+                // $rowStyle = 'background-color: #ffe6e6;'; // Đỏ (Hết hạn)
+                $expiryBadge = '<br><span class="badge badge-danger">ĐÃ HẾT HẠN</span>';
+            } elseif ($now->diffInDays($expiry) < 3) {
+                // $rowStyle = 'background-color: #fff3cd;'; // Vàng (Sắp hết)
+                $expiryBadge = '<br><span class="badge badge-warning">CẬN DATE</span>';
+            }
+        }
+
+
         return response()->json([
             'status' => true,
             'message' => 'Cập nhật sản phẩm thành công.',
@@ -196,9 +230,7 @@ class ProductController extends Controller
                 'id' => $product->id,
                 'name' => $product->name,
                 'slug' => $product->slug,
-                'category' => [
-                    'name' => $product->category->name
-                ],
+                'category_name' => $product->category->name, // Sửa lại key cho khớp với JS bên dưới
                 'description' => $product->description,
                 'price' => $product->price,
                 'price_formatted' => number_format($product->price, 0, ',', '.'),
@@ -206,6 +238,12 @@ class ProductController extends Controller
                 'unit' => $product->unit,
                 'status' => $product->status == 'in_stock' ? 'Còn hàng' : 'Hết hàng',
                 'image_url' => $imageUrl,
+
+                // Dữ liệu mới cho Hạn sử dụng
+                'expiry_date' => $product->expiry_date,
+                'expiry_date_formatted' => $product->expiry_date ? date('d/m/Y', strtotime($product->expiry_date)) : 'N/A',
+                // 'row_style' => $rowStyle, // Màu nền
+                'expiry_badge' => $expiryBadge // Nhãn cảnh báo
             ],
         ]);
     }

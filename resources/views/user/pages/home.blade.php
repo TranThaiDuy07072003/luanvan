@@ -110,6 +110,15 @@
                                     <div class="row ltn__tab-product-slider-one-active slick-arrow-1">
                                         <!-- ltn__product-item -->
                                         @foreach ($category->products as $product)
+
+                                            @php
+                                                // 1. Tính toán xem có bị hết hạn không
+                                                $isExpired = false;
+                                                if($product->expiry_date) {
+                                                    $isExpired = \Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($product->expiry_date));
+                                                }
+                                            @endphp
+
                                             <div class="col-lg-12">
                                                 <div class="ltn__product-item ltn__product-item-3 text-center">
                                                     <div class="product-img">
@@ -153,7 +162,7 @@
                                                         </h2>
                                                         <div class="product-price">
                                                             {{-- Hiện giá hoặc chữ HẾT HÀNG --}}
-                                                            @if ($product->stock > 0 && $product->status == 'in_stock')
+                                                            @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
                                                                 <span>{{ number_format($product->price, 0, ',', '.') }}
                                                                     VNĐ</span>
                                                             @else
@@ -196,37 +205,37 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3 col-sm-6 align-self-center">
-                    <div class="ltn__counterup-item-3 text-color-white text-center">
+                    {{-- <div class="ltn__counterup-item-3 text-color-white text-center">
                         <div class="counter-icon"> <img src="{{ asset('assets/user/img/icons/icon-img/2.png') }}"
                                 alt="#"> </div>
                         <h1><span class="counter">733</span><span class="counterUp-icon">+</span> </h1>
                         <h6>Khách Hàng Hài Lòng</h6>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-md-3 col-sm-6 align-self-center">
-                    <div class="ltn__counterup-item-3 text-color-white text-center">
+                    {{-- <div class="ltn__counterup-item-3 text-color-white text-center">
                         <div class="counter-icon"> <img src="{{ asset('assets/user/img/icons/icon-img/3.png') }}"
                                 alt="#"> </div>
                         <h1><span class="counter">33</span><span class="counterUp-letter">K</span><span
                                 class="counterUp-icon">+</span> </h1>
                         <h6>Loại Rau Củ Sạch</h6>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-md-3 col-sm-6 align-self-center">
-                    <div class="ltn__counterup-item-3 text-color-white text-center">
+                    {{-- <div class="ltn__counterup-item-3 text-color-white text-center">
                         <div class="counter-icon"> <img src="{{ asset('assets/user/img/icons/icon-img/4.png') }}"
                                 alt="#"> </div>
                         <h1><span class="counter">100</span><span class="counterUp-icon">+</span> </h1>
                         <h6>Sản Phẩm Hữu Cơ</h6>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-md-3 col-sm-6 align-self-center">
-                    <div class="ltn__counterup-item-3 text-color-white text-center">
+                    {{-- <div class="ltn__counterup-item-3 text-color-white text-center">
                         <div class="counter-icon"> <img src="{{ asset('assets/user/img/icons/icon-img/5.png') }}"
                                 alt="#"> </div>
                         <h1><span class="counter">250</span><span class="counterUp-icon">+</span> </h1>
                         <h6>Đối Tác Cung Cấp</h6>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -249,8 +258,18 @@
             <div class="row ltn__tab-product-slider-one-active--- slick-arrow-1">
                 <!-- ltn__product-item -->
                 @foreach ($bestSellingProducts as $product)
+
+                    @php
+                        $isExpired = false;
+                        if ($product->expiry_date) {
+                            $isExpired = \Carbon\Carbon::now()->gt(
+                                \Carbon\Carbon::parse($product->expiry_date),
+                            );
+                        }
+                    @endphp
+
                     <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                        <div class="ltn__product-item ltn__product-item-3 text-left">
+                        <div class="ltn__product-item ltn__product-item-3 text-center">
                             <div class="product-img">
                                 <a href="{{ route('product.detail', $product->slug) }}"><img
                                         src="{{ $product->image_url }}" alt="{{ $product->name }}"></a>
@@ -265,7 +284,8 @@
                                         </li>
 
 
-                                        @if ($product->stock > 0 && $product->status == 'in_stock')
+
+                                        @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
                                             <li>
                                                 <a href="javascript:void(0)" title="Thêm Vào Giỏ Hàng"
                                                     class="add-to-cart-btn" data-id="{{ $product->id }}">

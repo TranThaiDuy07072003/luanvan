@@ -2,6 +2,15 @@
     <div class="row">
         <!-- ltn__product-item , lưới sản phẩm -->
         @foreach ($products as $product)
+
+            @php
+                // 1. Tính toán xem có bị hết hạn không
+                $isExpired = false;
+                if($product->expiry_date) {
+                    $isExpired = \Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($product->expiry_date));
+                }
+            @endphp
+
             <div class="col-xl-4 col-sm-6 col-6">
                 <div class="ltn__product-item ltn__product-item-3 text-center">
                     <div class="product-img">
@@ -20,7 +29,7 @@
                                 </li>
 
 
-                                @if ($product->stock > 0 && $product->status == 'in_stock')
+                                @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
 
                                     <li>
                                         <a href="javascript:void(0)" title="Thêm Vào Giỏ Hàng" class="add-to-cart-btn" data-id="{{ $product->id }}">
@@ -42,7 +51,7 @@
                         <h2 class="product-title"><a href="{{ route('product.detail' , $product->slug) }}">{{ $product->name }}</a></h2>
                         <div class="product-price">
                             {{-- logic hiện giá hoặc chữ HẾT HÀNG --}}
-                            @if ($product->stock > 0 && $product->status == 'in_stock')
+                            @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
                                 <span>{{ number_format($product->price, 0, ',', '.') }} VNĐ</span>
                             @else
                                 <span style="color: #ff0000; font-weight: bold; font-size: 16px;">HẾT HÀNG</span>

@@ -143,6 +143,22 @@
                                     </div>
                                 </div>
 
+
+                                {{-- HẠN SỬ DỤNG --}}
+                                <div class="item form-group">
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="expiry_date">
+                                        Hạn sử dụng <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 ">
+                                        <input type="date" id="expiry_date" name="expiry_date"
+                                            class="form-control @error('expiry_date') is-invalid @enderror"
+                                            value="{{ old('expiry_date') }}" required>
+                                        @error('expiry_date')
+                                            <div class="text-danger small mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
                                 {{-- HÌNH ẢNH --}}
                                 <div class="item form-group">
                                     <label class="col-form-label col-md-3 col-sm-3 label-align" for="product-images">

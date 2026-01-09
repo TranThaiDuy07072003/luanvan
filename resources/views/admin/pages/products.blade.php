@@ -49,7 +49,7 @@
                                             </select>
                                         </div>
 
-                                        
+
                                         <div class="col-md-4">
                                             <label><strong>Lọc theo Trạng thái:</strong></label>
                                             <select name="status" class="form-control">
@@ -97,6 +97,7 @@
                                                     <th>Giá</th>
                                                     <th>Đơn vị</th>
                                                     <th>Trạng thái</th>
+                                                    <th>Hạn sử dụng</th>
                                                     <th></th>
                                                     <th></th>
                                                 </tr>
@@ -106,6 +107,24 @@
                                             <tbody>
 
                                                 @foreach ($products as $product)
+                                                    @php
+                                                        // Logic tính toán màu sắc cảnh báo hạn sử dụng
+                                                        $isExpired = false;
+                                                        $isNearExpiry = false;
+                                                        if ($product->expiry_date) {
+                                                            $expiry = \Carbon\Carbon::parse($product->expiry_date);
+                                                            $now = \Carbon\Carbon::now();
+
+                                                            // Nếu đã qua ngày hết hạn
+                                                            if ($now->gt($expiry)) {
+                                                                $isExpired = true;
+                                                            }
+                                                            // Nếu còn hạn nhưng dưới 3 ngày
+                                                            elseif ($now->diffInDays($expiry) < 3) {
+                                                                $isNearExpiry = true;
+                                                            }
+                                                        }
+                                                    @endphp
                                                     <tr id="product-row-{{ $product->id }}">
                                                         <td>
                                                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
@@ -121,6 +140,17 @@
                                                         <td>{{ $product->unit }}</td>
                                                         <td>{{ $product->status == 'in_stock' ? 'Còn hàng' : 'Hết hàng' }}
                                                         </td>
+
+                                                        <td>
+                                                            {{ $product->expiry_date ? date('d/m/Y', strtotime($product->expiry_date)) : 'N/A' }}
+
+                                                            @if($isExpired)
+                                                                <br><span class="badge badge-danger" style="background-color: red; color: white;">ĐÃ HẾT HẠN</span>
+                                                            @elseif($isNearExpiry)
+                                                                <br><span class="badge badge-warning" style="background-color: #ffc107; color: black;">CẬN DATE</span>
+                                                            @endif
+                                                        </td>
+
                                                         <td>
                                                             <a class="btn btn-app btn-update-product" data-toggle="modal"
                                                                 data-target="#modalUpdate-{{ $product->id }}">
@@ -289,6 +319,16 @@
                                                                             </div>
                                                                         </div>
 
+
+                                                                        <div class="item form-group">
+                                                                            <label class="col-form-label col-md-3 col-sm-3 label-align" for="expiry_date">
+                                                                                Hạn sử dụng <span class="required">*</span>
+                                                                            </label>
+                                                                            <div class="col-md-6 col-sm-6">
+                                                                                <input type="date" name="expiry_date" class="form-control"
+                                                                                    value="{{ $product->expiry_date }}" required>
+                                                                            </div>
+                                                                        </div>
 
 
                                                                         <div class="item form-group">

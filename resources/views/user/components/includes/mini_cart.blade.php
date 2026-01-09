@@ -3,7 +3,7 @@
     <button class="ltn__utilize-close">×</button>
 </div>
 
-{{-- 1. Khai báo biến tổng tiền ở ngoài cùng để tránh lỗi --}}
+
 @php
     $subtotal = 0;
 @endphp

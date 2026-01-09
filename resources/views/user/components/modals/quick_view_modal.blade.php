@@ -26,8 +26,16 @@
                                             ])
                                         </div>
                                         <h3>{{ $product->name }}</h3>
+
+                                        @php
+                                            $isExpired = false;
+                                            if($product->expiry_date) {
+                                                $isExpired = \Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($product->expiry_date));
+                                            }
+                                        @endphp
+
                                         <div class="product-price">
-                                            @if ($product->stock > 0 && $product->status == 'in_stock')
+                                            @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
                                                 <span>{{ number_format($product->price, 0, ',', '.') }} VNĐ</span>
                                             @else
                                                 <span style="color: #ff0000; font-weight: bold; font-size: 20px;">HẾT
@@ -55,7 +63,7 @@
 
                                         <div class="ltn__product-details-menu-2">
                                             <ul>
-                                                @if ($product->stock > 0 && $product->status == 'in_stock')
+                                                @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
                                                     <li>
                                                         <div class="cart-plus-minus">
                                                             <div class="dec qtybutton">-</div>
@@ -90,7 +98,7 @@
 
 
                                         <hr>
-                                        <div class="ltn__social-media">
+                                        {{-- <div class="ltn__social-media">
                                             <ul>
                                                 <li>Chia sẻ:</li>
                                                 <li><a href="#" title="Facebook"><i
@@ -103,7 +111,7 @@
                                                             class="fab fa-instagram"></i></a></li>
 
                                             </ul>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>

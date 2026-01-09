@@ -66,7 +66,7 @@
                                         </ul>
 
                                     </li>
-                                    <li class="menu-icon"><a href="{{ route('products.index') }}">Cửa hàng</a>
+                                    <li class="menu-icon"><a href="{{ route('products.index') }}">Sản phẩm</a>
                                     </li>
                                      <li class="menu-icon"><a href="{{ route('client.recipes') }}">Gợi ý món ăn</a> </li>
                                     <li><a href="{{ route('contact.index') }}">Liên hệ</a></li>

@@ -12,7 +12,7 @@ class Product extends Model
     use HasFactory;
 
 
-    protected $fillable = ['name', 'description', 'price', 'stock', 'category_id', 'status', 'slug', 'unit'];
+    protected $fillable = ['name', 'description', 'price', 'stock', 'category_id', 'status', 'slug', 'unit', 'expiry_date'];
 
     protected $appends = ['average_rating', 'image_url'];
 
@@ -59,7 +59,7 @@ class Product extends Model
     public function recipes()
     {
         return $this->belongsToMany(Recipe::class, 'product_recipes')
-                    ->withPivot('quantity');   
+                    ->withPivot('quantity');
     }
 
 

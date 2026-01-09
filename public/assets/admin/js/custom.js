@@ -382,36 +382,35 @@ $(document).ready(function(){
                     let newRow = `
                         <tr id="product-row-${productId}">
                             <td>
-                                <img src="${imageSrc}" alt="${product.name}" class="image-product"  width="80px">
+                                <img src="${imageSrc}" alt="${product.name}" class="image-product" width="80px">
                             </td>
-
                             <td>${product.name}</td>
                             <td>${product.category_name}</td>
-                            <td>${product.slug}</td>
                             <td>${product.description}</td>
                             <td>${product.stock}</td>
                             <td>${product.price_formatted} VND</td>
                             <td>${product.unit}</td>
                             <td>${product.status}</td>
 
-
                             <td>
-                                 <a class="btn btn-app btn-update-product" data-toggle="modal"
-                                    data-target="#modalUpdate-${productId}">
-                                        <i class="fa fa-edit"></i>Chỉnh sửa
-                                 </a>
-
+                                ${product.expiry_date_formatted}
+                                ${product.expiry_badge}
                             </td>
 
+                            <td>
+                                <a class="btn btn-app btn-update-product" data-toggle="modal"
+                                    data-target="#modalUpdate-${productId}">
+                                        <i class="fa fa-edit"></i>Chỉnh sửa
+                                </a>
+                            </td>
                             <td>
                                 <a class="btn btn-app btn-delete-product" data-id="${productId}" data-status="${product.status}">
                                     <i class="fa fa-close"></i>Xóa
                                 </a>
-
                             </td>
                         </tr>`;
 
-                        // Replace the old row with the new row
+                        // Thay thế dòng cũ bằng dòng mới
                         $('#product-row-' + productId).replaceWith(newRow);
 
                         toastr.success(response.message);
