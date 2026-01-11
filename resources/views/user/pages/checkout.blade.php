@@ -32,7 +32,7 @@
 
                                 <div>
                                     <a href="{{ route('account') }}"
-                                        class="btn theme-btn-1 btn-effect-1 text-uppercase">Thêm địa chỉ mới</a>
+                                        class="btn theme-btn-1 text-uppercase">Thêm địa chỉ mới</a>
                                 </div>
 
                             </div>
@@ -116,7 +116,7 @@
                                 <p>XIN QUÝ KHÁCH VUI LÒNG KIỂM TRA LẠI THÔNG TIN, SỐ SẢN PHẨM MUA , ĐỊA CHỈ HOẶC SỐ ĐIỆN
                                     THOẠI ĐỂ TRÁNH NHẦM LẪN .</p>
                             </div>
-                            <button class="btn theme-btn-1 btn-effect-1 text-uppercase" type="submit"
+                            <button class="btn theme-btn-1 text-uppercase" type="submit"
                                 id="order_button_cash">Đặt hàng</button>
                         </form>
                     </div>

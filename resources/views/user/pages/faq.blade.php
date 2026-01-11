@@ -147,42 +147,42 @@
             </div>
         </div>
     </div>
-    <div class="ltn__counterup-area bg-image bg-overlay-theme-black-80 pt-115 pb-70"
+    <div class="ltn__counterup-area bg-image bg-overlay-theme-black-80 pt-200 pb-150"
         data-bg="{{ asset('assets/user/img/bg/0.png') }}">
         <div class="container">
             <div class="row">
                 <div class="col-md-3 col-sm-6 align-self-center">
-                    <div class="ltn__counterup-item-3 text-color-white text-center">
+                    {{-- <div class="ltn__counterup-item-3 text-color-white text-center">
                         <div class="counter-icon"> <img src="{{ asset('assets/user/img/icons/icon-img/2.png') }}"
                                 alt="#"> </div>
                         <h1><span class="counter">733</span><span class="counterUp-icon">+</span> </h1>
                         <h6>Khách Hàng Hài Lòng</h6>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-md-3 col-sm-6 align-self-center">
-                    <div class="ltn__counterup-item-3 text-color-white text-center">
+                    {{-- <div class="ltn__counterup-item-3 text-color-white text-center">
                         <div class="counter-icon"> <img src="{{ asset('assets/user/img/icons/icon-img/3.png') }}"
                                 alt="#"> </div>
                         <h1><span class="counter">33</span><span class="counterUp-letter">K</span><span
                                 class="counterUp-icon">+</span> </h1>
                         <h6>Loại Rau Củ Sạch</h6>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-md-3 col-sm-6 align-self-center">
-                    <div class="ltn__counterup-item-3 text-color-white text-center">
+                    {{-- <div class="ltn__counterup-item-3 text-color-white text-center">
                         <div class="counter-icon"> <img src="{{ asset('assets/user/img/icons/icon-img/4.png') }}"
                                 alt="#"> </div>
                         <h1><span class="counter">100</span><span class="counterUp-icon">+</span> </h1>
                         <h6>Sản Phẩm Hữu Cơ</h6>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-md-3 col-sm-6 align-self-center">
-                    <div class="ltn__counterup-item-3 text-color-white text-center">
+                    {{-- <div class="ltn__counterup-item-3 text-color-white text-center">
                         <div class="counter-icon"> <img src="{{ asset('assets/user/img/icons/icon-img/5.png') }}"
                                 alt="#"> </div>
                         <h1><span class="counter">250</span><span class="counterUp-icon">+</span> </h1>
                         <h6>Đối Tác Cung Cấp</h6>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

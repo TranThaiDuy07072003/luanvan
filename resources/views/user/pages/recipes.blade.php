@@ -40,7 +40,7 @@
                                         </div>
 
                                         <div class="mt-3">
-                                            <button class="theme-btn-1 btn btn-effect-1 btn-show-recipe"
+                                            <button class="theme-btn-1 btn btn-show-recipe"
                                                 data-id="{{ $recipe->id }}">
                                                 MUA NGUYÊN LIỆU
                                             </button>

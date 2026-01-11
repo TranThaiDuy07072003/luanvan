@@ -15,7 +15,7 @@
                         <div class="row">
                             <div class="col-lg-12 align-self-center">
                                 <div class="slide-item-info">
-                                    <div class="slide-item-info-inner ltn__slide-animation">
+                                    <div class="">
                                         <div class="slide-video mb-50 d-none">
                                             <a class="ltn__video-icon-2 ltn__video-icon-2-border"
                                                 href="https://www.youtube.com/embed/ATI7vfCgwXE?autoplay=1&amp;showinfo=0"
@@ -30,7 +30,7 @@
                                         </div>
                                         <div class="btn-wrapper animated">
                                             <a href="{{ route('products.index') }}"
-                                                class="theme-btn-1 btn btn-effect-1 text-uppercase">Khám
+                                                class="theme-btn-1 btn">Khám
                                                 phá sản phẩm</a>
                                         </div>
                                     </div>
@@ -200,7 +200,7 @@
 
 
     <!-- COUNTER UP AREA START -->
-    <div class="ltn__counterup-area bg-image bg-overlay-theme-black-80 pt-115 pb-70"
+    <div class="ltn__counterup-area bg-image bg-overlay-theme-black-80 pt-200 pb-150"
         data-bg="{{ asset('assets/user/img/bg/0.png') }}">
         <div class="container">
             <div class="row">
