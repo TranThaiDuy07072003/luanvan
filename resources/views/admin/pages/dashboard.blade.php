@@ -53,19 +53,21 @@
             <div class="col-md-4 col-sm-4  ">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Biểu đồ doanh thu</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
+                    <h2>Biểu đồ doanh thu năm {{ $year }}</h2>
+                     <form method="GET" class="pull-right" style="margin-top: 5px;">
+                        <select name="year" onchange="this.form.submit()" class="form-control input-sm">
+                            @for ($y = now()->year; $y >= now()->year - 5; $y--)
+                                <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>
+                                    {{ $y }}
+                                </option>
+                            @endfor
+                        </select>
+                    </form>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
                     <canvas id="revenueBarChart"
-                    data-labels= '@json($monthlyRevenue->pluck('month')->toArray())'
+                    data-labels='@json($monthlyRevenue->pluck("month")->map(fn($m) => "Tháng $m"))'
                     data-values='@json($monthlyRevenue->pluck('revenue')->toArray())'
                                         ></canvas>
                   </div>

@@ -5,95 +5,81 @@
 
 @section('content')
 
-    <!-- Về chúng tôi AREA START -->
-    <div class="ltn__about-us-area pt-120--- pb-120">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 align-self-center">
-                    <div class="about-us-img-wrap about-img-left">
-                        <img src="{{ asset('assets/user/img/others/9.png') }}" alt="Về chúng tôi Image">
-                    </div>
-                </div>
-                <div class="col-lg-6 align-self-center">
-                    <div class="about-us-info-wrap">
-                        <div class="section-title-area ltn__section-title-2">
-                            <h6 class="section-subtitle ltn__secondary-color">Tìm Hiểu Thêm Về Cửa Hàng</h6>
-                            <h1 class="section-title">Thực Phẩm <br class="d-none d-md-block"> Hữu Cơ Uy Tín</h1>
-                            <p>Chúng tôi cam kết mang đến những sản phẩm chất lượng, an toàn và tốt cho sức khỏe</p>
-                        </div>
-                        <p>Chúng tôi xây dựng một cộng đồng thân thiện, bền vững và đáng tin cậy <br> nơi mọi sản phẩm đều được chọn lựa kỹ lưỡng, tôn trọng thiên nhiên và <br>sức khỏe con người.</p>
-                        <div class="about-author-info d-flex">
-                            <div class="author-name-designation  align-self-center">
-                                <h4 class="mb-0">VNMN</h4>
-                                <small>/ Giám Đốc Cửa Hàng</small>
-                            </div>
-                            <div class="author-sign">
-                                <img src="{{ asset('assets/user/img/icons/icon-img/author-sign1.png') }}" alt="#">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- ABOUT INTRO START -->
+<section class="about-section pt-60 pb-60">
+    <div class="container">
+        <h2 class="mb-4 fw-bold" style="margin-left: 350px;margin-top: -80px">GIỚI THIỆU VỀ NÔNG SẢN SẠCH</h2>
+        <br>
+
+        <p>
+            Nông Sản Sạch là hệ thống cung cấp các sản phẩm nông sản an toàn, có nguồn gốc xuất xứ rõ ràng,
+            được tuyển chọn kỹ lưỡng từ các vùng trồng đạt tiêu chuẩn trên khắp cả nước. Chúng tôi hướng đến
+            việc mang lại cho người tiêu dùng Việt Nam những giải pháp mua sắm thực phẩm tiện lợi, hiện đại
+            nhưng vẫn đảm bảo chất lượng và độ tin cậy cao. Với phương châm “Sức khỏe khách hàng là ưu tiên hàng đầu”,
+            Nông Sản Sạch không ngừng cải tiến quy trình kiểm soát chất lượng, bảo quản và phân phối sản phẩm
+            nhằm giữ trọn giá trị dinh dưỡng và độ tươi ngon của từng mặt hàng.
+        </p>
+
+        <img src="{{ asset('assets/user/img/others/winmart.jpg') }}" style="margin-left: 50px" alt="Về chúng tôi Image">
+
+        <p>
+            Khi mua sắm tại hệ thống WinMart & WinMart+, khách hàng không chỉ được trải nghiệm không gian mua sắm
+            hiện đại, thân thiện và tiện nghi mà còn được tiếp cận với đa dạng các mặt hàng thiết yếu cho cuộc sống
+            hằng ngày. Bên cạnh đó, hệ thống thường xuyên triển khai nhiều chương trình khuyến mãi, ưu đãi hấp dẫn,
+            giúp khách hàng tiết kiệm chi phí mà vẫn đảm bảo chất lượng sản phẩm và dịch vụ tốt nhất.
+        </p>
     </div>
-    <!-- Về chúng tôi AREA END -->
+</section>
+<!-- ABOUT INTRO END -->
 
-    <!-- FEATURE AREA START ( Feature - 6) -->
-    <div class="ltn__feature-area section-bg-1 pt-115 pb-90">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-title-area ltn__section-title-2 text-center">
-                        <h6 class="section-subtitle ltn__secondary-color">// Đặc Điểm //</h6>
-                        <h1 class="section-title">Vì Sao Nên Chọn Chúng Tôi<span>.</span></h1>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-4 col-sm-6 col-12">
-                    <div class="ltn__feature-item ltn__feature-item-7">
-                        <div class="ltn__feature-icon-title">
-                            <div class="ltn__feature-icon">
-                                <span><img src="{{ asset('assets/user/img/icons/icon-img/21.png') }}" alt="#"></span>
-                            </div>
-                            <h3><a href="service-details.html">Đa Dạng Các Thương Hiệu</a></h3>
-                        </div>
-                        <div class="ltn__feature-info">
-                            <p>Chúng tôi cung cấp nhiều thương hiệu uy tín, đảm bảo chất lượng và nguồn gốc rõ ràng.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-6 col-12">
-                    <div class="ltn__feature-item ltn__feature-item-7">
-                        <div class="ltn__feature-icon-title">
-                            <div class="ltn__feature-icon">
-                                <span><img src="{{ asset('assets/user/img/icons/icon-img/22.png') }}" alt="#"></span>
-                            </div>
-                            <h3><a href="service-details.html">Sản Phẩm Được Tuyển Chọn</a></h3>
-                        </div>
-                        <div class="ltn__feature-info">
-                            <p>Chúng tôi cung cấp các sản phẩm được chọn lọc kỹ lưỡng, đảm bảo chất lượng và an toàn cho sức khỏe.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-6 col-12">
-                    <div class="ltn__feature-item ltn__feature-item-7">
-                        <div class="ltn__feature-icon-title">
-                            <div class="ltn__feature-icon">
-                                <span><img src="{{ asset('assets/user/img/icons/icon-img/23.png') }}" alt="#"></span>
-                            </div>
-                            <h3><a href="service-details.html">Sản Phẩm Không Chất Độc Hại</a></h3>
-                        </div>
-                        <div class="ltn__feature-info">
-                            <p>Chúng tôi cung cấp các sản phẩm không chứa chất độc hại, đảm bảo an toàn cho sức khỏe người tiêu dùng.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+<!-- VISION START -->
+<section class="about-section pt-60 pb-60">
+    <div class="container">
+        <h3 class="fw-bold mb-3" style="margin-top: -120px">TẦM NHÌN</h3>
+
+        <p>
+            Nông Sản Sạch hướng tới trở thành hệ thống phân phối nông sản sạch hàng đầu tại Việt Nam,
+            là lựa chọn đáng tin cậy của mọi gia đình trong việc chăm sóc sức khỏe thông qua bữa ăn hằng ngày.
+            Chúng tôi mong muốn xây dựng một chuỗi cung ứng bền vững, kết nối trực tiếp người nông dân với người tiêu dùng,
+            góp phần nâng cao giá trị nông sản Việt và thúc đẩy nền nông nghiệp sạch, an toàn và thân thiện với môi trường.
+        </p>
+
+        <img src="{{ asset('assets/user/img/others/winmart2.jpg') }}" style="margin-left: 50px" alt="Về chúng tôi Image">
+
+        <p>
+            Trong tương lai, WinMart & WinMart+ sẽ tiếp tục mở rộng mạng lưới cửa hàng trên toàn quốc,
+            ứng dụng công nghệ vào quản lý và phục vụ khách hàng nhằm mang đến trải nghiệm mua sắm nhanh chóng,
+            thuận tiện và thông minh hơn. Qua đó, chúng tôi kỳ vọng có thể đáp ứng ngày càng tốt hơn
+            nhu cầu tiêu dùng đa dạng của khách hàng ở mọi khu vực.
+        </p>
     </div>
-    <!-- FEATURE AREA END -->
+</section>
+<!-- VISION END -->
 
 
+<!-- COMMITMENT START -->
+<section class="about-section pt-60 pb-60">
+    <div class="container">
+        <h3 class="fw-bold mb-3" style="margin-top: -120px">CAM KẾT VỚI KHÁCH HÀNG</h3>
+
+        <p>
+            Nông Sản Sạch cam kết chỉ cung cấp những sản phẩm đạt tiêu chuẩn chất lượng,
+            được kiểm tra nghiêm ngặt về nguồn gốc, vệ sinh an toàn thực phẩm và quy trình bảo quản.
+            Chúng tôi luôn minh bạch thông tin sản phẩm, giá cả rõ ràng và đặt quyền lợi của khách hàng lên hàng đầu.
+            Mỗi sản phẩm đến tay người tiêu dùng đều là kết quả của sự chọn lọc kỹ càng và trách nhiệm cao đối với cộng đồng.
+        </p>
+
+        <img src="{{ asset('assets/user/img/others/winmart3.jpg') }}" style="margin-left: 50px" alt="Về chúng tôi Image">
+
+        <p>
+            Bên cạnh chất lượng sản phẩm, WinMart & WinMart+ còn chú trọng nâng cao chất lượng dịch vụ,
+            lắng nghe ý kiến phản hồi và không ngừng cải thiện để mang đến sự hài lòng cao nhất cho khách hàng.
+            Chúng tôi tin rằng sự tin tưởng và đồng hành của khách hàng chính là nền tảng vững chắc
+            cho sự phát triển bền vững của Nông Sản Sạch trong tương lai.
+        </p>
+    </div>
+</section>
+<!-- COMMITMENT END -->
 
 @endsection

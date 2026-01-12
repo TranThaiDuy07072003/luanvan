@@ -38,15 +38,19 @@ class DashboardController extends Controller
         }])->orderByDesc('total_sold')->take(3)->get();
 
 
+        $year = request('year', now()->year);
+
+
         // biểu đồ doanh thu
         $monthlyRevenue = Order::where('status', 'completed')
-            ->select(
-                DB::raw('SUM(total_price) as revenue'),
-                DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month")
-            )
-            ->groupBy('month')
-            ->orderBy('month', 'ASC')
-            ->get();
+        ->whereYear('created_at', $year)
+        ->select(
+            DB::raw('SUM(total_price) as revenue'),
+            DB::raw('MONTH(created_at) as month')
+        )
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get();
 
 
         return view('admin.pages.dashboard', compact(
@@ -57,7 +61,8 @@ class DashboardController extends Controller
             'topSellingProducts',
             'monthlyRevenue',
             'totalOrdersCount',
-            'totalRevenueReal'
+            'totalRevenueReal',
+            'year'
         ));
     }
 }
