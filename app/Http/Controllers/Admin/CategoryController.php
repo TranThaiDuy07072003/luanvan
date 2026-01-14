@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 class CategoryController extends Controller
 {
@@ -19,23 +20,52 @@ class CategoryController extends Controller
 
     public function addCategory(Request $request)
     {
+        // 1. VALIDATION "CỨNG" (Giống addProduct)
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:categories,name', // <--- QUAN TRỌNG: Chặn trùng tên
             'description' => 'nullable|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // <--- QUAN TRỌNG: Bắt buộc có ảnh và đúng định dạng
+        ], [
+            // Thông báo lỗi tiếng Việt thân thiện
+            'name.required' => 'Vui lòng nhập tên danh mục.',
+            'name.unique' => 'Tên danh mục này đã tồn tại, vui lòng chọn tên khác.',
+            'name.max' => 'Tên danh mục không được quá 255 ký tự.',
+
+            'image.required' => 'Vui lòng chọn hình ảnh đại diện cho danh mục.',
+            'image.image' => 'File tải lên phải là hình ảnh.',
+            'image.mimes' => 'Ảnh phải có đuôi: jpeg, png, jpg, gif, svg.',
+            'image.max' => 'Dung lượng ảnh không được quá 2MB.',
         ]);
 
+        // 2. TẠO SLUG
+        $slug = Str::slug($request->name);
+        // Lưu ý: Danh mục thường cần URL đẹp nên mình không nối thêm time() như sản phẩm,
+        // vì đã có validate unique ở trên chặn trùng rồi.
+
+        // 3. XỬ LÝ ẢNH (Tối ưu hóa dung lượng như Product)
         $imagePath = null;
-        if ($request->hasFile("image"))
-        {
-            $imagePath = $request->file("image");
-            $fileName = now()->timestamp.'_'.uniqid().'.'.$imagePath->getClientOriginalExtension();
-            $imagePath = $imagePath->storeAs('uploads/categories', $fileName, 'public');
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = 'uploads/categories/' . $fileName;
+
+            // Resize ảnh danh mục cho nhẹ (ví dụ 300x300 hoặc tùy ý bạn)
+            // Cần use Intervention\Image\Facades\Image; ở đầu file
+            $resizedImage = Image::make($file)
+                            ->resize(300, 300, function ($constraint) {
+                                $constraint->aspectRatio(); // Giữ tỉ lệ ảnh
+                                $constraint->upsize();      // Không phóng to nếu ảnh nhỏ
+                            })->encode();
+
+            Storage::disk('public')->put($path, $resizedImage);
+            $imagePath = $path;
         }
 
+        // 4. LƯU VÀO DATABASE
         Category::create([
-            'name' => $request->input('name'),
-            'slug' => Str::slug($request->input('name')),
-            'description' => $request->input('description'),
+            'name' => $request->name,
+            'slug' => $slug,
+            'description' => $request->description,
             'image' => $imagePath,
         ]);
 

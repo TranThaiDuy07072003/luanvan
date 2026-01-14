@@ -30,7 +30,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'stock'  => 'required|integer|min:0',
             'unit'   => 'required|string|max:50',
-            'expiry_date' => 'required|date', // <--- THÊM VALIDATE CHO EXPIRY DATE
+            'expiry_date' => 'required|date',
             'images' => 'required',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ], [

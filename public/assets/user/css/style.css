@@ -9792,7 +9792,9 @@ blockquote {
   border-color: var(--border-color-11);
   font-size: 20px;
   font-weight: 700;
-  cursor: pointer; }
+  cursor: pointer;
+  user-select: none;
+ }
 
 input.cart-plus-minus-box {
   background: transparent none repeat scroll 0 0;

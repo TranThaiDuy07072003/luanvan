@@ -20,7 +20,7 @@
                 <div class="col-md-12 col-sm-12 ">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2>Thêm Danh Mục Mới <small>different form elements</small></h2>
+                            <h2>Thêm Danh Mục Mới</h2>
                             <ul class="nav navbar-right panel_toolbox">
                                 <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                 </li>
@@ -42,10 +42,19 @@
                                         <span class="required">*</span>
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
-                                        <input type="text" id="category-name" name="name" required="required"
-                                            class="form-control ">
+                                        {{-- Thêm value="{{ old('name') }}" để giữ lại nội dung đã nhập khi bị lỗi --}}
+                                        <input type="text" id="category-name" name="name"
+                                            value="{{ old('name') }}"
+                                            class="form-control @error('name') is-invalid @enderror">
+
+                                        {{-- Thêm đoạn này để hiện lỗi --}}
+                                        @error('name')
+                                            <div class="text-danger small mt-1">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
+
+
                                 <div class="item form-group">
                                     <label class="col-form-label col-md-3 col-sm-3 label-align"
                                         for="category-description">Mô Tả
@@ -53,7 +62,7 @@
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
                                         <input type="text" id="category-description" name="description"
-                                            required="required" class="form-control">
+                                             class="form-control">
                                     </div>
                                 </div>
 
@@ -65,8 +74,12 @@
                                         <label class="custom-file-upload" for="category-image"> Chọn ảnh </label>
                                         <input type="file" name="image" id="category-image" accept="image/*">
 
-                                        <img src="" alt="Ảnh xem trước" id="image-preview" class="image-preview">
+                                        {{-- Thêm đoạn này để hiện lỗi ảnh --}}
+                                        @error('image')
+                                            <div class="text-danger small mt-1">{{ $message }}</div>
+                                        @enderror
 
+                                        <img src="" alt="Ảnh xem trước" id="image-preview" class="image-preview">
                                     </div>
                                 </div>
 

@@ -23,7 +23,7 @@
         <img src="{{ asset('assets/user/img/others/winmart.jpg') }}" style="margin-left: 50px" alt="Về chúng tôi Image">
 
         <p>
-            Khi mua sắm tại hệ thống WinMart & WinMart+, khách hàng không chỉ được trải nghiệm không gian mua sắm
+            Khi mua sắm tại hệ thống Nông sản sạch, khách hàng không chỉ được trải nghiệm không gian mua sắm
             hiện đại, thân thiện và tiện nghi mà còn được tiếp cận với đa dạng các mặt hàng thiết yếu cho cuộc sống
             hằng ngày. Bên cạnh đó, hệ thống thường xuyên triển khai nhiều chương trình khuyến mãi, ưu đãi hấp dẫn,
             giúp khách hàng tiết kiệm chi phí mà vẫn đảm bảo chất lượng sản phẩm và dịch vụ tốt nhất.
@@ -48,7 +48,7 @@
         <img src="{{ asset('assets/user/img/others/winmart2.jpg') }}" style="margin-left: 50px" alt="Về chúng tôi Image">
 
         <p>
-            Trong tương lai, WinMart & WinMart+ sẽ tiếp tục mở rộng mạng lưới cửa hàng trên toàn quốc,
+            Trong tương lai, Nông sản sạch sẽ tiếp tục mở rộng mạng lưới cửa hàng trên toàn quốc,
             ứng dụng công nghệ vào quản lý và phục vụ khách hàng nhằm mang đến trải nghiệm mua sắm nhanh chóng,
             thuận tiện và thông minh hơn. Qua đó, chúng tôi kỳ vọng có thể đáp ứng ngày càng tốt hơn
             nhu cầu tiêu dùng đa dạng của khách hàng ở mọi khu vực.
@@ -73,7 +73,7 @@
         <img src="{{ asset('assets/user/img/others/winmart3.jpg') }}" style="margin-left: 50px" alt="Về chúng tôi Image">
 
         <p>
-            Bên cạnh chất lượng sản phẩm, WinMart & WinMart+ còn chú trọng nâng cao chất lượng dịch vụ,
+            Bên cạnh chất lượng sản phẩm, Nông sản sạch còn chú trọng nâng cao chất lượng dịch vụ,
             lắng nghe ý kiến phản hồi và không ngừng cải thiện để mang đến sự hài lòng cao nhất cho khách hàng.
             Chúng tôi tin rằng sự tin tưởng và đồng hành của khách hàng chính là nền tảng vững chắc
             cho sự phát triển bền vững của Nông Sản Sạch trong tương lai.

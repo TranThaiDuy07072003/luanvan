@@ -25,7 +25,7 @@
                             <img src="{{ asset('assets/user/img/icons/11.png') }}" alt="Icon Image">
                         </div>
                         <h3>Số Điện Thoại</h3>
-                        <p>0999-868-686</p>
+                        <p>0999-999-999</p>
                     </div>
                 </div>
                 <div class="col-lg-4">

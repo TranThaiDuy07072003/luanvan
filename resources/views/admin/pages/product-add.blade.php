@@ -152,7 +152,7 @@
                                     <div class="col-md-6 col-sm-6 ">
                                         <input type="date" id="expiry_date" name="expiry_date"
                                             class="form-control @error('expiry_date') is-invalid @enderror"
-                                            value="{{ old('expiry_date') }}" required>
+                                            value="{{ old('expiry_date') }}">
                                         @error('expiry_date')
                                             <div class="text-danger small mt-1">{{ $message }}</div>
                                         @enderror

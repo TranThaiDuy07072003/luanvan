@@ -2,11 +2,11 @@
 
 @section('title', 'Câu hỏi thường gặp')
 
-@section('breadcrumb', 'Những Câu Hỏi Thường Gặp Của Khách Hàng')
+@section('breadcrumb', 'Những Câu Hỏi Thường Gặp')
 
 @section('content')
 
-    <div class="ltn__faq-area mb-100">
+    <div class="ltn__faq-area mb-100" style="margin-left: 20px ; margin-top: -80px">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
@@ -116,11 +116,11 @@
                             </div>
                         </div>
                         <div class="need-support text-center mt-100">
-                            <h2>Cần hỗ trợ thêm? Liên hệ với chúng tôi 24/7:</h2>
+                            <h2>Cần hỗ trợ thêm ? Liên hệ với chúng tôi 24/7:</h2>
                             <div class="btn-wrapper mb-30">
                                 <a href="{{ route('contact.index') }}" class="theme-btn-1 btn">Liên Hệ Ngay</a>
                             </div>
-                            <h3><i class="fas fa-phone"></i> +0999-999-999</h3>
+                            {{-- <h3><i class="fas fa-phone"></i> +0999-999-999</h3> --}}
                         </div>
                     </div>
                 </div>
@@ -137,10 +137,11 @@
                                 <i class="fas fa-envelope-open-text"></i>
                             </div>
                         </div> --}}
-                        <div class="widget ltn__banner-widget">
+
+                        {{-- <div class="widget ltn__banner-widget">
                             <a href="{{ route('products.index') }}"><img
                                     src="{{ asset('assets/user/img/banner/banner-3.jpg') }}" alt="Banner Image"></a>
-                        </div>
+                        </div> --}}
 
                     </aside>
                 </div>

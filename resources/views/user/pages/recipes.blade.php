@@ -34,13 +34,13 @@
                                         </div>
                                     </div>
                                     <div class="product-info">
-                                        <h2 class="product-title"><a href="javascript:void(0)">{{ $recipe->name }}</a></h2>
+                                        <h3 class="product-title"><a href="javascript:void(0)">{{ $recipe->name }}</a></h3>
                                         <div class="product-price">
-                                            <span>Gợi ý món ngon</span>
+                                            {{-- <span>Gợi ý món ngon</span> --}}
                                         </div>
 
                                         <div class="mt-3">
-                                            <button class="theme-btn-1 btn btn-show-recipe"
+                                            <button class="theme-btn-1 btn btn-show-recipe" style="padding: 10px 20px;"
                                                 data-id="{{ $recipe->id }}">
                                                 MUA NGUYÊN LIỆU
                                             </button>

@@ -1,7 +1,7 @@
 
 <header class="ltn__header-area ltn__header-5 ltn__header-transparent-- gradient-color-4---">
 
-    <div class="ltn__header-top-area">
+    {{-- <div class="ltn__header-top-area">
         <div class="container">
             <div class="row">
                 <div class="col-md-7">
@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 
 
