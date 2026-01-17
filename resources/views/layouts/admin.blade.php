@@ -37,7 +37,7 @@
 
 
     @php
-        $dataTableRoutes = ['admin.categories.index', 'admin.products.index', 'admin.orders.index'];
+        $dataTableRoutes = ['admin.categories.index', 'admin.products.index', 'admin.orders.index', 'admin.users.index'];
     @endphp
 
     @if (in_array(Route::currentRouteName(), $dataTableRoutes))

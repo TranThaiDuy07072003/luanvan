@@ -1,6 +1,15 @@
 @if (isset($products) && count($products) > 0)
     <div class="row">
         @foreach ($products as $product)
+
+            @php
+                // 1. Tính toán xem có bị hết hạn không
+                $isExpired = false;
+                if($product->expiry_date) {
+                    $isExpired = \Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($product->expiry_date));
+                }
+            @endphp
+
             <div class="col-lg-4 col-md-6 col-6 mb-3">
                 <div class="ltn__product-item ltn__product-item-3 text-center"
                     style="border: 1px solid #e5e5e5; border-radius: 8px; padding: 10px 5px; margin-bottom: 0;">
@@ -33,7 +42,7 @@
                                 target="_blank">{{ $product->name }}</a>
                         </h2>
                         <div class="product-price" style="margin-bottom: 10px;">
-                            @if ($product->stock > 0 && $product->status == 'in_stock')
+                            @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
                                 <span
                                     style="color: #d0021b; font-weight: bold;">{{ number_format($product->price, 0, ',', '.') }} VNĐ</span>
                             @else
@@ -42,7 +51,7 @@
                         </div>
 
                         {{-- KHU VỰC NÚT MUA --}}
-                        @if ($product->stock > 0 && $product->status == 'in_stock')
+                        @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
                             <div class="product-action-bhx d-flex justify-content-center align-items-center"
                                 style="gap: 5px;">
 

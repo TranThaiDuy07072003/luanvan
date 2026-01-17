@@ -137,7 +137,7 @@
                                                                 </li>
 
 
-                                                                @if ($product->stock > 0 && $product->status == 'in_stock')
+                                                                @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
                                                                     <li>
                                                                         <a href="javascript:void(0)"
                                                                             title="Thêm Vào Giỏ Hàng"

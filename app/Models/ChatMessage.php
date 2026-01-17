@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ChatMessage extends Model
-{
-    protected $fillable = ['user_id', 'guest_token', 'sender', 'message'];
-}
+// class ChatMessage extends Model
+// {
+//     protected $fillable = ['user_id', 'guest_token', 'sender', 'message'];
+// }

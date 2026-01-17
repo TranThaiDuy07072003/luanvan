@@ -46,11 +46,15 @@ Route::prefix('admin')->group(function () {
         Route::post('/notification/update', [NotificationController::class, 'update']);
 
 
+        //quản lý người dùng
         Route::middleware(['permission:manager_users'])->group(function(){
             Route::get('/users' , [UsersController::class, 'index'])->name('admin.users.index');
             Route::post('/user/upgrade' , [UsersController::class, 'upgrade']);
 
             Route::post('/user/change-status', [UsersController::class, 'changeStatus'])->name('admin.users.status');
+
+            // Thêm người dùng mới
+            Route::post('/user/store', [UsersController::class, 'store'])->name('admin.users.store');
         });
 
 
@@ -129,11 +133,11 @@ Route::prefix('admin')->group(function () {
 
 
     // Route Demo
-    Route::get('/demo-category', function () {
-        return view('admin.pages.demo-add');
-    });
-    Route::post('/demo-category', [CategoryController::class, 'demoStore'])->name('demo.store');
+    Route::get('/demo-category', [CategoryController::class, 'demoCreate'])
+    ->name('demo.create');
 
+    Route::post('/demo-category', [CategoryController::class, 'demoStore'])
+    ->name('demo.store');
 
 
 });

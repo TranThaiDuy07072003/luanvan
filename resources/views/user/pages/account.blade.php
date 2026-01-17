@@ -192,16 +192,18 @@
 
                                                             <div class="mb-3">
                                                                 <label class="form-lable">Số điện thoại</label>
-                                                                <input type="text" class="form-control" name="phone"
-                                                                    required placeholder="Nhập số điện thoại">
+                                                                <input type="number" class="form-control" name="phone"
+                                                                    required placeholder="Nhập số điện thoại" pattern="[0-9]+" title="Chỉ được nhập số">
                                                             </div>
 
                                                             <div class="mb-3">
                                                                 <label class="form-lable">Tỉnh/Thành phố</label>
-                                                                <select class="form-control nice-select" id="tinh"
-                                                                    name="tinh" style="width: 100%;">
-                                                                    <option value="0">Tỉnh Thành</option>
+                                                                {{-- Khóa không cho chọn (disabled) và mặc định là TP.HCM --}}
+                                                                <select class="form-control nice-select disabled" id="tinh" name="tinh" style="width: 100%; pointer-events: none; background: #e9ecef;">
+                                                                    <option value="79" data-name="Thành phố Hồ Chí Minh" selected>Thành phố Hồ Chí Minh</option>
                                                                 </select>
+                                                                {{-- Input ẩn để gửi dữ liệu về server vì thẻ select disabled sẽ không gửi value --}}
+                                                                <input type="hidden" name="tinh" value="Thành phố Hồ Chí Minh">
                                                             </div>
 
                                                             <div class="row">
@@ -355,6 +357,12 @@
             width: 100%;
         }
 
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
         .nice-select {
             width: 100%;
             margin-bottom: 15px;
@@ -365,29 +373,27 @@
     <script>
         $(document).ready(function() {
 
-            // Đợi 1 giây để đảm bảo thư viện NiceSelect đã load
             setTimeout(function() {
                 $('select.nice-select').niceSelect();
             }, 500);
 
-            // =======================================================
-            // 1. LOGIC CHỌN ĐỊA CHỈ 3 CẤP (Dùng FETCH để tránh CORS)
-            // =======================================================
-
+            let idHCM = '79';
+            $("#final_city").val('Thành phố Hồ Chí Minh');
             // 1.1. Load Tỉnh/Thành
-            fetch('https://esgoo.net/api-tinhthanh/1/0.htm')
+            fetch(`https://esgoo.net/api-tinhthanh/2/${idHCM}.htm`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error === 0) {
+                        $("#quan").html('<option value="0">Chọn Quận/Huyện</option>');
                         data.data.forEach(val => {
-                            $("#tinh").append(
+                            $("#quan").append(
                                 `<option value="${val.id}" data-name="${val.full_name}">${val.full_name}</option>`
-                                );
+                            );
                         });
-                        $("#tinh").niceSelect('update');
+                        $("#quan").niceSelect('update');
                     }
                 })
-                .catch(error => console.error('Lỗi tải Tỉnh:', error));
+                .catch(error => console.error('Lỗi tải Quận:', error));
 
             // 1.2. Chọn Tỉnh -> Load Quận/Huyện
             $("#tinh").change(function() {
@@ -483,8 +489,20 @@
                         }
                     },
                     error: function(xhr) {
+                        // Nếu lỗi Validate (422) từ Laravel trả về
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            // Lặp qua từng lỗi và hiện Toastr
+                            $.each(errors, function(key, value) {
+                                toastr.error(value[0]);
+                            });
+                        } else {
+                            // Lỗi Server khác (500, 404...)
+                            toastr.error('Có lỗi xảy ra, vui lòng thử lại sau.');
+                        }
+
+                        // Mở lại nút bấm
                         btn.prop('disabled', false).text(originalText);
-                        toastr.error('Lỗi khi lưu địa chỉ. Kiểm tra lại thông tin.');
                     }
                 });
             });

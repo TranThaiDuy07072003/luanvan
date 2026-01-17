@@ -26,11 +26,20 @@
                                 <div class="ltn__product-tab-content-inner ltn__product-grid-view">
                                     <div class="row">
                                         @foreach ($products as $product)
+
+                                            @php
+                                                // 1. Tính toán xem có bị hết hạn không
+                                                $isExpired = false;
+                                                if($product->expiry_date) {
+                                                    $isExpired = \Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($product->expiry_date));
+                                                }
+                                            @endphp
+
                                             <div class="col-xl-3 col-lg-4 col-sm-6 col-6">
                                                 <div class="ltn__product-item ltn__product-item-3 text-center">
                                                     <div class="product-img">
                                                         <a href="{{ route('product.detail', $product->slug) }}">
-                                                            
+
                                                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
                                                         </a>
 
@@ -54,7 +63,7 @@
                                                                 </li>
 
                                                                 {{-- ẩn nút thêm giỏ hàng nếu hết hàng --}}
-                                                                @if ($product->stock > 0 && $product->status == 'in_stock')
+                                                                @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
                                                                     <li>
                                                                         <a href="javascript:void(0)"
                                                                             title="Thêm Vào Giỏ Hàng"
@@ -80,7 +89,7 @@
                                                                 href="{{ route('product.detail', $product->slug) }}">{{ $product->name }}</a>
                                                         </h2>
                                                         <div class="product-price">
-                                                            @if ($product->stock > 0 && $product->status == 'in_stock')
+                                                            @if ($product->stock > 0 && $product->status == 'in_stock' && !$isExpired)
                                                                 <span>{{ number_format($product->price, 0, ',', '.') }}
                                                                     VNĐ</span>
                                                             @else

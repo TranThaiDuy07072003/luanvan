@@ -97,6 +97,64 @@ $(document).ready(function(){
     });
 
 
+    // Xử lý thêm nhân viên mới
+    $('#addStaffForm').on('submit', function(e){
+        e.preventDefault();
+
+        let form = $(this);
+        let btn = $('#btnSaveStaff');
+        let originalText = btn.text();
+
+        // 1. Reset trạng thái lỗi cũ (Xóa đỏ, xóa chữ)
+        $('span.error-text').text('');
+        $('input.form-control').removeClass('is-invalid');
+
+        btn.prop('disabled', true).text('Đang lưu...');
+
+        $.ajax({
+            type: "POST",
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function (response) {
+                if(response.status){
+                    toastr.success(response.message); // Hiện thông báo thành công
+                    $('#addStaffModal').modal('hide'); // Tắt modal
+                    form[0].reset(); // Xóa trắng form
+
+                    // Reload lại trang sau 1s để thấy nhân viên mới
+                    setTimeout(function(){
+                        location.reload();
+                    }, 1000);
+                }
+            },
+            error: function (xhr) {
+                btn.prop('disabled', false).text(originalText);
+
+                // 2. Xử lý lỗi 422 (Lỗi Validate từ Laravel trả về)
+                if(xhr.status === 422){
+                    let errors = xhr.responseJSON.errors;
+
+                    // Duyệt qua từng lỗi và gán vào ô input tương ứng
+                    $.each(errors, function(key, value){
+                        // key = tên field (vd: email, phone_number)
+                        // value[0] = nội dung lỗi (vd: Email đã tồn tại)
+
+                        // Tìm thẻ input có name="key" và thêm class đỏ
+                        $('input[name="'+key+'"]').addClass('is-invalid');
+
+                        // Tìm thẻ span có class="key_error" và điền chữ lỗi vào
+                        $('span.'+key+'_error').text(value[0]);
+                    });
+
+                    // toastr.error('Vui lòng kiểm tra lại thông tin nhập vào!');
+                }else{
+                    toastr.error('Lỗi hệ thống, vui lòng thử lại.');
+                }
+            }
+        });
+    });
+
+
 
 
 

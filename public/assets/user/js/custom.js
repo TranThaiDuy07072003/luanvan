@@ -128,64 +128,64 @@ $(document).ready(function() {
 
 
 
-    // Validate form địa chỉ
-    // thêm địa chỉ mới
-    $("#addAddressForm").on('submit', function(e) {
-        e.preventDefault();
+    // // Validate form địa chỉ
+    // // thêm địa chỉ mới
+    // $("#addAddressForm").on('submit', function(e) {
+    //     e.preventDefault();
 
-        let form = $(this);
-        let btn = $('#btn-add-address'); // Nút submit
+    //     let form = $(this);
+    //     let btn = $('#btn-add-address'); // Nút submit
 
-        // khóa nút lại để tránh user bấm liên tục spam
-        let originalText = btn.text();
-        btn.prop('disabled', true).text('Đang lưu...');
+    //     // khóa nút lại để tránh user bấm liên tục spam
+    //     let originalText = btn.text();
+    //     btn.prop('disabled', true).text('Đang lưu...');
 
-        $('.error-message').remove();
+    //     $('.error-message').remove();
 
-        let formData = new FormData(this);
+    //     let formData = new FormData(this);
 
-        $.ajax({
-            url: form.attr('action'),
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+    //     $.ajax({
+    //         url: form.attr('action'),
+    //         type: 'POST',
+    //         data: formData,
+    //         processData: false,
+    //         contentType: false,
 
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
+    //         headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         },
 
-            success: function(response) {
-                if (response.success) {
-                    toastr.success(response.message, 'Thành công!');
-                    $('#addAddressModal').modal('hide');
-                    form[0].reset();
+    //         success: function(response) {
+    //             if (response.success) {
+    //                 toastr.success(response.message, 'Thành công!');
+    //                 $('#addAddressModal').modal('hide');
+    //                 form[0].reset();
 
-                    setTimeout(function() {
-                        location.reload();
-                    }, 1000);
-                }
-            },
+    //                 setTimeout(function() {
+    //                     location.reload();
+    //                 }, 1000);
+    //             }
+    //         },
 
-            error: function(xhr) {
-                btn.prop('disabled', false).text(originalText);
+    //         error: function(xhr) {
+    //             btn.prop('disabled', false).text(originalText);
 
-                if (xhr.status === 422) {
-                    let errors = xhr.responseJSON.errors;
-                    $.each(errors, function(key, value) {
-                        let input = $('#' + key); // Tìm ô input bị lỗi
-                        if (input.length) {
-                            input.after('<p class="error-message text-danger" style="font-size: 13px; margin-top: 5px;">' + value[0] + '</p>');
-                        }
-                    });
-                    toastr.error('Vui lòng kiểm tra lại thông tin.', 'Lỗi nhập liệu');
-                } else {
-                    toastr.error('Có lỗi xảy ra, vui lòng thử lại sau.', 'Lỗi hệ thống');
-                    console.log(xhr.responseText);
-                }
-            }
-        });
-    });
+    //             if (xhr.status === 422) {
+    //                 let errors = xhr.responseJSON.errors;
+    //                 $.each(errors, function(key, value) {
+    //                     let input = $('#' + key); // Tìm ô input bị lỗi
+    //                     if (input.length) {
+    //                         input.after('<p class="error-message text-danger" style="font-size: 13px; margin-top: 5px;">' + value[0] + '</p>');
+    //                     }
+    //                 });
+    //                 toastr.error('Vui lòng kiểm tra lại thông tin.', 'Lỗi nhập liệu');
+    //             } else {
+    //                 toastr.error('Có lỗi xảy ra, vui lòng thử lại sau.', 'Lỗi hệ thống');
+    //                 console.log(xhr.responseText);
+    //             }
+    //         }
+    //     });
+    // });
 
 
 

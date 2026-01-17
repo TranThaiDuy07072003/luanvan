@@ -10,215 +10,215 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
-class ChatController extends Controller
-{
-    public function fetchMessages(Request $request)
-    {
+// class ChatController extends Controller
+// {
+//     public function fetchMessages(Request $request)
+//     // {
 
-        if (Auth::check()) {
+    //     if (Auth::check()) {
 
-            $msgs = ChatMessage::where('user_id', Auth::id())->orderBy('created_at')->get();
+    //         $msgs = ChatMessage::where('user_id', Auth::id())->orderBy('created_at')->get();
 
-        } else {
+    //     } else {
 
-            $token = $request->cookie('chat_token');
+    //         $token = $request->cookie('chat_token');
 
-            $msgs = $token ? ChatMessage::where('guest_token', $token)->orderBy('created_at')->get() : collect();
+    //         $msgs = $token ? ChatMessage::where('guest_token', $token)->orderBy('created_at')->get() : collect();
 
-        }
+    //     }
 
-        return response()->json($msgs);
+    //     return response()->json($msgs);
 
-    }
+    // }
 
-    public function sendMessage(Request $request)
-    {
+    // public function sendMessage(Request $request)
+    // {
 
-        $request->validate([
+        // $request->validate([
 
-            'message' => 'required|string|max:2000',
+        //     'message' => 'required|string|max:2000',
 
-        ]);
+        // ]);
 
-        $userId = Auth::id();
+        // $userId = Auth::id();
 
-        // --- Handler guest token (cookie) ---
+        // // --- Handler guest token (cookie) ---
 
-        $guestToken = null;
+        // $guestToken = null;
 
-        if (! $userId) {
+        // if (! $userId) {
 
-            $guestToken = $request->cookie('chat_token');
+        //     $guestToken = $request->cookie('chat_token');
 
-            if (! $guestToken) {
+        //     if (! $guestToken) {
 
-                $guestToken = 'guest_'.Str::random(32);
+        //         $guestToken = 'guest_'.Str::random(32);
 
-                cookie()->queue(cookie('chat_token', $guestToken, 60 * 24 * 180));
+        //         cookie()->queue(cookie('chat_token', $guestToken, 60 * 24 * 180));
 
-            }
+        //     }
 
-        }
+        // }
 
-        // 1) Save message user to DB
+        // // 1) Save message user to DB
 
-        $userMsg = ChatMessage::create([
+        // $userMsg = ChatMessage::create([
 
-            'user_id' => $userId,
+        //     'user_id' => $userId,
 
-            'guest_token' => $userId ? null : $guestToken,
+        //     'guest_token' => $userId ? null : $guestToken,
 
-            'sender' => 'user',
+        //     'sender' => 'user',
 
-            'message' => $request->message,
+        //     'message' => $request->message,
 
-        ]);
+        // ]);
 
-        // 2) Prepare prompt
+        // // 2) Prepare prompt
 
-        $products = Product::where('stock', '>', 0)->get(['name', 'price', 'unit', 'description'])->map(function ($p) {
+        // $products = Product::where('stock', '>', 0)->get(['name', 'price', 'unit', 'description'])->map(function ($p) {
 
-            return "{$p->name} - {$p->price} / {$p->unit}";
+        //     return "{$p->name} - {$p->price} / {$p->unit}";
 
-        })->toArray();
+        // })->toArray();
 
-        $productList = implode("\n", $products);
+        // $productList = implode("\n", $products);
 
-        $prompt = "Bạn là trợ lý bán hàng cho website rau củ. Dưới đây là danh sách một số sản phẩm hiện có:\n$productList\n
+        // $prompt = "Bạn là trợ lý bán hàng cho website rau củ. Dưới đây là danh sách một số sản phẩm hiện có:\n$productList\n
 
-        Hãy trả lời ngắn gọn, trung thực, chỉ dùng thông tin trong danh sách sản phẩm nếu cần.";
+        // Hãy trả lời ngắn gọn, trung thực, chỉ dùng thông tin trong danh sách sản phẩm nếu cần.";
 
-        $history = ChatMessage::query()
+        // $history = ChatMessage::query()
 
-            ->where(function ($q) use ($userId, $guestToken) {
+        //     ->where(function ($q) use ($userId, $guestToken) {
 
-                if ($userId) {
+        //         if ($userId) {
 
-                    $q->where('user_id', $userId);
+        //             $q->where('user_id', $userId);
 
-                } else {
+        //         } else {
 
-                    $q->where('guest_token', $guestToken);
+        //             $q->where('guest_token', $guestToken);
 
-                }
+        //         }
 
-            })
+        //     })
 
-            ->latest()
+        //     ->latest()
 
-            ->limit(6)
+        //     ->limit(6)
 
-            ->orderBy('created_at', 'asc')
+        //     ->orderBy('created_at', 'asc')
 
-            ->get();
+        //     ->get();
 
-        $contents = [];
+        // $contents = [];
 
-        foreach ($history as $msg) {
+        // foreach ($history as $msg) {
 
-            $contents[] = [
+        //     $contents[] = [
 
-                'role' => $msg->sender === 'user' ? 'user' : 'model',
+        //         'role' => $msg->sender === 'user' ? 'user' : 'model',
 
-                'parts' => [['text' => $msg->message]],
+        //         'parts' => [['text' => $msg->message]],
 
-            ];
+        //     ];
 
-        }
+        // }
 
-        // Append new message of user
+        // // Append new message of user
 
-        $contents[] = [
+        // $contents[] = [
 
-            'role' => 'user',
+        //     'role' => 'user',
 
-            'parts' => [['text' => $request->message]],
+        //     'parts' => [['text' => $request->message]],
 
-        ];
+        // ];
 
-        // 3. Gọi AI
+        // // 3. Gọi AI
 
-        $aiReplyText = 'Xin lỗi, hiện tại AI chưa được cấu hình.';
+        // $aiReplyText = 'Xin lỗi, hiện tại AI chưa được cấu hình.';
 
-        if (env('GOOGLE_GEMINI_API_KEY')) {
+        // if (env('GOOGLE_GEMINI_API_KEY')) {
 
-            try {
+        //     try {
 
-                $url_apikey = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+        //         $url_apikey = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
-                $payload = [
+        //         $payload = [
 
-                    'systemInstruction' => [
+        //             'systemInstruction' => [
 
-                        'parts' => [
+        //                 'parts' => [
 
-                            [
+        //                     [
 
-                                'text' => $prompt,
+        //                         'text' => $prompt,
 
-                            ],
+        //                     ],
 
-                        ],
+        //                 ],
 
-                    ],
+        //             ],
 
-                    'contents' => $contents,
+        //             'contents' => $contents,
 
-                ];
+        //         ];
 
-                $response = Http::withHeaders([
+        //         $response = Http::withHeaders([
 
-                    'Content-Type' => 'application/json',
+        //             'Content-Type' => 'application/json',
 
-                    'X-Goog-Api-Key' => env('GOOGLE_GEMINI_API_KEY'),
+        //             'X-Goog-Api-Key' => env('GOOGLE_GEMINI_API_KEY'),
 
-                ])->post($url_apikey, $payload);
+        //         ])->post($url_apikey, $payload);
 
-                if ($response->successful()) {
+        //         if ($response->successful()) {
 
-                    $data = $response->json();
+        //             $data = $response->json();
 
-                    $aiReplyText = $data['candidates'][0]['content']['parts'][0]['text']
+        //             $aiReplyText = $data['candidates'][0]['content']['parts'][0]['text']
 
-                        ?? 'Xin lỗi, tôi chưa hiểu câu hỏi.';
+        //                 ?? 'Xin lỗi, tôi chưa hiểu câu hỏi.';
 
-                } else {
+        //         } else {
 
-                    $aiReplyText = 'Xin lỗi, AI không thể xử lý lúc này.';
+        //             $aiReplyText = 'Xin lỗi, AI không thể xử lý lúc này.';
 
-                    //\Log::error('AI API error', ['response' => $response->json()]);
+        //             //\Log::error('AI API error', ['response' => $response->json()]);
 
-                }
+        //         }
 
-            } catch (\Throwable $e) {
+        //     } catch (\Throwable $e) {
 
-                //\Log::error('AI call error: '.$e->getMessage());
+        //         //\Log::error('AI call error: '.$e->getMessage());
 
-                $aiReplyText = 'Xin lỗi, hiện tại không thể kết nối AI.';
+        //         $aiReplyText = 'Xin lỗi, hiện tại không thể kết nối AI.';
 
-            }
+        //     }
 
-        }
+        // }
 
-        $botMsg = ChatMessage::create([
+        // $botMsg = ChatMessage::create([
 
-            'user_id' => $userId,
+        //     'user_id' => $userId,
 
-            'guest_token' => $userId ? null : $guestToken,
+        //     'guest_token' => $userId ? null : $guestToken,
 
-            'sender' => 'bot',
+        //     'sender' => 'bot',
 
-            'message' => $aiReplyText,
+        //     'message' => $aiReplyText,
 
-        ]);
+        // ]);
 
-        return response()->json([
+        // return response()->json([
 
-            'user' => $userMsg,
+        //     'user' => $userMsg,
 
-            'bot' => $botMsg,
+        //     'bot' => $botMsg,
 
-        ]);
+        // ]);
 
-    }
-}
+//     }
+// }

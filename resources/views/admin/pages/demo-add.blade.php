@@ -18,5 +18,13 @@
         <input type="file" name="image">
     </div>
 
-    <button type="submit" style="margin-top: 10px;">Lưu Danh Mục</button>
+    <div style="margin-top: 10px;">
+        <button type="submit">Lưu Danh Mục</button>
+
+        @if (session('success'))
+            <span style="color: green; margin-left: 10px;">
+                 {{ session('success') }}
+            </span>
+        @endif
+    </div>
 </form>

@@ -16,7 +16,7 @@ class AccountController extends Controller
         $user = Auth::user();
         $addresses = ShippingAddress::where('user_id', Auth::id())->get();
         $orders = Order::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
-  
+
         return view('user.pages.account', compact('user', 'addresses', 'orders'));
     }
 
@@ -102,17 +102,17 @@ class AccountController extends Controller
 
         $request->validate([
             'full_name' => 'required|string|max:255',
-            'phone' => 'required|digits:10',
-            'address' => 'required|string|min:5',
+            'phone'     => ['required', 'digits:10', 'regex:/(0)[0-9]{9}/'],
+            'address' => 'required|string|min:10',
             'city' => 'required|string|min:2',
         ], [
-            'full_name.required' => 'Họ tên không được để trống.',
-            'phone.required' => 'Số điện thoại không được để trống.',
-            'phone.digits' => 'Số điện thoại phải có đúng 10 chữ số.',
-            'address.required' => 'Địa chỉ không được để trống.',
-            'address.min' => 'Địa chỉ phải có ít nhất 5 ký tự.',
-            'city.required' => 'Thành phố không được để trống.',
-            'city.min' => 'Thành phố phải có ít nhất 2 ký tự.',
+            'full_name.required' => 'Vui lòng nhập họ và tên người nhận.',
+            'phone.required'     => 'Vui lòng nhập số điện thoại.',
+            'phone.digits'       => 'Số điện thoại phải có đúng 10 chữ số.',
+            'phone.regex'        => 'Số điện thoại không đúng định dạng (VD: 0912345678).',
+            'address.required'   => 'Địa chỉ không được để trống.',
+            'address.min'        => 'Địa chỉ quá ngắn, vui lòng nhập chi tiết hơn.',
+            'city.required'      => 'Vui lòng chọn Tỉnh/Thành phố.',
         ]);
 
         if ($request->has('default')) {
@@ -136,7 +136,7 @@ class AccountController extends Controller
 
 
 
-
+    // Đặt địa chỉ mặc định
     public function updatePrimaryAddress($id)
     {
         $address = ShippingAddress::where('id', $id)->where('user_id', Auth::id())->firstOrFail();

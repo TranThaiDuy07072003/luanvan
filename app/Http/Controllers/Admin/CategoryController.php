@@ -188,34 +188,37 @@ class CategoryController extends Controller
 
 
 
+    public function demoCreate()
+    {
+        return view('admin.pages.demo-add');
+    }
 
-    // Viết xuống cuối file CategoryController.php
     public function demoStore(Request $request)
     {
         $request->validate([
             'name' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'image' => 'nullable|image'
         ]);
 
+        $imagePath = null;
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-
             $fileName = time() . '_' . $file->getClientOriginalName();
-
             $imagePath = $file->storeAs('uploads/categories', $fileName, 'public');
         }
 
-        $slug = Str::slug($request->name);
-
         Category::create([
-            'name' => $request->name,
-            'slug' => $slug,
+            'name'        => $request->name,
+            'slug'        => Str::slug($request->name),
             'description' => $request->description,
-            'image' => $imagePath
+            'image'       => $imagePath
         ]);
 
-        return "Thêm danh mục: " . $request->name . " thành công! (Dữ liệu đã vào DB thật)";
+        return redirect()
+            ->route('demo.create')
+            ->with('success', 'Thêm danh mục thành công');
     }
 
 

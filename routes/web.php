@@ -139,8 +139,8 @@ Route::prefix('/')->group(function () {
 
 
     //chatbox
-    Route::get('/chat/messages', [ChatController::class, 'fetchMessages']);
-    Route::post('/chat/send', [ChatController::class, 'sendMessage']);
+    // Route::get('/chat/messages', [ChatController::class, 'fetchMessages']);
+    // Route::post('/chat/send', [ChatController::class, 'sendMessage']);
 
 
 
