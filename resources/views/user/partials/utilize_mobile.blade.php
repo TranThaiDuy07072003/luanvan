@@ -3,14 +3,16 @@
     <div class="ltn__utilize-menu-inner ltn__scrollbar">
         <div class="ltn__utilize-menu-head">
             <div class="site-logo">
-                <a href="index.html"><img src="{{ asset('assets/user/img/logo01.png') }}" alt="Logo"></a>
+                <a href="\"><img src="{{ asset('assets/user/img/logo01.png') }}" alt="Logo"></a>
             </div>
             <button class="ltn__utilize-close">×</button>
         </div>
         <div class="ltn__utilize-menu-search-form">
-            <form action="#">
-                <input type="text" placeholder="Search...">
-                <button><i class="fas fa-search"></i></button>
+            <form id="#" method="GET" action="{{ route('search') }}">
+                <input type="text" name="keyword" value="" placeholder="Tìm kiếm..." />
+                <button type="submit">
+                    <span><i class="icon-search"></i></span>
+                </button>
             </form>
         </div>
         <div class="ltn__utilize-menu">
@@ -22,8 +24,9 @@
                         <li><a href="{{ route('faq') }}">Những Câu Hỏi Thường Gặp</a></li>
                     </ul>
                 </li>
-                <li><a href="shop.html">Cửa hàng</a></li>
-                <li><a href="contact.html">Liên hệ</a></li>
+                <li><a href="{{ route('products.index') }}">Sản phẩm</a></li>
+                <li><a href="{{ route('client.recipes') }}">Gợi ý món ăn</a> </li>
+                <li><a href="{{ route('contact.index') }}">Liên hệ</a></li>
             </ul>
         </div>
         <div class="ltn__utilize-buttons ltn__utilize-buttons-2">
@@ -49,7 +52,13 @@
                     <a href="{{route('cart.index')}}" title="Giỏ hàng">
                         <span class="utilize-btn-icon">
                             <i class="fas fa-shopping-cart"></i>
-                            <sup>5</sup>
+                            <sup id="cart_count">
+                                @auth
+                                    {{ \App\Models\CartItem::where('user_id', auth()->id())->sum('quantity')  }}
+                                @else
+                                    {{ session('cart') ? array_sum(array_column(session('cart'), 'quantity')) : 0 }}
+                                @endauth
+                            </sup>
                         </span>
                         Giỏ hàng
                     </a>
@@ -58,10 +67,10 @@
         </div>
         <div class="ltn__social-media-2">
             <ul>
-                <li><a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
-                <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
-                <li><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="javascript:void(0)" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                <li><a href="javascript:void(0)" title="Twitter"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="javascript:void(0)" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
+                <li><a href="javascript:void(0)" title="Instagram"><i class="fab fa-instagram"></i></a></li>
             </ul>
         </div>
     </div>

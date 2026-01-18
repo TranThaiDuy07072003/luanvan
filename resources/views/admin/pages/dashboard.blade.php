@@ -26,16 +26,12 @@
 
                 <div class="col-md-2 col-sm-4 tile_stats_count">
                     <span class="count_top"><i class="fa fa-shopping-cart"></i> Tổng đơn hàng</span>
-                    {{-- CŨ: {{ $orders->count() }} --}}
-                    {{-- MỚI: --}}
                     <div class="count green">{{ $totalOrdersCount }}</div>
                 </div>
 
 
                 <div class="col-md-2 col-sm-4 tile_stats_count" style="overflow: unset">
                     <span class="count_top"><i class="fa fa-money"></i> Doanh thu</span>
-                    {{-- CŨ: {{ number_format($orders->sum('total_price'), 0, 0) }} --}}
-                    {{-- MỚI: --}}
                     <div class="count">{{ number_format($totalRevenueReal, 0, ',', '.') }} VNĐ</div>
                 </div>
 

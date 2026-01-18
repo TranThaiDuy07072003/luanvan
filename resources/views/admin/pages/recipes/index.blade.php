@@ -49,8 +49,8 @@
                                                     style="font-size: 14px;">{{ $recipe->products_count }} loại</span>
                                             </td>
                                             <td>
-                                                {{-- Nút Sửa/Xóa sau này làm tiếp --}}
-                                                <button class="btn btn-sm btn-primary">Sửa</button>
+                                                
+                                                {{-- <button class="btn btn-sm btn-primary">Sửa</button> --}}
                                                 <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete-recipe"
                                                     data-id="{{ $recipe->id }}">
                                                     <i class="fa fa-close"></i> Xóa

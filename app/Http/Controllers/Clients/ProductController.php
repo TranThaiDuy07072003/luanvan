@@ -43,6 +43,7 @@ class ProductController extends Controller
     }
 
 
+    // Lọc sản phẩm
     public function filter(Request $request)
     {
         $query = Product::with('firstImage')->whereIn('status', ['in_stock', 'out_of_stock']);
@@ -91,6 +92,7 @@ class ProductController extends Controller
     }
 
 
+    // Lọc sản phẩm theo danh mục
     public function filterByCategory($id)
     {
         $categories = Category::withCount('products')->get();
@@ -111,7 +113,7 @@ class ProductController extends Controller
         return view('user.pages.products', compact('categories', 'products', 'selectedCategory'));
     }
 
-    
+
     //Chi tiết sản phẩm
     public function detail($slug)
     {

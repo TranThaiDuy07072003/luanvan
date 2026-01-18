@@ -107,13 +107,15 @@
                                     </div>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <p class="lead">Phương thức thanh toán:</p>
-                                        @if ($order->payment->payment_method == 'vnpay')
-                                            <img src="{{ asset('assets/admin/images/paypal.png') }}" alt="Paypal">
-                                        @else
-                                            <img src="{{ asset('assets/admin/images/cash1.png') }}" width="80px"
-                                                height="50px" alt="Thanh toán khi nhận hàng">
-                                        @endif
+                                        <p>Hình thức thanh toán:
+                                            @if ($order->payment && $order->payment->payment_method == 'cash')
+                                                <span class="custom-badge badge badge-info" style="width: 133px;height: 20px;padding-top: 5px">Thanh toán khi nhận hàng</span>
+                                            @elseif($order->payment && $order->payment->payment_method == 'vnpay')
+                                                <span class="custom-badge badge badge-success" style="width: 122px;height: 20px;padding-top: 5px">Thanh toán online</span>
+                                            @else
+                                                <span class="badge bg-danger">Chưa xác định</span>
+                                            @endif
+                                        </p>
 
                                         <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
                                             Đây là phương thức thanh toán mà khách hàng đã chọn cho đơn hàng này. Nếu là

@@ -194,6 +194,7 @@ $(document).ready(function() {
      * PAGE PRODUCTS
      *********************************/
 
+    // Hàm lấy sản phẩm theo bộ lọc
     function fetchProducts() {
         let category_id = $(".category-filter.active").data('id') || '';
         let sort_by = $("#sort-by").val()

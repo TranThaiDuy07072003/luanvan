@@ -274,9 +274,10 @@
                                 <a href="{{ route('product.detail', $product->slug) }}"><img
                                         src="{{ $product->image_url }}" alt="{{ $product->name }}"></a>
 
-                                <div class="product-hover-action">
+                                {{-- <div class="product-hover-action">
                                     <ul>
                                         <li>
+
                                             <a href="javascript:void(0)" title="Xem Nhanh" data-bs-toggle="modal"
                                                 data-bs-target="#quick_view_modal-{{ $product->id }}">
                                                 <i class="far fa-eye"></i>
@@ -295,7 +296,7 @@
                                         @endif
 
                                     </ul>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="product-info">
                                 <div class="product-ratting">

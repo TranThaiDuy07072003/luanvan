@@ -35,8 +35,9 @@ class RecipeController extends Controller
             'products' => 'required|array|min:1',
         ], [
             'name.required' => 'Tên món ăn không được để trống.',
-            'name.unique' => 'Tên món ăn này đã tồn tại.',
+            'name.unique' => 'Tên món ăn này đã tồn tại, vui lòng chọn tên khác.',
             'image.required' => 'Vui lòng chọn ảnh đại diện món ăn.',
+            'image.image' => 'File tải lên phải là hình ảnh.',
             'products.required' => 'Vui lòng chọn ít nhất 1 nguyên liệu.',
         ]);
 
@@ -73,7 +74,11 @@ class RecipeController extends Controller
 
         $recipe->products()->attach($syncData);
 
-        return redirect()->route('admin.recipes.index')->with('success', 'Thêm món ăn thành công!');
+        return response()->json([
+            'status' => true,
+            'message' => 'Thêm món ăn thành công!',
+            'redirect' => route('admin.recipes.index')
+        ]);
     }
 
 

@@ -22,10 +22,10 @@ class DashboardController extends Controller
         $orders = Order::with('shippingAddress')->latest()->take(3)->get();
 
 
-        // A. Tổng số đơn hàng (chỉ tính đơn không bị hủy)
+        //Tổng số đơn hàng (chỉ tính đơn không bị hủy)
         $totalOrdersCount = Order::where('status', '!=', 'canceled')->count();
 
-        // B. Tổng doanh thu (tính đơn đã hoàn thành)
+        //Tổng doanh thu (tính đơn đã hoàn thành)
         $totalRevenueReal = Order::where('status', 'completed')->sum('total_price');
 
 
@@ -42,15 +42,27 @@ class DashboardController extends Controller
 
 
         // biểu đồ doanh thu
-        $monthlyRevenue = Order::where('status', 'completed')
-        ->whereYear('created_at', $year)
-        ->select(
-            DB::raw('SUM(total_price) as revenue'),
-            DB::raw('MONTH(created_at) as month')
-        )
-        ->groupBy('month')
-        ->orderBy('month')
-        ->get();
+        $rawRevenue = Order::where('status', 'completed')
+            ->whereYear('created_at', $year)
+            ->select(
+                DB::raw('SUM(total_price) as revenue'),
+                DB::raw('MONTH(created_at) as month')
+            )
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        
+        // Tạo một bộ khung từ 1 đến 12
+        $monthlyRevenue = collect(range(1, 12))->map(function ($month) use ($rawRevenue) {
+            // Tìm xem tháng này có trong dữ liệu DB không
+            $found = $rawRevenue->firstWhere('month', $month);
+
+            return [
+                'month' => $month,
+                'revenue' => $found ? $found->revenue : 0, // Có thì lấy tiền, không thì bằng 0
+            ];
+        });
 
 
         return view('admin.pages.dashboard', compact(
